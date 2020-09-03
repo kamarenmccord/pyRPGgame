@@ -126,12 +126,11 @@ class Player(Character):
         self.rect = self.image.get_rect()
         self.rect.center = self.pos
 
-        self.step_count = 0
         self.level = level
         self.max_level = 100
         self._stats = {'hp': hp, 'attack': 20, 'defence': 30, 'speed': 5,
                        'sp_att': 3, 'sp_def': 4, 'accuracy': 90, 'mana': 25,
-                       'xp_to_level': 50, 'xp': 0}
+                       'xp_to_level': 50, 'xp': 0, 'step_count':0}
 
         self.zone = False  # true if player enters a zone, change to False if exit, for triggered events
 
@@ -167,8 +166,7 @@ class Player(Character):
         if (self.pos[0] >= self.prev_pos[0]+STEPSIZE or self.pos[0] <= self.prev_pos[0]-STEPSIZE
                 or self.pos[1] >= self.prev_pos[1]+STEPSIZE or self.pos[1] <= self.prev_pos[1]-STEPSIZE):
             self.prev_pos = self.pos
-            self.step_count += 1
-            print('steps: ', self.step_count)
+            self._stats['step_count'] += 1
 
     def update(self):
         collision_with_bz(self, self.game.map.danger_zone)
