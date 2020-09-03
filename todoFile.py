@@ -23,9 +23,9 @@
 #       + delete the cursor after selection
 
 # TODO: if savelimit files exist, prompt user to overwrite
-# TODO: add collision box for player to wall collisions
 
 
+# BYPASSED: add collision box for player to wall collisions
 # DONE: save_game data then successfully load data
 # DONE: fix collision with save zone in char file
 # DONE: tie strings to the crud module so game can be loaded after saving
