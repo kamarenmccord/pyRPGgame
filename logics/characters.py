@@ -21,9 +21,10 @@ def collide_with_boundries(player, dx, dy):
 def collide_with_walls(obj, dx, dy):
     """object hits walls"""
     # this would be more effective via adding a col box around player
+    buffer = 10
     for wall in obj.game.walls:
-        if wall.x < obj.pos[0]+dx and obj.pos[0]+dx+TILESIZE < wall.width:
-            if wall.y < obj.pos[1]+dy and obj.pos[1]+dy+TILESIZE < wall.height:
+        if wall.x-buffer <= obj.pos[0]+dx and obj.pos[0]+dx <= wall.width+buffer:
+            if wall.y-buffer <= obj.pos[1]+dy and obj.pos[1]+dy <= wall.height+buffer:
                 return True
     return False
 
