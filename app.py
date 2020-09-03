@@ -12,8 +12,6 @@ from os import path, listdir, chdir
 import pygame
 
 
-# TODO: add tilemap
-
 class Game:
     def __init__(self):
         """ if a vari is not set here check the
