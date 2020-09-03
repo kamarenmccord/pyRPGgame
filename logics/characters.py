@@ -120,11 +120,13 @@ class Player(Character):
         super().__init__(name=name, x=x, y=y, hp=hp, game=game)
         self.groups = []
         self.init_groups(add_default=True)
+        self.prev_pos = x, y
         self.pos = vec(x, y)
         self.image = pygame.image.load(path.join(game.game_folder, 'd-kin-front.png'))
         self.rect = self.image.get_rect()
         self.rect.center = self.pos
 
+        self.step_count = 0
         self.level = level
         self.max_level = 100
         self._stats = {'hp': hp, 'attack': 20, 'defence': 30, 'speed': 5,
@@ -161,11 +163,19 @@ class Player(Character):
         elif keys[pygame.K_DOWN] or keys[pygame.K_s]:
             self.move(dy=PLAYERSPEED * self.game.dt)
 
+    def check_steps(self):
+        if (self.pos[0] >= self.prev_pos[0]+STEPSIZE or self.pos[0] <= self.prev_pos[0]-STEPSIZE
+                or self.pos[1] >= self.prev_pos[1]+STEPSIZE or self.pos[1] <= self.prev_pos[1]-STEPSIZE):
+            self.prev_pos = self.pos
+            self.step_count += 1
+            print('steps: ', self.step_count)
+
     def update(self):
         collision_with_bz(self, self.game.map.danger_zone)
         collision_with_zone(self, self.game.map.saves)
         player_exit_zone(self)
 
+        self.check_steps()
         self.rect.x = self.pos[0]
         self.rect.y = self.pos[1]
         self.rect.center = self.pos
