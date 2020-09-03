@@ -1,0 +1,4 @@
+pytmx_data
+__init__.py
+logics/save_dir/*
+logics/__pycache__
