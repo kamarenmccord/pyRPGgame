@@ -1,5 +1,6 @@
 import pygame
 from os import path
+import random
 
 vec = pygame.math.Vector2
 
@@ -39,6 +40,7 @@ def collision_with_bz(plyr, battlezone):
                 if plyr.pos[0] >= zone.pos[0] and plyr.pos[0] + TILESIZE <= zone.width:
                     if plyr.pos[1] >= zone.pos[1] and plyr.pos[1] + TILESIZE <= zone.height:
                         plyr.zone = zone.pos[0], zone.pos[1], zone.width, zone.height
+                        plyr.area = zone
 
 
 def collision_with_zone(plyr, zone):
@@ -57,6 +59,8 @@ def player_exit_zone(plyr):
         if (plyr.pos[0] < plyr.zone[0] or plyr.pos[0] + TILESIZE > plyr.zone[2]
                 or plyr.pos[1] < plyr.zone[1] or plyr.pos[1] + TILESIZE > plyr.zone[3]):
             plyr.zone = False
+            if isinstance(plyr.area, DangerZone):
+                plyr.area = False
 
 
 class Character(pygame.sprite.Sprite):
@@ -133,6 +137,8 @@ class Player(Character):
                        'xp_to_level': 50, 'xp': 0, 'step_count':0}
 
         self.zone = False  # true if player enters a zone, change to False if exit, for triggered events
+        self.area = False
+        self.grace_period = 0
 
     def is_levelup(self):
         """ check to see if player has reached a level up """
@@ -167,6 +173,14 @@ class Player(Character):
                 or self.pos[1] >= self.prev_pos[1]+STEPSIZE or self.pos[1] <= self.prev_pos[1]-STEPSIZE):
             self.prev_pos = self.pos
             self._stats['step_count'] += 1
+            if self.grace_period > 0:
+                self.grace_period -= 1
+
+            if isinstance(self.area, DangerZone):
+                battle_chance = 100 * random.random()
+                if battle_chance > 85 and self.grace_period <= 0:
+                    print('battle')
+                    self.grace_period = 3  # battle cooldown
 
     def update(self):
         collision_with_bz(self, self.game.map.danger_zone)
@@ -211,11 +225,11 @@ class Wall(pygame.sprite.Sprite):
 class DangerZone(pygame.sprite.Sprite):
     def __init__(self, x, y, width, height, zoneLevel):
         self.pos = x, y
-        self.width = self.pos[0] + width
-        self.height = self.pos[1] + height
+        self.width = x + width
+        self.height = y + height
         self.zone = zoneLevel
 
     def __str__(self):
         # for debugging
-        return f'x:{self.pos[0]} y:{self.pos[1]}, width: {self.width} height:{self.height}'
+        return f'x:{self.pos[0]} y:{self.pos[1]}, width: {self.width} height:{self.height}, danger: {self.zone}'
 
