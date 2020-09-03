@@ -204,6 +204,7 @@ class Player(Character):
             if isinstance(self.area, DangerZone):
                 battle_chance = 100 * random.random()
                 if battle_chance > 85 and self.grace_period <= 0:
+                    b = Battle(self.game.party, self.area.zone)
                     print('battle')
                     self.grace_period = 3  # battle cooldown
 
@@ -220,15 +221,22 @@ class Player(Character):
 
 
 class Mob(pygame.sprite.Sprite):
-    def __init__(self, level):
+    def __init__(self, level, image):
         self.level = level
+        self.level_check(self)
         self.stats = self.get_stats(level)
-        self.img = pygame.image.load(path.join(game_folder, 'voltorb.png'))
+        self.img = pygame.image.load(path.join(game_folder, f'{image}'))
         self.rect = self.img.get_rect()
+
+    def level_check(self):
+        if self.level <= 0:
+            self.level = 1
+        if self.level > 100:
+            self.level = 100
 
     def get_stats(self, level):
         # returns a dict of stats
-        stats = {'hp': 20 * level, 'attack': 10 * level, 'defence': 10 * level, 'speed': 5 * level,
+        stats = {'hp': 4 * level, 'attack': 2 * level, 'defence': 10 * level, 'speed': 5 * level,
                  'sp_att': 3 * level, 'sp_def': 4 * level, 'accuracy': 90, 'mana': 0 * level}
         return stats
 
