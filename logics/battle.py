@@ -7,7 +7,7 @@ from .settings import *
 """ module represent the entire battle phase of in game battles """
 
 
-class Battle():
+class Battle:
     def __init__(self, party, battle_zone, is_boss=False):
         """
         @party: player may join battle with a party of up to 3
@@ -17,14 +17,10 @@ class Battle():
         self.party = party  # make sure to return this to game.party
         self.battle_zone = battle_zone
         self.is_boss = is_boss
-        self.enemies = self.get_enemies()
+        self.enemies = self.get_enemies(battle_zone, len(party))
         self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
 
         self.main()
-
-    def is_alive(self, entity):
-        # check to see if either party has feinted
-        return entity.hp > 0
 
     def attack(self):
         # player party gets to attack for each player (up to 3)
@@ -49,7 +45,10 @@ class Battle():
             self.attack()
             self.defend()
             win = self.is_victorious()
-        self.return_xp()
+            if not [x.is_alive() for x in self.party]:
+                pass  # gameover
+        # self.return_xp()
+        # self.return_rewards()
 
     def draw(self):
         # draw all changes after updating
