@@ -7,9 +7,6 @@ vec = pygame.math.Vector2
 from .settings import *
 from .battle import *
 
-# TODO: add collisions
-# DONE: add boundries
-
 game_folder = path.dirname(__file__)
 
 
@@ -134,7 +131,7 @@ class Player(Character):
         self.max_level = 100
         self._stats = {'hp': hp, 'attack': 20, 'defence': 30, 'speed': 5,
                        'sp_att': 3, 'sp_def': 4, 'accuracy': 90, 'mana': 25,
-                       'xp_to_level': 50, 'xp': 0, 'step_count':0}
+                       'xp_to_level': 50, 'xp': 0, 'step_count': 0}
 
         self.zone = False  # true if player enters a zone, change to False if exit, for triggered events
         self.area = False
