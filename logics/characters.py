@@ -12,19 +12,18 @@ game_folder = path.dirname(__file__)
 
 def collide_with_boundries(player, dx, dy):
     """boundaries set by map dimensions"""
-    if player.pos[0] + dx <= 0 or player.pos[0] + dx >= player.game.map.width:
+    if player.pos[0] + dx <= CLIPPING_BUFFER or player.pos[0] + dx >= player.game.map.width-CLIPPING_BUFFER:
         return True
-    elif player.pos[1] + dy <= 0 or player.pos[1] + dy >= player.game.map.height:
+    elif player.pos[1] + dy <= CLIPPING_BUFFER or player.pos[1] + dy >= player.game.map.height-CLIPPING_BUFFER:
         return True
 
 
 def collide_with_walls(obj, dx, dy):
     """object hits walls"""
     # this would be more effective via adding a col box around player
-    buffer = 10
     for wall in obj.game.walls:
-        if wall.x-buffer <= obj.pos[0]+dx and obj.pos[0]+dx <= wall.width+buffer:
-            if wall.y-buffer <= obj.pos[1]+dy and obj.pos[1]+dy <= wall.height+buffer:
+        if wall.x-CLIPPING_BUFFER <= obj.pos[0]+dx and obj.pos[0]+dx <= wall.width+CLIPPING_BUFFER:
+            if wall.y-CLIPPING_BUFFER <= obj.pos[1]+dy and obj.pos[1]+dy <= wall.height+CLIPPING_BUFFER:
                 return True
     return False
 
