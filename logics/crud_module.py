@@ -8,7 +8,7 @@ from .settings import *
 
 """
 create read write delete
-using shelve module?
+using shelve!
 
 """
 
@@ -73,10 +73,14 @@ def save_game(game):
         create only a limited prev saves """
 
     if not os.path.exists('./save_dir'):
+        os.mkdir('./save_dir')
         return 'no folder'
 
     files = get_file_list()
     # use a datetime only allow 10 files erase any files that are over ten, the oldest file first
+    if len(files) == 0:
+        return 'no files found'
+
     if len(files) > SAVELIMIT:
         # prompt user if overwrite is true
         # create a screen that prompts user to overwrite data
@@ -107,10 +111,11 @@ def load_game():
     # return the required data to start the game where player left off
     if os.path.exists('./save_dir'):
         files = os.listdir('./save_dir')
-    save_file = get_newest_file()
-    game_data = shelve.open(f'./save_dir/{save_file}', 'r')
-    # return the game object
-    return game_data['game_data']
+        save_file = get_newest_file()
+        game_data = shelve.open(f'./save_dir/{save_file}', 'r')
+        # return the game object
+        return game_data['game_data']
+    return 'no saves found'
 
 
 """ 
