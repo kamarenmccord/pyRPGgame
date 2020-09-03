@@ -38,6 +38,7 @@ BATTLECHANCE = 0.15
 
 # player settings
 PLAYERSPEED = 200
+MAINCHARIMAGE = 'd-kin-front.png'
 
 # global settings for instances
 MAX_LEVEL = 100

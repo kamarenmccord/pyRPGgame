@@ -19,6 +19,7 @@ class Game:
         """
         self.game_folder = path.join('./logics')
         self.all_sprites = pygame.sprite.Group()
+        self.battle_sprites = pygame.sprite.Group()
         self.walls = pygame.sprite.Group()
         self.battle_zone_group = pygame.sprite.Group()
         self.draw_debug = True
@@ -35,7 +36,7 @@ class Game:
     def spawn_player(self):
         """ spawn player at map point """
         self.player = Player('test player', self.map.player_spawnx, self.map.player_spawny, self)
-        self.party.append(self.player)
+        self.party.append(self.player.partyChar)
 
     def new(self, mapNum):
         load_level(self, mapNum)

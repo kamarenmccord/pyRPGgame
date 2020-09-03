@@ -6,6 +6,7 @@ vec = pygame.math.Vector2
 
 from .settings import *
 from .battle import *
+from .inventory import Inventory
 
 game_folder = path.dirname(__file__)
 
@@ -116,38 +117,58 @@ class Cursor(pygame.sprite.Sprite):
         self.sfx.play()
 
 
+class PartyChar(pygame.sprite.Sprite):
+    # the char that is in party
+    def __init__(self, image, game):
+        self.groups = []
+        self.game = game
+        self.groups.append(self.game.battle_sprites)
+        pygame.sprite.Sprite.__init__(self, self.groups)
+
+        self.pos = 0, 0
+        self.image = pygame.image.load(path.join(game.game_folder, f'{image}'))
+        self.stats = {'hp': 100, 'attack': 20, 'defence': 30, 'speed': 5,
+                       'sp_att': 3, 'sp_def': 4, 'accuracy': 90, 'mana': 25,
+                       'xp_to_level': 50, 'xp': 0, 'step_count': 0}
+
+    def is_alive(self):
+        return self.stats['hp'] > 0
+
+    def is_levelup(self):
+        """ check to see if player has reached a level up """
+        while self.stats['xp'] > self.stats['xp_to_level'] and self.level < MAX_LEVEL:
+            self.level += 1
+            self.stats = self.statsIncrease()
+
+    def statsIncrease(self):
+        """ method used via stats.setter to level up stats """
+        """ return stats for the setter to update """
+        self.stats['xp_to_level'] += 100
+        return self.stats
+
+
 class Player(Character):
     def __init__(self, name, x, y, game, hp=100, level=1):
+        # the main char that moves about the screen
         super().__init__(name=name, x=x, y=y, hp=hp, game=game)
         self.groups = []
         self.init_groups(add_default=True)
         self.prev_pos = x, y
         self.pos = vec(x, y)
-        self.image = pygame.image.load(path.join(game.game_folder, 'd-kin-front.png'))
+        self.image = pygame.image.load(path.join(game.game_folder, MAINCHARIMAGE))
         self.rect = self.image.get_rect()
         self.rect.center = self.pos
 
+        self.inventory = Inventory()
         self.level = level
         self.max_level = 100
-        self._stats = {'hp': hp, 'attack': 20, 'defence': 30, 'speed': 5,
-                       'sp_att': 3, 'sp_def': 4, 'accuracy': 90, 'mana': 25,
-                       'xp_to_level': 50, 'xp': 0, 'step_count': 0}
+        self.step_count = 0
 
         self.zone = False  # true if player enters a zone, change to False if exit, for triggered events
         self.area = False
         self.grace_period = 0
 
-    def is_levelup(self):
-        """ check to see if player has reached a level up """
-        while self._stats['xp'] > self._stats['xp_to_level'] and self.level < MAX_LEVEL:
-            self.level += 1
-            self._stats = self.statsIncrease()
-
-    def statsIncrease(self):
-        """ method used via stats.setter to level up stats """
-        """ return stats for the setter to update """
-        self._stats['xp_to_level'] += 100
-        return self._stats
+        self.partyChar = PartyChar(MAINCHARIMAGE, self.game)
 
     def move(self, dx=0, dy=0):
         if not collide_with_boundries(self, dx, dy):
@@ -169,7 +190,7 @@ class Player(Character):
         if (self.pos[0] >= self.prev_pos[0]+STEPSIZE or self.pos[0] <= self.prev_pos[0]-STEPSIZE
                 or self.pos[1] >= self.prev_pos[1]+STEPSIZE or self.pos[1] <= self.prev_pos[1]-STEPSIZE):
             self.prev_pos = self.pos
-            self._stats['step_count'] += 1
+            self.step_count += 1
             if self.grace_period > 0:
                 self.grace_period -= 1
 
