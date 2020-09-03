@@ -267,8 +267,10 @@ if USE_PREVIOUS_DATA:
     # player is created with map
     # move player to data location (where did they save?)
     g.player.pos = data['playerData']['pos']
-    g.player.level = data['playerData']['level']
-    g.player._stats = data['playerData']['stats']
+    g.player.step_count = data['playerData']['steps']
+    g.party = []
+    for objData in data['partyData']:
+        g.party.append(PartyChar(objData['name'], objData['imageFile'], g, objData['stats']))
     # start and play game
     while True:
         # if new game

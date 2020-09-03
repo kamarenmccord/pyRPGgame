@@ -96,10 +96,14 @@ def save_game(game):
     # save essential data
     data = {}
     data['gameData'] = {'map': game.mapLevel}
-    data['playerData'] = {'stats': game.player._stats, 'pos': game.player.pos, 'level': game.player.level}
+    data['playerData'] = {'steps': game.player.step_count, 'pos': game.player.pos}
+    data['partyData'] = []
+    for obj in game.party:
+        # adding the important stats
+        data['partyData'].append({'name': obj.name, 'imageFile': obj.imageFile, 'stats': obj.stats})
+
     save_data['game_data'] = data
     save_data.close()
-
     os.chdir('../')
     return True
 

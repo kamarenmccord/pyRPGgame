@@ -119,17 +119,25 @@ class Cursor(pygame.sprite.Sprite):
 
 class PartyChar(pygame.sprite.Sprite):
     # the char that is in party
-    def __init__(self, image, game):
+    def __init__(self, name, image, game, stats=False):
+        self.name = name
         self.groups = []
         self.game = game
         self.groups.append(self.game.battle_sprites)
         pygame.sprite.Sprite.__init__(self, self.groups)
 
         self.pos = 0, 0
+        self.imageFile = image
         self.image = pygame.image.load(path.join(game.game_folder, f'{image}'))
-        self.stats = {'hp': 100, 'attack': 20, 'defence': 30, 'speed': 5,
-                       'sp_att': 3, 'sp_def': 4, 'accuracy': 90, 'mana': 25,
-                       'xp_to_level': 50, 'xp': 0, 'step_count': 0}
+        if not stats:
+            self.stats = {'level': 1, 'hp': 100, 'attack': 20, 'defence': 30, 'speed': 5,
+                           'sp_att': 3, 'sp_def': 4, 'accuracy': 90, 'mana': 25,
+                           'xp_to_level': 50, 'xp': 0, 'step_count': 0}
+        else:
+            self.stats = stats
+
+    def __str__(self):
+        return f'{self.name}'
 
     def is_alive(self):
         return self.stats['hp'] > 0
@@ -148,7 +156,7 @@ class PartyChar(pygame.sprite.Sprite):
 
 
 class Player(Character):
-    def __init__(self, name, x, y, game, hp=100, level=1):
+    def __init__(self, name, x, y, game, hp=100):
         # the main char that moves about the screen
         super().__init__(name=name, x=x, y=y, hp=hp, game=game)
         self.groups = []
@@ -160,7 +168,6 @@ class Player(Character):
         self.rect.center = self.pos
 
         self.inventory = Inventory()
-        self.level = level
         self.max_level = 100
         self.step_count = 0
 
@@ -168,7 +175,7 @@ class Player(Character):
         self.area = False
         self.grace_period = 0
 
-        self.partyChar = PartyChar(MAINCHARIMAGE, self.game)
+        self.partyChar = PartyChar('joe', MAINCHARIMAGE, game)
 
     def move(self, dx=0, dy=0):
         if not collide_with_boundries(self, dx, dy):
