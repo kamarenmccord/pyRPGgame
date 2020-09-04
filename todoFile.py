@@ -1,8 +1,6 @@
 
 """ a place to store all my todo's """
 
-# KNOWN BUG: when exiting battle, player sometimes re-spawns about 10 tiles or more to the right
-
 # TODO: build stats functions
 #       - leveling up multiplier function triggered via player class stats property
 #       - enemy stats
