@@ -2,11 +2,10 @@ import pygame
 from os import path
 import random
 
-vec = pygame.math.Vector2
-
 from .settings import *
 from .battle import *
 from .inventory import Inventory
+vec = pygame.math.Vector2
 
 game_folder = path.dirname(__file__)
 
@@ -23,8 +22,8 @@ def collide_with_walls(obj, dx, dy):
     """object hits walls"""
     # this would be more effective via adding a col box around player
     for wall in obj.game.walls:
-        if wall.x-CLIPPING_BUFFER <= obj.pos[0]+dx and obj.pos[0]+dx <= wall.width+CLIPPING_BUFFER:
-            if wall.y-CLIPPING_BUFFER <= obj.pos[1]+dy and obj.pos[1]+dy <= wall.height+CLIPPING_BUFFER:
+        if wall.x-CLIPPING_BUFFER <= obj.pos[0]+dx <= wall.width+CLIPPING_BUFFER:
+            if wall.y-CLIPPING_BUFFER <= obj.pos[1]+dy <= wall.height+CLIPPING_BUFFER:
                 return True
     return False
 
@@ -54,6 +53,7 @@ def collision_with_zone(plyr, zone):
                         for guy in plyr.game.party:
                             print(f'{guy.name} healed')
                             guy.stats['hp'] = guy.max_hp
+
 
 def player_exit_zone(plyr):
     # check to see if player exited last entered zone

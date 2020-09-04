@@ -152,8 +152,6 @@ class Battle:
         pygame.display.flip()
         time.sleep(2)
 
-
-
     def get_enemies(self, areaLevel, partySize):
         # amount of enemies depends on partySize
         # strength of enemies depends on areaLevel
