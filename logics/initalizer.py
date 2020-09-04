@@ -33,7 +33,7 @@ def load_level(game, level):
                     game.map.danger_zone[f'zone_{lvl+1}'].append(DangerZone(tile_objs.x, tile_objs.y, tile_objs.width,
                                                                             tile_objs.height, lvl+1))
             if tile_objs.name == 'save_spot':
-                game.map.saves.append((tile_objs.x, tile_objs.y, tile_objs.width, tile_objs.height))
+                game.map.saves.append((tile_objs.x, tile_objs.y, tile_objs.width, tile_objs.height, 'save'))
             if tile_objs.name == 'wall':
                 Wall(tile_objs.x, tile_objs.y, tile_objs.width, tile_objs.height, game)
         game.camera = Camera(game.map.width, game.map.height)
