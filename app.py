@@ -19,6 +19,7 @@ class Game:
         """
         self.game_folder = path.join('./logics')
         self.all_sprites = pygame.sprite.Group()
+        self.enemy_sprites = pygame.sprite.Group()
         self.battle_sprites = pygame.sprite.Group()
         self.walls = pygame.sprite.Group()
         self.battle_zone_group = pygame.sprite.Group()

@@ -35,6 +35,7 @@ BGCOLOR = TAN
 USE_PREVIOUS_DATA = False
 STEPSIZE = TILESIZE*2
 BATTLECHANCE = 0.15
+ENEMYVARIANCE = 3  # increase to get harder enemies
 
 # player settings
 PLAYERSPEED = 200
