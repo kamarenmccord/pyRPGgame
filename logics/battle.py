@@ -57,37 +57,69 @@ class Battle:
         self.enemies = self.get_enemies(battle_zone, len(party))
         self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
 
-        self.main()
-
     def attack(self):
         # player party gets to attack for each player (up to 3)
-        pass
+        # get keys, use cursor to pick options
+        # when entered on option do actions
+
+        # temp code to do damage to other party
+        for player in self.party:
+            random_enemy = -1
+            # keep consistant for max survival
+            if not self.enemies[random_enemy].is_alive():
+                while not self.enemies[random_enemy].is_alive():
+                    random_enemy -= 1
+            self.enemies[random_enemy].stats['hp'] -= player.stats['attack']
+
+            print(f'{player.name} does {player.stats["attack"]} damage to moblin.')
+            if not self.enemies[random_enemy].is_alive():
+                print('enemy died')
 
     def defend(self):
+        # enemies auto attack player takes damages
         # player takes hits from enemies
-        pass
+        for enemy in self.enemies:
+            random_player = random.randint(1, len(self.party))-1
+            if not self.party[random_player].is_alive():
+                while not self.party[random_player].is_alive():
+                    random_player = random.randint(1, len(self.party))
+            self.party[random_player].stats['hp'] -= enemy.stats['attack']
 
-    def is_victorious(self):
-        # check each enemy for death status
-        escape = True  # only stays True if all enemies have died
-        for bad_guy in self.enemies:
-            if bad_guy.is_alive():
+            print(f'moblin does {enemy.stats["attack"]} damage to {self.party[random_player]}.')
+            if not self.party[random_player].is_alive():
+                print(f'{self.party[random_player].name} died')
+            else:
+                print(f'{self.party[random_player].name} has {self.party[random_player].stats["hp"]} hp remaining.')
+
+    def is_victorious(self, party):
+        # check each player for death status
+        escape = True  # only stays True if all players have died
+        for player in party:
+            if player.is_alive():
                 escape = False
         return escape
 
     def main(self):
         # main loop of battle
-        win = False
-        while not win:
+        round_count = 0
+        print(f'there are {len(self.enemies)}')
+        while True:
+            print('attack')
+            # attack iterations
             self.attack()
+            if self.is_victorious(self.enemies):
+                print('victory')
+                break
+
+            print('defend')
+            # defend iterations
             self.defend()
-            win = self.is_victorious()
-            if not [x.is_alive() for x in self.party]:
-                pass  # gameover
-            if [x.is_alive() for x in self.enemies]:
-                win = False
-            print('battled')
-            break
+            if self.is_victorious(self.party):
+                print('GAME OVER')
+                pygame.display.quit()
+                pygame.quit()
+            round_count += 1
+            print(f'round count: {round_count}')
         # self.return_xp()
         # self.return_rewards()
 

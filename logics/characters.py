@@ -205,6 +205,9 @@ class Player(Character):
                 battle_chance = 100 * random.random()
                 if battle_chance > 85 and self.grace_period <= 0:
                     b = Battle(self.game.party, self.area.zone, self.game)
+                    b.main()
+
+                    # post battle effects
                     self.grace_period = 3  # battle cooldown
 
     def update(self):
