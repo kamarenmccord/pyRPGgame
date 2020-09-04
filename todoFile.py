@@ -1,6 +1,8 @@
 
 """ a place to store all my todo's """
 
+# KNOWN BUG: when exiting battle, player sometimes re-spawns about 10 tiles or more to the right
+
 # TODO: build stats functions
 #       - leveling up multiplier function triggered via player class stats property
 #       - enemy stats
@@ -10,9 +12,6 @@
 # TODO: add a game menu that pops up on right for options like checking inv, saving, etc.
 
 # TODO: build battle screen
-# TODO: triggers for battle screen
-#       Done: collisions to enter
-#       TODO: enter battle
 
 # TODO: title screen
 #       + push words over on hover effect
@@ -30,6 +29,10 @@
 # DONE: fix collision with save zone in char file
 # DONE: tie strings to the crud module so game can be loaded after saving
 # DONE: spawn player at point other than spawn point when loading map
+# DONE: triggers for battle screen
+#       Done: collisions to enter
+#       DONE: enter battle
+
 
 
 
