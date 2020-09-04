@@ -151,8 +151,9 @@ class PartyChar(pygame.sprite.Sprite):
 
     def is_levelup(self):
         """ check to see if player has reached a level up """
-        while self.stats['xp'] > self.stats['xp_to_level'] and self.level < MAX_LEVEL:
-            self.level += 1
+        while self.stats['xp'] > self.stats['xp_to_level'] and self.stats['level'] < MAX_LEVEL:
+            print(f'{self.name} has leveld up to: lvl {self.stats["level"]+1}!')
+            self.stats['level'] += 1
             self.stats = self.statsIncrease()
             self.max_hp = self.stats['hp']
 
@@ -187,7 +188,7 @@ class Player(Character):
         self.area = False
         self.grace_period = 0
 
-        self.partyChar = PartyChar('joe', MAINCHARIMAGE, game)
+        self.partyChar = PartyChar(self.name, MAINCHARIMAGE, game)
 
     def move(self, dx=0, dy=0):
         if not collide_with_boundries(self, dx, dy):
