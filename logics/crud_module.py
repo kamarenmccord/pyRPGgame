@@ -100,7 +100,8 @@ def save_game(game):
     data['partyData'] = []
     for obj in game.party:
         # adding the important stats
-        data['partyData'].append({'name': obj.name, 'imageFile': obj.imageFile, 'stats': obj.stats})
+        data['partyData'].append({'name': obj.name, 'imageFile': obj.imageFile,
+                                  'stats': obj.stats, 'max_hp': obj.max_hp})
 
     save_data['game_data'] = data
     save_data.close()
