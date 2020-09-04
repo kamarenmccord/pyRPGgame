@@ -2,6 +2,7 @@ import pygame
 from os import path
 import random
 import math
+import time
 
 from .settings import *
 game_folder = path.join('./logics')
@@ -19,6 +20,8 @@ class Mob(pygame.sprite.Sprite):
         self.groups.append(game.enemy_sprites)
         pygame.sprite.Sprite.__init__(self, self.groups)
 
+        self.xp_value = 10
+        self.battle_rewards = []  # fill with dict to hold items
         self.pos = 0, 0
         self.img = pygame.image.load(path.join(game_folder, f'{image}'))
         self.rect = self.img.get_rect()
@@ -56,6 +59,11 @@ class Battle:
         self.is_boss = is_boss
         self.enemies = self.get_enemies(battle_zone, len(party))
         self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
+        self.screen = self.game.screen
+
+        self.battle_rewards = []
+        self.battle_xp = 0
+
 
     def attack(self):
         # player party gets to attack for each player (up to 3)
@@ -79,8 +87,9 @@ class Battle:
         # enemies auto attack player takes damages
         # player takes hits from enemies
         for enemy in self.enemies:
+            print(self.party)
             random_player = random.randint(1, len(self.party))-1
-            if not self.party[random_player].is_alive():
+            if not self.party[random_player].is_alive() and len(self.party) > 1:
                 while not self.party[random_player].is_alive():
                     random_player = random.randint(1, len(self.party))
             self.party[random_player].stats['hp'] -= enemy.stats['attack']
@@ -109,6 +118,7 @@ class Battle:
             self.attack()
             if self.is_victorious(self.enemies):
                 print('victory')
+                self.check_rewards()
                 break
 
             print('defend')
@@ -116,16 +126,33 @@ class Battle:
             self.defend()
             if self.is_victorious(self.party):
                 print('GAME OVER')
-                pygame.display.quit()
-                pygame.quit()
+                self.game.quit()
             round_count += 1
             print(f'round count: {round_count}')
-        # self.return_xp()
+        self.draw()
+        self.return_xp()
         # self.return_rewards()
+
+    def check_rewards(self):
+        for mob in self.enemies:
+            self.battle_xp += mob.xp_value
+            # self.battle_rewards.append(mob.battle_rewards)
+
+    def return_xp(self):
+        for player in self.party:
+            player.stats['xp'] += self.battle_xp
+            player.is_levelup()
+        # self.game.player.inventory.add(self.battle_rewards[1:])
 
     def draw(self):
         # draw all changes after updating
-        self.screen.blit()
+        self.screen.fill(BATTLEBACKGROUND_COLOR)
+        self.screen.blit(self.enemies[0].img, (WIDTH/2, HEIGHT/2))
+
+        pygame.display.flip()
+        time.sleep(2)
+
+
 
     def get_enemies(self, areaLevel, partySize):
         # amount of enemies depends on partySize

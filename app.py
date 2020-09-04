@@ -271,7 +271,8 @@ if USE_PREVIOUS_DATA:
     g.player.step_count = data['playerData']['steps']
     g.party = []
     for objData in data['partyData']:
-        g.party.append(PartyChar(objData['name'], objData['imageFile'], g, objData['stats']))
+        g.party.append(PartyChar(objData['name'], objData['imageFile'], g, objData['max_hp'], objData['stats']))
+
     # start and play game
     while True:
         # if new game

@@ -50,6 +50,10 @@ def collision_with_zone(plyr, zone):
                 if plyr.pos[1] >= coords[1] and plyr.pos[1] + TILESIZE <= zone_height:
                     plyr.zone = coords[0], coords[1], zone_width, zone_height
 
+                    if coords[4] == 'save':
+                        for guy in plyr.game.party:
+                            print(f'{guy.name} healed')
+                            guy.stats['hp'] = guy.max_hp
 
 def player_exit_zone(plyr):
     # check to see if player exited last entered zone
@@ -119,7 +123,7 @@ class Cursor(pygame.sprite.Sprite):
 
 class PartyChar(pygame.sprite.Sprite):
     # the char that is in party
-    def __init__(self, name, image, game, stats=False):
+    def __init__(self, name, image, game, max_hp=False, stats=False):
         self.name = name
         self.groups = []
         self.game = game
@@ -129,12 +133,15 @@ class PartyChar(pygame.sprite.Sprite):
         self.pos = 0, 0
         self.imageFile = image
         self.image = pygame.image.load(path.join(game.game_folder, f'{image}'))
-        if not stats:
-            self.stats = {'level': 1, 'hp': 100, 'attack': 20, 'defence': 30, 'speed': 5,
-                           'sp_att': 3, 'sp_def': 4, 'accuracy': 90, 'mana': 25,
-                           'xp_to_level': 50, 'xp': 0, 'step_count': 0}
-        else:
+        self.stats = {'level': 1, 'hp': 100, 'attack': 20, 'defence': 30, 'speed': 5,
+                       'sp_att': 3, 'sp_def': 4, 'accuracy': 90, 'mana': 25,
+                       'xp_to_level': 50, 'xp': 0, 'step_count': 0}
+        self.max_hp = self.stats['hp']
+
+        if stats:
             self.stats = stats
+        if max_hp:
+            self.max_hp = max_hp
 
     def __str__(self):
         return f'{self.name}'
@@ -147,12 +154,17 @@ class PartyChar(pygame.sprite.Sprite):
         while self.stats['xp'] > self.stats['xp_to_level'] and self.level < MAX_LEVEL:
             self.level += 1
             self.stats = self.statsIncrease()
+            self.max_hp = self.stats['hp']
 
     def statsIncrease(self):
         """ method used via stats.setter to level up stats """
         """ return stats for the setter to update """
         self.stats['xp_to_level'] += 100
         return self.stats
+
+    def next_level_in(self):
+        # how much xp to level up
+        return self.stats['xp_to_level'] - self.stats['xp']
 
 
 class Player(Character):
@@ -208,6 +220,7 @@ class Player(Character):
                     b.main()
 
                     # post battle effects
+                    self.pos = self.prev_pos
                     self.grace_period = 3  # battle cooldown
 
     def update(self):
