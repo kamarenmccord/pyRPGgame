@@ -15,7 +15,7 @@ class Mob(pygame.sprite.Sprite):
         self.level = level
         self.level_check()
         self.hardness = 10
-        self.stats = self.get_stats(level)
+        self.stats = self.get_stats(self.level)
         self.groups = []
         self.groups.append(game.enemy_sprites)
         pygame.sprite.Sprite.__init__(self, self.groups)
@@ -72,16 +72,20 @@ class Battle:
 
         # do damage to other party
         for player in self.party:
-            random_enemy = -1
-            # keep consistant for max survival
-            if not self.enemies[random_enemy].is_alive():
-                while not self.enemies[random_enemy].is_alive():
-                    random_enemy -= 1
-            self.enemies[random_enemy].stats['hp'] -= player.stats['attack']
+            hit_miss = random.random() * 100
+            if hit_miss < player.stats['accuracy']:
+                last_enemy = -1
+                # keep consistant for max survival
+                if not self.enemies[last_enemy].is_alive():
+                    while not self.enemies[last_enemy].is_alive():
+                        last_enemy -= 1
+                self.enemies[last_enemy].stats['hp'] -= player.stats['attack']
 
-            print(f'{player.name} does {player.stats["attack"]} damage to moblin.')
-            if not self.enemies[random_enemy].is_alive():
-                print('enemy died')
+                print(f'{player.name} does {player.stats["attack"]} damage to moblin.')
+                if not self.enemies[last_enemy].is_alive():
+                    print('enemy died')
+            else:
+                print(f'{player.name} missed')
 
     def defend(self):
         # enemies auto attack random player
@@ -111,10 +115,15 @@ class Battle:
                 escape = False
         return escape
 
+    def get_battle_start(self):
+        for num, enemy in enumerate(self.enemies, 1):
+            print(f'enemy {num} has {enemy.stats["hp"]} hit points')
+
     def main(self):
         # main loop of battle
         round_count = 0
-        print(f'there are {len(self.enemies)}')
+        print(f'there are {len(self.enemies)} enem(y/ies)')
+        self.get_battle_start()
         while True:
             print('attack')
             # attack iterations
