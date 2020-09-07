@@ -86,18 +86,22 @@ class Battle:
     def defend(self):
         # enemies auto attack random player
         for enemy in self.enemies:
-            print(self.party)
-            random_player = random.randint(1, len(self.party))-1
-            if not self.party[random_player].is_alive() and len(self.party) > 1:
-                while not self.party[random_player].is_alive():
-                    random_player = random.randint(1, len(self.party))
-            self.party[random_player].stats['hp'] -= enemy.stats['attack']
+            hit_miss = random.random() * 100
+            if hit_miss < enemy.stats['accuracy']:
+                random_player = random.randint(1, len(self.party))-1
+                if not self.party[random_player].is_alive() and len(self.party) > 1:
+                    while not self.party[random_player].is_alive():
+                        random_player = random.randint(1, len(self.party))
+                self.party[random_player].stats['hp'] -= enemy.stats['attack']
 
-            print(f'moblin does {enemy.stats["attack"]} damage to {self.party[random_player]}.')
-            if not self.party[random_player].is_alive():
-                print(f'{self.party[random_player].name} died')
+                """ print statements for debugging"""
+                print(f'moblin does {enemy.stats["attack"]} damage to {self.party[random_player]}.')
+                if not self.party[random_player].is_alive():
+                    print(f'{self.party[random_player].name} died')
+                else:
+                    print(f'{self.party[random_player].name} has {self.party[random_player].stats["hp"]} hp remaining.')
             else:
-                print(f'{self.party[random_player].name} has {self.party[random_player].stats["hp"]} hp remaining.')
+                print('moblin missed')
 
     def is_victorious(self, party):
         """ does @party have anyone alive? """
