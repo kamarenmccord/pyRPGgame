@@ -24,6 +24,7 @@ class Mob(pygame.sprite.Sprite):
         self.battle_rewards = []  # fill with dict to hold items
         self.pos = 0, 0
         self.img = pygame.image.load(path.join(game_folder, f'{image}'))
+        self.img = pygame.transform.scale(self.img, (64, 64))
         self.rect = self.img.get_rect()
 
     def is_alive(self):
@@ -64,13 +65,12 @@ class Battle:
         self.battle_rewards = []
         self.battle_xp = 0
 
-
     def attack(self):
         # player party gets to attack for each player (up to 3)
         # get keys, use cursor to pick options
         # when entered on option do actions
 
-        # temp code to do damage to other party
+        # do damage to other party
         for player in self.party:
             random_enemy = -1
             # keep consistant for max survival
@@ -84,8 +84,7 @@ class Battle:
                 print('enemy died')
 
     def defend(self):
-        # enemies auto attack player takes damages
-        # player takes hits from enemies
+        # enemies auto attack random player
         for enemy in self.enemies:
             print(self.party)
             random_player = random.randint(1, len(self.party))-1
@@ -101,7 +100,7 @@ class Battle:
                 print(f'{self.party[random_player].name} has {self.party[random_player].stats["hp"]} hp remaining.')
 
     def is_victorious(self, party):
-        # check each player for death status
+        """ does @party have anyone alive? """
         escape = True  # only stays True if all players have died
         for player in party:
             if player.is_alive():

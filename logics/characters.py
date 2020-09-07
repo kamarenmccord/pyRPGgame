@@ -133,7 +133,7 @@ class PartyChar(pygame.sprite.Sprite):
         self.pos = 0, 0
         self.imageFile = image
         self.image = pygame.image.load(path.join(game.game_folder, f'{image}'))
-        self.stats = {'level': 1, 'hp': 100, 'attack': 20, 'defence': 30, 'speed': 5,
+        self.stats = {'level': 1, 'hp': 10000, 'attack': 20, 'defence': 30, 'speed': 5,
                        'sp_att': 3, 'sp_def': 4, 'accuracy': 90, 'mana': 25,
                        'xp_to_level': 50, 'xp': 0, 'step_count': 0}
         self.max_hp = self.stats['hp']
@@ -155,12 +155,13 @@ class PartyChar(pygame.sprite.Sprite):
             print(f'{self.name} has leveld up to: lvl {self.stats["level"]+1}!')
             self.stats['level'] += 1
             self.stats = self.statsIncrease()
-            self.max_hp = self.stats['hp']
 
     def statsIncrease(self):
         """ method used via stats.setter to level up stats """
         """ return stats for the setter to update """
-        self.stats['xp_to_level'] += 100
+        self.stats['xp_to_level'] += math.log(self.stats['xp_to_level'], 2) + self.stats['xp_to_level']/2
+        self.max_hp = self.stats['hp']
+        print(self.stats['xp_to_level'])
         return self.stats
 
     def next_level_in(self):
