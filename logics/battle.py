@@ -42,12 +42,13 @@ class Mob(pygame.sprite.Sprite):
 
     def get_stats(self, level):
         # returns a dict of stats
-        stats = {'hp': 10 * level, 'attack': 1, 'defence': 1, 'speed': 1,
+        stats = {'hp': 5*level, 'attack': 1, 'defence': 1, 'speed': 1,
                  'sp_att': 1, 'sp_def': 1, 'accuracy': 90, 'mana': 1}
         for key, value in stats.items():
             if not key == 'hp' and not key == 'accuracy':
                 ri = random.random()  # random integer
                 stats[key] = round(random.randint(1, 5) * level + math.ceil(ri*self.hardness))
+        stats['hp'] += round(stats['hp'] * 25/100 + level)
         return stats
 
     def set_health_bar_location(self):
