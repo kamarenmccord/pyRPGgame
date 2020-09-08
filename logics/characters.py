@@ -69,7 +69,7 @@ class Cursor(pygame.sprite.Sprite):
     def __init__(self, game):
         self.game = game
         self.groups = []
-        self.groups.append(self.game.all_sprites)
+        self.groups.append(self.game.cursors)
         pygame.sprite.Sprite.__init__(self, self.groups)
 
         self.pos = vec(0, 0)
@@ -94,9 +94,6 @@ class Cursor(pygame.sprite.Sprite):
         if not self.battleMode:
             if playsnd:
                 self.sfx.play()
-
-    def moveOff(self):
-        self.moveTo((-500, -500), playsnd=False)
 
     def playSound(self):
         self.sfx.play()

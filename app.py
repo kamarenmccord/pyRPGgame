@@ -21,6 +21,7 @@ class Game:
         self.all_sprites = pygame.sprite.Group()
         self.enemy_sprites = pygame.sprite.Group()
         self.battle_sprites = pygame.sprite.Group()
+        self.cursors = pygame.sprite.Group()
         self.walls = pygame.sprite.Group()
         self.battle_zone_group = pygame.sprite.Group()
         self.draw_debug = True
@@ -238,7 +239,6 @@ class Game:
                             count = 0
 
         # move cursor off screen and delete it
-        title_cursor.moveOff()
         title_cursor.playSound()
         del title_cursor
 
