@@ -128,7 +128,8 @@ class Battle:
                     if not self.party[random_player].is_alive():
                         print(f'{self.party[random_player].name} died')
                     else:
-                        print(f'{self.party[random_player].name} has {self.party[random_player].stats["hp"]} hp remaining.')
+                        print(f'{self.party[random_player].name} has '
+                              f'{self.party[random_player].stats["hp"]} hp remaining.')
                 else:
                     print('moblin missed')
 
