@@ -159,9 +159,9 @@ class PartyChar(pygame.sprite.Sprite):
     def statsIncrease(self):
         """ method used via stats.setter to level up stats """
         """ return stats for the setter to update """
-        self.stats['xp_to_level'] += math.log(self.stats['xp_to_level'], 2) + self.stats['xp_to_level']/2
+        self.stats['xp_to_level'] += math.ceil(math.log(self.stats['xp_to_level'], 2) + self.stats['xp_to_level']/2)
         self.max_hp = self.stats['hp']
-        print(self.stats['xp_to_level'])
+        print(f'next level in {self.next_level_in()} xp')
         return self.stats
 
     def next_level_in(self):

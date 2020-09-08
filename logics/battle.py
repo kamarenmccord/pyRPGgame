@@ -11,24 +11,25 @@ game_folder = path.join('./logics')
 
 
 class Mob(pygame.sprite.Sprite):
-    def __init__(self, level, image, game):
+    def __init__(self, level, image, game, xp=10):
         self.level = level
         self.level_check()
         self.hardness = 10
         self.stats = self.get_stats(self.level)
         self.stats['max_hp'] = self.stats['hp']
+        self.xp_value = xp * self.level
         self.groups = []
         self.groups.append(game.enemy_sprites)
         pygame.sprite.Sprite.__init__(self, self.groups)
 
-        self.xp_value = 10
         self.battle_rewards = []  # fill with dict to hold items
         self.pos = 0, 0
         self.img = pygame.image.load(path.join(game_folder, f'{image}'))
         self.img = pygame.transform.scale(self.img, (64, 64))
         self.rect = self.img.get_rect()
-        # self.health_rect = pygame.Rect((self.pos[0]-5, self.pos[1]+64+10), (10, 64+10))
         self.health_rect = pygame.Rect((0, 0), (64, 64))
+
+        self.dt = game.clock.tick(FPS) / 1000
 
     def is_alive(self):
         return self.stats['hp'] > 0
@@ -41,12 +42,12 @@ class Mob(pygame.sprite.Sprite):
 
     def get_stats(self, level):
         # returns a dict of stats
-        stats = {'hp': 4 * level, 'attack': 1, 'defence': 1, 'speed': 1,
+        stats = {'hp': 10 * level, 'attack': 1, 'defence': 1, 'speed': 1,
                  'sp_att': 1, 'sp_def': 1, 'accuracy': 90, 'mana': 1}
         for key, value in stats.items():
-            if not stats[key] == 'hp' or stats[key] == 'accuracy':
+            if not key == 'hp' and not key == 'accuracy':
                 ri = random.random()  # random integer
-                stats[key] = round(random.randint(1, 5) * level + ri*self.hardness)
+                stats[key] = round(random.randint(1, 5) * level + math.ceil(ri*self.hardness))
         return stats
 
     def set_health_bar_location(self):
@@ -56,12 +57,11 @@ class Mob(pygame.sprite.Sprite):
     def draw_health(self, screen):
         self.set_health_bar_location()
         width = int(self.rect.width * self.stats['hp']/self.stats['max_hp'])
-        depth = 6
-        back_bar = pygame.Rect(self.pos[0], self.pos[1]+self.rect.height, self.rect.width, depth)
-        health_bar = pygame.Rect(self.pos[0], self.pos[1]+self.rect.height, width, depth)
+        depth = 4
+        back_bar = pygame.Rect(self.pos[0], self.pos[1]+self.rect.height+13, self.rect.width, depth)
+        health_bar = pygame.Rect(self.pos[0]-5, self.pos[1]+self.rect.height+10, width, depth)
         pygame.draw.rect(screen, BLACK, back_bar)
         pygame.draw.rect(screen, RED, health_bar)
-
 
     def draw(self, screen):
         self.draw_health(screen)
@@ -146,7 +146,6 @@ class Battle:
     def main(self):
         # main loop of battle
         round_count = 0
-        print(f'there are {len(self.enemies)} enem(y/ies)')
         self.get_battle_start()
         while True:
             print('attack')
@@ -172,13 +171,11 @@ class Battle:
     def check_rewards(self):
         for mob in self.enemies:
             self.battle_xp += mob.xp_value
-            # self.battle_rewards.append(mob.battle_rewards)
 
     def return_xp(self):
         for player in self.party:
             player.stats['xp'] += self.battle_xp
             player.is_levelup()
-        # self.game.player.inventory.add(self.battle_rewards[1:])
 
     def draw(self):
         # draw all changes after updating
@@ -197,8 +194,9 @@ class Battle:
         while len(enemy_population) == 0:
             pop_size = random.randint(2, math.ceil(partySize*1.5))
             for e in range(random.randint(1, pop_size)):
-                level = areaLevel * 5 + random.randint(-5, 5) + random.randint(-ENEMYVARIANCE, ENEMYVARIANCE)
-                enemy_population.append(Mob(level, 'shadow_d-kin.png', self.game))
+                level = (areaLevel * 5 + math.ceil(random.randint(-5, 5)) +
+                         math.ceil(random.randint(-ENEMYVARIANCE, ENEMYVARIANCE)))
+                enemy_population.append(Mob(int(level), 'shadow_d-kin.png', self.game))
         return enemy_population
 
     def set_positions(self):
