@@ -61,6 +61,7 @@ class Game:
             pygame.draw.line(self.screen, LIGHTGREY, (0, y), (WIDTH, y))
 
     def draw_text(self, text, font_name, size, color, x, y, align="nw"):
+        # from kids can code
         font = pygame.font.Font(font_name, size)
         text_surface = font.render(text, True, color)
         text_rect = text_surface.get_rect()
