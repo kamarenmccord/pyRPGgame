@@ -7,3 +7,4 @@ This is work in progress
 
 <h3>Known Bugs</h3>
 <p>player spawns 10 to 20 tiles to the right after exit battle</p>
+<p><t>but not every time</p>
