@@ -14,6 +14,7 @@ PURPLE = (255, 0, 255)
 TAN = (153, 155, 102)
 DARKBROWN = (102, 51, 0)
 BATTLEBACKGROUND_COLOR = 230, 255, 255
+BACKDROP_BLUE = './logics/backdrop.jpg'
 
 # screen size
 WIDTH = 1024

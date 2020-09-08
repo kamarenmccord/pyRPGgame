@@ -83,6 +83,7 @@ class Battle:
         self.set_positions()
         self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
         self.screen = self.game.screen
+        self.backdrop = pygame.image.load(BACKDROP_BLUE)
 
         self.battle_rewards = []
         self.battle_xp = 0
@@ -140,7 +141,7 @@ class Battle:
     def get_battle_start(self):
         self.draw()
         for num, enemy in enumerate(self.enemies, 1):
-            print(f'enemy {num} has {enemy.stats["hp"]} hit points')
+            print(f'enemy {num} has {enemy.stats["hp"]} hit points, level {enemy.level}')
 
     def main(self):
         # main loop of battle
@@ -181,7 +182,7 @@ class Battle:
 
     def draw(self):
         # draw all changes after updating
-        self.screen.fill(BATTLEBACKGROUND_COLOR)
+        self.screen.blit(self.backdrop, (0, 0))
         for enemy in self.enemies:
             if enemy.is_alive():
                 enemy.draw(self.screen)
