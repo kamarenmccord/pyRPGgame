@@ -5,11 +5,7 @@
 #       - leveling up multiplier function triggered via player class stats property
 #       - enemy stats
 
-# TODO: add an inventory for player to keep items
-
 # TODO: add a game menu that pops up on right for options like checking inv, saving, etc.
-
-# TODO: build battle screen
 
 # TODO: title screen
 #       + push words over on hover effect
@@ -30,8 +26,8 @@
 # DONE: triggers for battle screen
 #       Done: collisions to enter
 #       DONE: enter battle
-
-
+# DONE: build battle screen
+# DONE: add an inventory for player to keep items
 
 
 """ UPDATE IDEAS """
