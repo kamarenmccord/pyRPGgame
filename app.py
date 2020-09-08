@@ -203,10 +203,10 @@ class Game:
                 self.draw_text('New Game', title_font, font_size_sm, WHITE, WIDTH/2, HEIGHT/2, align='center')
 
             # draw cursor half of the time
-            if count < 300:
+            if count < 60:
                 # this is where we draw the cursor
                 title_cursor.draw()
-            if count > 500:
+            if count > 100:
                 count = 0
             pygame.display.flip()
             # check for input and move cursor to left side of text
