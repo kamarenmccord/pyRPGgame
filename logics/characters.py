@@ -65,25 +65,6 @@ def player_exit_zone(plyr):
                 plyr.area = False
 
 
-class Character(pygame.sprite.Sprite):
-    # blueprint for sprites
-    def __init__(self, name, x, y, hp, game):
-        self.name = name
-        self.hp = hp
-        self.max_hp = hp
-        self.game = game
-        self.pos = vec(x, y)
-
-    def is_alive(self):
-        return self.hp > 0
-
-    def init_groups(self, add_default=False):
-        """add add_default=True to add to all sprites"""
-        if add_default:
-            self.groups.append(self.game.all_sprites)
-        pygame.sprite.Sprite.__init__(self, self.groups)
-
-
 class Cursor(pygame.sprite.Sprite):
     def __init__(self, game):
         self.game = game
@@ -157,10 +138,12 @@ class PartyChar(pygame.sprite.Sprite):
             self.stats = self.statsIncrease()
 
     def statsIncrease(self):
-        """ method used via stats.setter to level up stats """
-        """ return stats for the setter to update """
+        """ method used to level up players stats """
         self.stats['xp_to_level'] += math.ceil(math.log(self.stats['xp_to_level'], 2) + self.stats['xp_to_level']/2)
-        self.max_hp = self.stats['hp']
+        gain = round(self.max_hp*25/100 + self.stats['level'])
+        self.max_hp += gain
+        self.stats['hp'] += gain
+
         print(f'next level in {self.next_level_in()} xp')
         return self.stats
 
@@ -169,12 +152,14 @@ class PartyChar(pygame.sprite.Sprite):
         return self.stats['xp_to_level'] - self.stats['xp']
 
 
-class Player(Character):
-    def __init__(self, name, x, y, game, hp=100):
-        # the main char that moves about the screen
-        super().__init__(name=name, x=x, y=y, hp=hp, game=game)
+class Player(pygame.sprite.Sprite):
+    def __init__(self, name, x, y, game):
+        # the char that moves about the screen
+        self.name = name
         self.groups = []
-        self.init_groups(add_default=True)
+        self.game = game
+        self.groups.append(self.game.all_sprites)
+        pygame.sprite.Sprite.__init__(self, self.groups)
         self.prev_pos = x, y
         self.pos = vec(x, y)
         self.image = pygame.image.load(path.join(game.game_folder, MAINCHARIMAGE))
@@ -230,10 +215,10 @@ class Player(Character):
         collision_with_zone(self, self.game.map.saves)
         player_exit_zone(self)
 
-        self.check_steps()
         self.rect.x = self.pos[0]
         self.rect.y = self.pos[1]
         self.rect.center = self.pos
+        self.check_steps()
         self.check_keys()
 
 
