@@ -103,22 +103,39 @@ class Battle:
         # do damage to other party
         for player in self.party:
             if player.is_alive():
-                if attack_num == 0:
-                    hit_miss = random.random() * 100
-                    if hit_miss < player.stats['accuracy']:
-                        last_enemy = -1
-                        # keep consistant for max survival
-                        if not self.enemies[last_enemy].is_alive():
-                            while not self.enemies[last_enemy].is_alive():
-                                last_enemy -= 1
-                        damage_delt = player.stats['attack']
-                        self.enemies[last_enemy].stats['hp'] -= player.stats['attack']
+                hit_miss = random.random() * 100
+                if hit_miss < player.stats['accuracy']:
+                    last_enemy = -1
+                    if not self.enemies[last_enemy].is_alive():
+                        while not self.enemies[last_enemy].is_alive():
+                            last_enemy -= 1
 
-                        print(f'{player.name} does {player.stats["attack"]} damage to moblin.')
+                    if attack_num < 2:
+                        if attack_num == 0:
+                            damage_delt = player.stats['attack']
+                            self.enemies[last_enemy].stats['hp'] -= damage_delt
+
+                        if attack_num == 1:
+                            if player.stats['mana'] > 5:
+                                damage_delt = player.stats['sp_att']
+                                self.enemies[last_enemy].stats['hp'] -= damage_delt
+                                player.stats['mana'] -= 5
+
+                        print(f'{player.name} does {damage_delt} damage to moblin.')
                         if not self.enemies[last_enemy].is_alive():
                             print('enemy died')
-                    else:
-                        print(f'{player.name} missed')
+
+                    if attack_num == 2:
+                        pass  # items
+
+                    if attack_num == 3:
+                        escape_chance = random.random() * 100 - self.enemies[last_enemy].stats['speed']
+                        if escape_chance > 35:
+                            return 'escape'
+                        else:
+                            print('failed to escape')
+                else:
+                    print(f'{player.name} missed')
 
     def get_player_choice(self, mem_pos):
         """ return the players selection """
@@ -209,7 +226,10 @@ class Battle:
             # attack iterations
             attack_trigger = self.get_player_choice(attack_trigger[1])
             if attack_trigger[0] > -1:
-                self.attack(attack_trigger[0])
+                escape = self.attack(attack_trigger[0])
+                if escape:
+                    print('ran away')
+                    break
                 player_attacked = True
                 if self.has_fainted(self.enemies):
                     print('victory')
