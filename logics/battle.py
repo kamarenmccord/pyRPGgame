@@ -215,8 +215,7 @@ class Battle:
             for player in self.party:
                 player.active = False
             self.party[round_count].active = True
-            if player_attacked and round_count == len(self.party):
-                # defend iterations
+            if player_attacked and round_count == len(self.party):                # defend iterations
                 self.defend()
                 if self.has_fainted(self.party):
                     print('GAME OVER')
