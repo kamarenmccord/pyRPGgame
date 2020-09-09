@@ -116,6 +116,7 @@ class PartyChar(pygame.sprite.Sprite):
                        'sp_att': 3, 'sp_def': 4, 'accuracy': 90, 'mana': 25,
                        'xp_to_level': 50, 'xp': 0, 'step_count': 0}
         self.max_hp = self.stats['hp']
+        self.active = False
 
         if stats:
             self.stats = stats

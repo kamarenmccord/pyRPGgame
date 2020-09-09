@@ -59,7 +59,7 @@ class Mob(pygame.sprite.Sprite):
         self.set_health_bar_location()
         width = int(self.rect.width * self.stats['hp']/self.stats['max_hp'])
         depth = 4
-        back_bar = pygame.Rect(self.pos[0], self.pos[1]+self.rect.height+13, self.rect.width, depth)
+        back_bar = pygame.Rect(self.pos[0], self.pos[1]+self.rect.height+13, width, depth)
         health_bar = pygame.Rect(self.pos[0]-5, self.pos[1]+self.rect.height+10, width, depth)
         pygame.draw.rect(screen, BLACK, back_bar)
         pygame.draw.rect(screen, RED, health_bar)
@@ -211,7 +211,11 @@ class Battle:
         attack_trigger = [-1, 0]
         player_attacked = False
         while True:
-            if player_attacked:
+            self.draw_background()
+            for player in self.party:
+                player.active = False
+            self.party[round_count].active = True
+            if player_attacked and round_count == len(self.party):
                 # defend iterations
                 self.defend()
                 if self.has_fainted(self.party):
@@ -219,8 +223,6 @@ class Battle:
                     self.game.quit()
                 attack_trigger[0] = -1
                 player_attacked = False
-                round_count += 1
-                print(f'round count: {round_count}')
                 time.sleep(1)
 
             # attack iterations
@@ -230,12 +232,16 @@ class Battle:
                 if escape:
                     print('ran away')
                     break
+                else:
+                    round_count += 1
                 player_attacked = True
                 if self.has_fainted(self.enemies):
                     print('victory')
                     self.check_rewards()
                     break
 
+            if round_count >= len(self.party):
+                round_count = 0
             self.draw(attack_trigger[0])
         self.return_xp()
         # self.return_rewards()
@@ -249,18 +255,37 @@ class Battle:
             player.stats['xp'] += self.battle_xp
             player.is_levelup()
 
+    def draw_background(self):
+        """ draw the background so everything else can overlap """
+        # self.screen.blit(self.backdrop, (0, 0))
+        self.screen.fill((255, 255, 230))
+
     def draw(self, plyr_turn=0):
-        # draw all changes after updating
-        self.screen.blit(self.backdrop, (0, 0))
         for enemy in self.enemies:
             if enemy.is_alive():
                 enemy.draw(self.screen)
 
+        # top bar
+        pygame.draw.rect(self.screen, (172, 115, 57), (-5, -5, WIDTH+5, 75))
+        pygame.draw.rect(self.screen, BLACK, (-5, -5, WIDTH+5, 75), 2)
+
+        spotX = 40
+        spotY = 10
+        for player in self.party:
+            pygame.draw.rect(self.screen, (0, 255, 0), (spotX-20, spotY, 100*player.stats['hp']/player.max_hp, 6))
+            self.game.draw_text(player.name, self.battle_font, 18, BLACK, spotX+20, spotY+20, align='center')
+            if player.active:
+                pygame.draw.circle(self.screen, BLACK, (spotX + 10, spotY + 40), 4)
+            spotX += 200
+
         if plyr_turn == -1:
+            rect = self.attack_positions
             choices = ['attack', 'magic', 'items', 'run']
             for num in range(len(choices)):
+                pygame.draw.rect(self.screen, (153, 230, 255), (rect[num][0]-75, rect[num][1]-30, 175, 300), 0)
+                pygame.draw.rect(self.screen, BLACK, (rect[num][0]-75, rect[num][1]-30, 175, 300), 3)
                 self.game.draw_text(f'{choices[num]}', self.battle_font, self.battle_font_size,
-                                    BLACK, self.attack_positions[num][0], self.attack_positions[num][1], align='center')
+                                    BLACK, rect[num][0], rect[num][1], align='center')
             self.game.battle_cursor.draw()
         pygame.display.flip()
 
