@@ -39,6 +39,10 @@ STEPSIZE = TILESIZE*2
 BATTLECHANCE = 0.15
 ENEMYVARIANCE = 3  # increase to get harder enemies
 
+# fonts
+FONTSMENU = 'overpass-regular.otf'
+FONTSBATTLE = 'overpass-regular.otf'
+
 # player settings
 PLAYERSPEED = 200
 MAINCHARIMAGE = 'd-kin-front.png'

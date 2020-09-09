@@ -27,6 +27,7 @@ class Game:
         self.draw_debug = True
         self.grid = False
         pygame.init()
+        self.battle_cursor = Cursor(self, -90)
         pygame.key.set_repeat(200, 100)
         self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
         pygame.display.set_caption(TITLE)
@@ -235,7 +236,7 @@ class Game:
                             title_cursor.moveTo(positions[pos])
                             if display_return:
                                 optional_pos = positions[pos][0]+50, positions[pos][1]
-                                title_cursor.moveTo(optional_pos)
+                                title_cursor.moveTo(optional_pos, playsnd=True)
                             count = 0
 
         # move cursor off screen and delete it

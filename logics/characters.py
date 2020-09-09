@@ -66,7 +66,7 @@ def player_exit_zone(plyr):
 
 
 class Cursor(pygame.sprite.Sprite):
-    def __init__(self, game):
+    def __init__(self, game, angle=0):
         self.game = game
         self.groups = []
         self.groups.append(self.game.cursors)
@@ -74,6 +74,7 @@ class Cursor(pygame.sprite.Sprite):
 
         self.pos = vec(0, 0)
         self.image = pygame.image.load(path.join(game.game_folder, 'cursor.png'))
+        self.image = pygame.transform.rotate(self.image, angle)
         self.rect = self.image.get_rect()
 
         self.sfx = pygame.mixer.Sound(path.join(game_folder, 'Coins13.wav'))
@@ -83,7 +84,7 @@ class Cursor(pygame.sprite.Sprite):
     def draw(self):
         self.game.screen.blit(self.image, self.rect)
 
-    def moveTo(self, pos, playsnd=True):
+    def moveTo(self, pos, playsnd=False):
         """ move cursor to a location on screen, playsnd=false for no sound fx """
         # get pygame keys and move cursor if movement comes in
         self.pos = pos[0], pos[1]
@@ -133,6 +134,7 @@ class PartyChar(pygame.sprite.Sprite):
             print(f'{self.name} has leveld up to: lvl {self.stats["level"]+1}!')
             self.stats['level'] += 1
             self.stats = self.statsIncrease()
+        print(f'next level in {self.next_level_in()} xp')
 
     def statsIncrease(self):
         """ method used to level up players stats """
@@ -141,7 +143,6 @@ class PartyChar(pygame.sprite.Sprite):
         self.max_hp += gain
         self.stats['hp'] += gain
 
-        print(f'next level in {self.next_level_in()} xp')
         return self.stats
 
     def next_level_in(self):

@@ -88,8 +88,14 @@ class Battle:
 
         self.battle_rewards = []
         self.battle_xp = 0
+        self.battle_font = path.join(game_folder, FONTSBATTLE)
+        self.battle_font_size = 32
+        self.attack_positions = [(WIDTH * 15 / 100, HEIGHT - 50), (WIDTH * 35 / 100, HEIGHT - 50),
+                                 (WIDTH * 60 / 100, HEIGHT - 50), (WIDTH * 85 / 100, HEIGHT - 50)]
+        if self.is_boss:
+            self.attack_positions.pop()
 
-    def attack(self):
+    def attack(self, attack_num):
         # player party gets to attack for each player (up to 3)
         # get keys, use cursor to pick options
         # when entered on option do actions
@@ -97,20 +103,54 @@ class Battle:
         # do damage to other party
         for player in self.party:
             if player.is_alive():
-                hit_miss = random.random() * 100
-                if hit_miss < player.stats['accuracy']:
-                    last_enemy = -1
-                    # keep consistant for max survival
-                    if not self.enemies[last_enemy].is_alive():
-                        while not self.enemies[last_enemy].is_alive():
-                            last_enemy -= 1
-                    self.enemies[last_enemy].stats['hp'] -= player.stats['attack']
+                if attack_num == 0:
+                    hit_miss = random.random() * 100
+                    if hit_miss < player.stats['accuracy']:
+                        last_enemy = -1
+                        # keep consistant for max survival
+                        if not self.enemies[last_enemy].is_alive():
+                            while not self.enemies[last_enemy].is_alive():
+                                last_enemy -= 1
+                        damage_delt = player.stats['attack']
+                        self.enemies[last_enemy].stats['hp'] -= player.stats['attack']
 
-                    print(f'{player.name} does {player.stats["attack"]} damage to moblin.')
-                    if not self.enemies[last_enemy].is_alive():
-                        print('enemy died')
-                else:
-                    print(f'{player.name} missed')
+                        print(f'{player.name} does {player.stats["attack"]} damage to moblin.')
+                        if not self.enemies[last_enemy].is_alive():
+                            print('enemy died')
+                    else:
+                        print(f'{player.name} missed')
+
+    def get_player_choice(self, mem_pos):
+        """ return the players selection """
+        # [attack, magic, items, run]
+        pos = mem_pos
+        # temp to give player one option
+        battle_loop = True
+        battle_cursor = self.game.battle_cursor
+
+        battle_cursor.moveTo((self.attack_positions[pos][0], self.attack_positions[pos][1]-75), playsnd=False)
+
+        # get keys
+        for event in pygame.event.get():
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_RETURN:
+                    # get pos of cursor and return its state
+                    battle_loop = False
+                    return [pos, pos]
+
+                if event.key == pygame.K_LEFT:
+                    pos -= 1
+                    if pos < 0:
+                        pos = len(self.attack_positions) - 1
+                if event.key == pygame.K_RIGHT:
+                    pos += 1
+                    if pos >= len(self.attack_positions):
+                        pos = 0
+                if event.key in [pygame.K_LEFT, pygame.K_RIGHT]:
+                    battle_cursor.moveTo((self.attack_positions[pos][0], self.attack_positions[pos][1]-75), playsnd=False)
+
+        # return selected option
+        return [-1, pos]
 
     def defend(self):
         # enemies auto attack random player
@@ -151,24 +191,29 @@ class Battle:
         # main loop of battle
         round_count = 0
         self.get_battle_start()
+        attack_trigger = [-1, 0]
         while True:
             print('attack')
             # attack iterations
-            self.attack()
-            if self.has_fainted(self.enemies):
-                print('victory')
-                self.check_rewards()
-                break
+            attack_trigger = self.get_player_choice(attack_trigger[1])
+            if attack_trigger[0] > -1:
+                self.attack(attack_trigger[0])
+                if self.has_fainted(self.enemies):
+                    print('victory')
+                    self.check_rewards()
+                    break
 
-            print('defend')
-            # defend iterations
-            self.defend()
-            if self.has_fainted(self.party):
-                print('GAME OVER')
-                self.game.quit()
-            round_count += 1
-            print(f'round count: {round_count}')
-            self.draw()
+                print('defend')
+                # defend iterations
+                self.defend()
+                if self.has_fainted(self.party):
+                    print('GAME OVER')
+                    self.game.quit()
+                attack_trigger[0] = -1
+                round_count += 1
+                print(f'round count: {round_count}')
+                time.sleep(1)
+            self.draw(attack_trigger[0])
         self.return_xp()
         # self.return_rewards()
 
@@ -181,15 +226,20 @@ class Battle:
             player.stats['xp'] += self.battle_xp
             player.is_levelup()
 
-    def draw(self):
+    def draw(self, plyr_turn=0):
         # draw all changes after updating
         self.screen.blit(self.backdrop, (0, 0))
         for enemy in self.enemies:
             if enemy.is_alive():
                 enemy.draw(self.screen)
 
+        if plyr_turn == -1:
+            choices = ['attack', 'magic', 'items', 'run']
+            for num in range(len(choices)):
+                self.game.draw_text(f'{choices[num]}', self.battle_font, self.battle_font_size,
+                                    BLACK, self.attack_positions[num][0], self.attack_positions[num][1], align='center')
+            self.game.battle_cursor.draw()
         pygame.display.flip()
-        time.sleep(1)
 
     def get_enemies(self, areaLevel, partySize):
         # amount of enemies depends on partySize
