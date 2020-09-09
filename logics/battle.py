@@ -192,27 +192,30 @@ class Battle:
         round_count = 0
         self.get_battle_start()
         attack_trigger = [-1, 0]
+        player_attacked = False
         while True:
-            print('attack')
-            # attack iterations
-            attack_trigger = self.get_player_choice(attack_trigger[1])
-            if attack_trigger[0] > -1:
-                self.attack(attack_trigger[0])
-                if self.has_fainted(self.enemies):
-                    print('victory')
-                    self.check_rewards()
-                    break
-
-                print('defend')
+            if player_attacked:
                 # defend iterations
                 self.defend()
                 if self.has_fainted(self.party):
                     print('GAME OVER')
                     self.game.quit()
                 attack_trigger[0] = -1
+                player_attacked = False
                 round_count += 1
                 print(f'round count: {round_count}')
                 time.sleep(1)
+
+            # attack iterations
+            attack_trigger = self.get_player_choice(attack_trigger[1])
+            if attack_trigger[0] > -1:
+                self.attack(attack_trigger[0])
+                player_attacked = True
+                if self.has_fainted(self.enemies):
+                    print('victory')
+                    self.check_rewards()
+                    break
+
             self.draw(attack_trigger[0])
         self.return_xp()
         # self.return_rewards()
