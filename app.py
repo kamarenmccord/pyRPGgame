@@ -274,6 +274,7 @@ if USE_PREVIOUS_DATA:
     g.party = []
     for objData in data['partyData']:
         g.party.append(PartyChar(objData['name'], objData['imageFile'], g, objData['max_hp'], objData['stats']))
+        g.party.append(PartyChar('Plyr2', objData['imageFile'], g))
 
     # start and play game
     while True:

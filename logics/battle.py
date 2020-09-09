@@ -94,35 +94,35 @@ class Battle:
         if self.is_boss:
             self.attack_positions.pop()
 
-    def attack(self, attack_num):
+    def attack(self, attack_num, player_num):
         # player party gets to attack for each player (up to 3)
         # get keys, use cursor to pick options
         # when entered on option do actions
 
         # do damage to other party
-        for player in self.party:
-            if player.is_alive():
-                hit_miss = random.random() * 100
-                if hit_miss < player.stats['accuracy']:
-                    last_enemy = -1
-                    if not self.enemies[last_enemy].is_alive():
-                        while not self.enemies[last_enemy].is_alive():
-                            last_enemy -= 1
+        player = self.party[player_num]
+        if player.is_alive():
+            hit_miss = random.random() * 100
+            if hit_miss < player.stats['accuracy']:
+                last_enemy = -1
+                if not self.enemies[last_enemy].is_alive():
+                    while not self.enemies[last_enemy].is_alive():
+                        last_enemy -= 1
 
-                    if attack_num < 2:
-                        if attack_num == 0:
-                            damage_delt = player.stats['attack']
+                if attack_num < 2:
+                    if attack_num == 0:
+                        damage_delt = player.stats['attack']
+                        self.enemies[last_enemy].stats['hp'] -= damage_delt
+
+                    if attack_num == 1:
+                        if player.stats['mana'] > 5:
+                            damage_delt = player.stats['sp_att']
                             self.enemies[last_enemy].stats['hp'] -= damage_delt
+                            player.stats['mana'] -= 5
 
-                        if attack_num == 1:
-                            if player.stats['mana'] > 5:
-                                damage_delt = player.stats['sp_att']
-                                self.enemies[last_enemy].stats['hp'] -= damage_delt
-                                player.stats['mana'] -= 5
-
-                        print(f'{player.name} does {damage_delt} damage to moblin.')
-                        if not self.enemies[last_enemy].is_alive():
-                            print('enemy died')
+                    print(f'{player.name} does {damage_delt} damage to moblin.')
+                    if not self.enemies[last_enemy].is_alive():
+                        print('enemy died')
 
                     if attack_num == 2:
                         pass  # items
@@ -148,7 +148,7 @@ class Battle:
 
         # get keys
         for event in pygame.event.get():
-            if event.type == pygame.KEYDOWN:
+            if event.type == pygame.KEYUP:
                 if event.key == pygame.K_RETURN:
                     # get pos of cursor and return its state
                     battle_loop = False
@@ -209,12 +209,14 @@ class Battle:
         self.get_battle_start()
         attack_trigger = [-1, 0]
         player_attacked = False
+
         while True:
             self.draw_background()
             for player in self.party:
                 player.active = False
             self.party[round_count].active = True
-            if player_attacked and round_count == len(self.party):                # defend iterations
+            if player_attacked:
+                # defend iterations
                 self.defend()
                 if self.has_fainted(self.party):
                     print('GAME OVER')
@@ -226,13 +228,12 @@ class Battle:
             # attack iterations
             attack_trigger = self.get_player_choice(attack_trigger[1])
             if attack_trigger[0] > -1:
-                escape = self.attack(attack_trigger[0])
+                escape = self.attack(attack_trigger[0], round_count)
                 if escape:
                     print('ran away')
                     break
                 else:
                     round_count += 1
-                player_attacked = True
                 if self.has_fainted(self.enemies):
                     print('victory')
                     self.check_rewards()
@@ -240,6 +241,7 @@ class Battle:
 
             if round_count >= len(self.party):
                 round_count = 0
+                player_attacked = True
             self.draw(attack_trigger[0])
         self.return_xp()
         # self.return_rewards()
