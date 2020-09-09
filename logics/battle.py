@@ -84,7 +84,6 @@ class Battle:
         self.set_positions()
         self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
         self.screen = self.game.screen
-        self.backdrop = pygame.image.load(BACKDROP_BLUE)
 
         self.battle_rewards = []
         self.battle_xp = 0
