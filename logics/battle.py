@@ -272,6 +272,10 @@ class Battle:
         spotX = 40
         spotY = 10
         for player in self.party:
+            # draw health bars, names, etc
+            pygame.draw.rect(self.screen, LIGHTGREY, (spotX-20, spotY-3, 100, 9))
+            pygame.draw.rect(self.screen, BLUE, (spotX-20, spotY-3,
+                                                 100*player.stats['xp']/player.stats['xp_to_level'], 3))
             pygame.draw.rect(self.screen, (0, 255, 0), (spotX-20, spotY, 100*player.stats['hp']/player.max_hp, 6))
             self.game.draw_text(player.name, self.battle_font, 18, BLACK, spotX+20, spotY+20, align='center')
             if player.active:
