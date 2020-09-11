@@ -111,7 +111,6 @@ def save_game(game):
 
 def load_game():
     """ reads the database and returns game data then goes to loading for said data
-        if no data then returns error and sends back to main selection screen (todo) """
 
     # return the required data to start the game where player left off
     if os.path.exists('./save_dir'):
