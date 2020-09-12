@@ -253,7 +253,6 @@ class Battle:
     def return_xp(self):
         for player in self.party:
             # draw animation for xp gains
-            prev_xp = player.stats['xp']
             self.draw_xp_gains(player)
 
     def draw_xp_gains(self, who):
@@ -299,7 +298,6 @@ class Battle:
                         time.sleep(2)
                     leveld = who.is_levelup(gain_ani)
             spotX += 200
-
 
     def draw_background(self):
         """ draw the background so everything else can overlap """
