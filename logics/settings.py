@@ -26,6 +26,7 @@ GRIDHEIGHT = WIDTH / TILESIZE
 
 # system settings
 DIRECTORY = 'save_dir'
+MOB_DIR = 'mobs'
 SAVELIMIT = 10  # allow up to 10 previous save files
 
 # game settings

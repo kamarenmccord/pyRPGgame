@@ -4,69 +4,11 @@ import random
 import math
 import time
 
+from .mobs import *
 from .settings import *
 game_folder = path.join('./logics')
 
 """ module represent the entire battle phase of in game battles """
-
-
-class Mob(pygame.sprite.Sprite):
-    def __init__(self, level, image, game, xp=10):
-        self.level = level
-        self.level_check()
-        self.hardness = 10
-        self.stats = self.get_stats(self.level)
-        self.stats['max_hp'] = self.stats['hp']
-        self.xp_value = xp * self.level
-        self.groups = []
-        self.groups.append(game.enemy_sprites)
-        pygame.sprite.Sprite.__init__(self, self.groups)
-
-        self.battle_rewards = []  # fill with dict to hold items
-        self.pos = 0, 0
-        self.img = pygame.image.load(path.join(game_folder, f'{image}'))
-        self.img = pygame.transform.scale(self.img, (64, 64))
-        self.rect = self.img.get_rect()
-        self.health_rect = pygame.Rect((0, 0), (64, 64))
-
-        self.dt = game.clock.tick(FPS) / 1000
-
-    def is_alive(self):
-        return self.stats['hp'] > 0
-
-    def level_check(self):
-        if self.level <= 0:
-            self.level = 1
-        if self.level > 100:
-            self.level = 100
-
-    def get_stats(self, level):
-        # returns a dict of stats
-        stats = {'hp': 5*level, 'attack': 1, 'defence': 1, 'speed': 1,
-                 'sp_att': 1, 'sp_def': 1, 'accuracy': 90, 'mana': 1}
-        for key, value in stats.items():
-            if not key == 'hp' and not key == 'accuracy':
-                ri = random.random()  # random integer
-                stats[key] = round(random.randint(1, 5) * level + math.ceil(ri*self.hardness))
-        stats['hp'] += round(stats['hp'] * 25/100 + level)
-        return stats
-
-    def set_health_bar_location(self):
-        self.health_rect.x = self.pos[0]-10
-        self.health_rect.y = self.pos[1]+64+10
-
-    def draw_health(self, screen):
-        self.set_health_bar_location()
-        width = int(self.rect.width * self.stats['hp']/self.stats['max_hp'])
-        depth = 4
-        back_bar = pygame.Rect(self.pos[0], self.pos[1]+self.rect.height+13, width, depth)
-        health_bar = pygame.Rect(self.pos[0]-5, self.pos[1]+self.rect.height+10, width, depth)
-        pygame.draw.rect(screen, BLACK, back_bar)
-        pygame.draw.rect(screen, RED, health_bar)
-
-    def draw(self, screen):
-        self.draw_health(screen)
-        screen.blit(self.img, self.pos)
 
 
 class Battle:
@@ -340,23 +282,29 @@ class Battle:
     def get_enemies(self, areaLevel, partySize):
         # amount of enemies depends on partySize
         # strength of enemies depends on areaLevel
+        # areaLevel also determines the types of enemies
+        game_enemies = {
+                        '1': (pipo_BAT, pipo_SNAKE),
+                        '2': (pipo_BAT, pipo_SNAKE),
+                        }
         enemy_population = []
         while len(enemy_population) == 0:
             pop_size = random.randint(2, math.ceil(partySize*1.5))
             for e in range(random.randint(1, pop_size)):
                 level = (areaLevel * 5 + math.ceil(random.randint(-5, 5)) +
                          math.ceil(random.randint(-ENEMYVARIANCE, ENEMYVARIANCE)))
-                enemy_population.append(Mob(int(level), 'shadow_d-kin.png', self.game))
+                rando_baddy = random.randint(0, len(game_enemies[f'{areaLevel}'])-1)
+                enemy_population.append(game_enemies[f'{areaLevel}'][rando_baddy](int(level), self.game))
         return enemy_population
 
     def set_positions(self):
         position_count = len(self.enemies)
-        CENTER = WIDTH/2, HEIGHT/2
-        CENTER_LEFT = WIDTH/2-150, HEIGHT/2-50
-        CENTER_RIGHT = WIDTH/2+150, HEIGHT/2-50
+        CENTER = WIDTH/2-50, HEIGHT/2
+        CENTER_LEFT = CENTER[0]-200, CENTER[1]-50
+        CENTER_RIGHT = CENTER[0]+200, CENTER[1]-50
         HIGH_LEFT = CENTER_LEFT[0]-150, CENTER_LEFT[1]-50
         HIGH_RIGHT = CENTER_RIGHT[0]+150, CENTER_RIGHT[1]-50
-        HIGH_CENTER = CENTER[0]-200, HEIGHT
+        HIGH_CENTER = CENTER[0], CENTER[1]-250
 
         positions = CENTER, CENTER_LEFT, CENTER_RIGHT, HIGH_LEFT, HIGH_RIGHT, HIGH_CENTER
 
