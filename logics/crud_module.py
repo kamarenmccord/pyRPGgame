@@ -110,7 +110,7 @@ def save_game(game):
 
 
 def load_game():
-    """ reads the database and returns game data then goes to loading for said data
+    """ reads the database and returns game data then goes to loading for said data """
 
     # return the required data to start the game where player left off
     if os.path.exists('./save_dir'):

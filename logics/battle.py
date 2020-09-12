@@ -252,8 +252,54 @@ class Battle:
 
     def return_xp(self):
         for player in self.party:
-            player.stats['xp'] += self.battle_xp
-            player.is_levelup()
+            # draw animation for xp gains
+            prev_xp = player.stats['xp']
+            self.draw_xp_gains(player)
+
+    def draw_xp_gains(self, who):
+        spotX = 40
+        spotY = 10
+        gain_ani = 5
+        throttle = 5
+        leveld = False
+        xp_left = self.battle_xp
+        for player in self.party:
+            if who == player:
+                while xp_left > 0:
+                    if not xp_left > throttle:
+                        gain_ani = xp_left
+                    xp_left -= gain_ani
+                    self.draw_background()
+                    # top bar
+                    pygame.draw.rect(self.screen, (172, 115, 57), (-5, -5, WIDTH + 5, 75))
+                    pygame.draw.rect(self.screen, BLACK, (-5, -5, WIDTH + 5, 75), 2)
+
+                    if leveld:
+                        self.game.draw_text(f'{who.name} has reached level {who.stats["level"]}',
+                                            self.battle_font, 24, BLACK,
+                                            WIDTH / 2, HEIGHT / 2, align='center')
+                    else:
+                        self.game.draw_text(f'{who.name} gained {self.battle_xp}', self.battle_font, 24, BLACK,
+                                            WIDTH/2, HEIGHT/2, align='center')
+
+                    pygame.draw.rect(self.screen, LIGHTGREY, (spotX - 20, spotY - 3, 100, 9))
+                    pygame.draw.rect(self.screen, BLUE, (spotX-20, spotY-3,
+                                                         100*who.stats['xp']/who.stats['xp_to_level'], 3))
+                    pygame.draw.rect(self.screen, (0, 255, 0),
+                                     (spotX - 20, spotY, 100 * player.stats['hp'] / player.max_hp, 6))
+                    pygame.draw.rect(self.screen, (0, 255, 0),
+                                     (spotX - 20, spotY, 100 * player.stats['hp'] / player.max_hp, 6))
+                    self.game.draw_text(player.name, self.battle_font, 18, BLACK, spotX + 20, spotY + 20,
+                                        align='center')
+
+                    pygame.display.flip()
+                    if not leveld:
+                        time.sleep(0.100)
+                    else:
+                        time.sleep(2)
+                    leveld = who.is_levelup(gain_ani)
+            spotX += 200
+
 
     def draw_background(self):
         """ draw the background so everything else can overlap """

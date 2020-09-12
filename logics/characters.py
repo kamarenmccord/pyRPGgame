@@ -129,13 +129,15 @@ class PartyChar(pygame.sprite.Sprite):
     def is_alive(self):
         return self.stats['hp'] > 0
 
-    def is_levelup(self):
+    def is_levelup(self, number_of_gained):
         """ check to see if player has reached a level up """
-        while self.stats['xp'] > self.stats['xp_to_level'] and self.stats['level'] < MAX_LEVEL:
-            print(f'{self.name} has leveld up to: lvl {self.stats["level"]+1}!')
+        self.stats['xp'] += number_of_gained
+        if self.stats['xp'] > self.stats['xp_to_level'] and self.stats['level'] < MAX_LEVEL:
+            print(f'{self.name} has reached lvl {self.stats["level"]+1}!')
             self.stats['level'] += 1
             self.stats = self.statsIncrease()
-        print(f'next level in {self.next_level_in()} xp')
+            return True
+        return False
 
     def statsIncrease(self):
         """ method used to level up players stats """
