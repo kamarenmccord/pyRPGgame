@@ -284,8 +284,8 @@ class Battle:
         # strength of enemies depends on areaLevel
         # areaLevel also determines the types of enemies
         game_enemies = {
-                        '1': (pipo_BAT, pipo_SNAKE),
-                        '2': (pipo_BAT, pipo_SNAKE),
+                        '1': (pipo_BAT, pipo_SNAKE, pipo_CREEPER, pipo_SKELETON),
+                        '2': (pipo_BAT, pipo_SNAKE, pipo_CREEPER, pipo_SKELETON),
                         }
         enemy_population = []
         while len(enemy_population) == 0:
