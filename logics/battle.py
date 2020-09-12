@@ -260,13 +260,13 @@ class Battle:
         spotX = 40
         spotY = 10
         gain_ani = 5
-        throttle = 5
         leveld = False
         xp_left = self.battle_xp
+
         for player in self.party:
             if who == player:
                 while xp_left > 0:
-                    if not xp_left > throttle:
+                    if not xp_left-gain_ani > 0:
                         gain_ani = xp_left
                     xp_left -= gain_ani
                     self.draw_background()
