@@ -1,7 +1,6 @@
 
 import pygame
 from os import path
-import os
 import random
 import math
 
@@ -112,5 +111,5 @@ class pipo_SKELETON(Mob):
         img = path.join(pipo_mobs, 'pipo-enemy039.png')
         base_stats = {'hp': 5, 'attack': 2, 'defence': 5, 'speed': 1,
                       'sp_att': 3, 'sp_def': 5, 'accuracy': 90, 'mana': 10}
-        super().__init__(level, img, game, stats=base_stats, xp=10)
+        super().__init__(level, img, game, stats=base_stats, xp=8)
         self.name = 'White Skeleton'
