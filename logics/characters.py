@@ -77,8 +77,10 @@ class Cursor(pygame.sprite.Sprite):
         self.image = pygame.transform.rotate(self.image, angle)
         self.rect = self.image.get_rect()
 
-        self.sfx = pygame.mixer.Sound(path.join(game_folder, 'Coins13.wav'))
+        self.sfx = pygame.mixer.Sound(path.join(game_folder, 'back_style_2_001.ogg'))
         self.sfx.set_volume(0.4)
+        self.sfx_enter = pygame.mixer.Sound(path.join(game_folder, 'confirm_style_3_005.ogg'))
+        self.sfx_enter.set_volume(0.4)
         self.battleMode = False
 
     def draw(self):
@@ -96,8 +98,11 @@ class Cursor(pygame.sprite.Sprite):
             if playsnd:
                 self.sfx.play()
 
-    def playSound(self):
-        self.sfx.play()
+    def playSound(self, action='none'):
+        if action == 'none':
+            self.sfx.play()
+        if action == 'enter':
+            self.sfx_enter.play()
 
 
 class PartyChar(pygame.sprite.Sprite):

@@ -32,6 +32,7 @@ class Game:
         pygame.display.set_caption(TITLE)
         self.clock = pygame.time.Clock()
         self.pause = False
+        self.pop_up = False
 
         self.party = []  # # where we will store the players, limit 3
 
@@ -223,6 +224,7 @@ class Game:
                         selection = choices[pos]
                         # returned value will be based off of this selection
                         menu_loop = False
+                        title_cursor.playSound(action='enter')
                         break  # to prevent arrow key checking
                     if display_return:
                         if event.key == pygame.K_UP:
