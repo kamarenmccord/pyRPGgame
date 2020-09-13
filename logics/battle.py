@@ -100,6 +100,7 @@ class Battle:
                 if event.key == pygame.K_RETURN:
                     # get pos of cursor and return its state
                     battle_loop = False
+                    battle_cursor.playSound(action='enter')
                     return [pos, pos]
 
                 if event.key == pygame.K_LEFT:
@@ -111,7 +112,7 @@ class Battle:
                     if pos >= len(self.attack_positions):
                         pos = 0
                 if event.key in [pygame.K_LEFT, pygame.K_RIGHT]:
-                    battle_cursor.moveTo((self.attack_positions[pos][0], self.attack_positions[pos][1]-75), playsnd=False)
+                    battle_cursor.moveTo((self.attack_positions[pos][0], self.attack_positions[pos][1]-75), playsnd=True)
 
         # return selected option
         return [-1, pos]
