@@ -81,6 +81,8 @@ class Cursor(pygame.sprite.Sprite):
         self.sfx.set_volume(0.4)
         self.sfx_enter = pygame.mixer.Sound(path.join(game_folder, 'confirm_style_3_005.ogg'))
         self.sfx_enter.set_volume(0.4)
+        self.sfx_battle_enter = pygame.mixer.Sound(path.join(game_folder, 'confirm_style_3_002.ogg'))
+        self.sfx_battle_enter.set_volume(0.3)
         self.battleMode = False
 
     def draw(self):
@@ -103,6 +105,8 @@ class Cursor(pygame.sprite.Sprite):
             self.sfx.play()
         if action == 'enter':
             self.sfx_enter.play()
+        if action == 'action':
+            self.sfx_battle_enter.play()
 
 
 class PartyChar(pygame.sprite.Sprite):

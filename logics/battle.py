@@ -100,7 +100,6 @@ class Battle:
                 if event.key == pygame.K_RETURN:
                     # get pos of cursor and return its state
                     battle_loop = False
-                    battle_cursor.playSound(action='enter')
                     return [pos, pos]
 
                 if event.key == pygame.K_LEFT:
