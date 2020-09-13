@@ -13,11 +13,14 @@ pipo_mobs = path.join(mob_dir, 'monster_pack')
 
 
 class Mob(pygame.sprite.Sprite):
-    def __init__(self, level, image, game, width=128, height=128, xp=10):
+    def __init__(self, level, image, game, stats=None, width=128, height=128, xp=10):
         self.level = level
         self.level_check()
         self.hardness = 10
         self.stats = self.get_stats(self.level)
+        if stats:
+            self.stats = stats
+            self.set_stats(self.level)
         self.stats['max_hp'] = self.stats['hp']
         self.xp_value = xp * self.level
         self.groups = []
@@ -51,6 +54,12 @@ class Mob(pygame.sprite.Sprite):
         stats['hp'] += round(stats['hp'] * 25/100 + level)
         return stats
 
+    def set_stats(self, level):
+        for key in self.stats.keys():
+            if key not in ['hp', 'mana']:
+                self.stats[f'{key}'] *= level + random.randint(-5, 5)
+        self.stats['hp'] *= level
+
     def set_health_bar_location(self):
         self.health_rect.x = self.pos[0]-10
         self.health_rect.y = self.pos[1]+64+10
@@ -69,10 +78,18 @@ class Mob(pygame.sprite.Sprite):
         screen.blit(self.img, self.pos)
 
 
+"""  
+        stats
+{'hp': 5*level, 'attack': 1, 'defence': 1, 'speed': 1,
+                 'sp_att': 1, 'sp_def': 1, 'accuracy': 90, 'mana': 1}
+"""
+
 class pipo_BAT(Mob):
     def __init__(self, level, game):
         img = path.join(pipo_mobs, 'pipo-enemy001.png')
-        super().__init__(level, img, game, xp=5)
+        base_stats = {'hp': 7, 'attack': 2, 'defence': 1, 'speed': 1,
+                      'sp_att': 1, 'sp_def': 1, 'accuracy': 90, 'mana': 0}
+        super().__init__(level, img, game, stats=base_stats, xp=5)
         self.name = 'Cave Bat'
 
 
@@ -93,5 +110,7 @@ class pipo_CREEPER(Mob):
 class pipo_SKELETON(Mob):
     def __init__(self, level, game):
         img = path.join(pipo_mobs, 'pipo-enemy039.png')
-        super().__init__(level, img, game, xp=10)
+        base_stats = {'hp': 5, 'attack': 2, 'defence': 5, 'speed': 1,
+                      'sp_att': 3, 'sp_def': 5, 'accuracy': 90, 'mana': 10}
+        super().__init__(level, img, game, stats=base_stats, xp=10)
         self.name = 'White Skeleton'
