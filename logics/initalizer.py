@@ -54,7 +54,6 @@ def draw_snapshot(game):
         if game.map:
             print(f'// map size(w,h): {game.map.width, game.map.height} //')
         print(f'// paused: {game.pause} //')
-        print(f'// grid on: {game.grid} //')
         print('/'*50)
 
 

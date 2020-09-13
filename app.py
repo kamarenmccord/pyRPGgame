@@ -25,7 +25,6 @@ class Game:
         self.walls = pygame.sprite.Group()
         self.battle_zone_group = pygame.sprite.Group()
         self.draw_debug = True
-        self.grid = False
         pygame.init()
         self.battle_cursor = Cursor(self, -90)
         pygame.key.set_repeat(200, 100)
@@ -38,7 +37,7 @@ class Game:
 
     def spawn_player(self):
         """ spawn player at map point """
-        self.player = Player('test player', self.map.player_spawnx, self.map.player_spawny, self)
+        self.player = Player('Noah', self.map.player_spawnx, self.map.player_spawny, self)
         self.party.append(self.player.partyChar)
 
     def new(self, mapNum):
@@ -55,12 +54,6 @@ class Game:
         self.all_sprites.update()
         self.player.update()  # other function may be calling it on parent objecet
         self.camera.update(self.player)
-
-    def draw_grid(self):
-        for x in range(0, WIDTH, TILESIZE):
-            pygame.draw.line(self.screen, LIGHTGREY, (x, 0), (x, HEIGHT))
-        for y in range(0, HEIGHT, TILESIZE):
-            pygame.draw.line(self.screen, LIGHTGREY, (0, y), (WIDTH, y))
 
     def draw_text(self, text, font_name, size, color, x, y, align="nw"):
         # from kids can code
@@ -90,12 +83,9 @@ class Game:
     def draw(self):
         if self.draw_debug:
             # function at bottom of initalizer
+            # displays fps at top of window
             draw_debug(self)
         self.screen.blit(self.map_img, self.camera.apply_box(self.map_rect))
-
-        # debug to show (grid locations
-        if self.grid:
-            self.draw_grid()
 
         # draw.all_sprites
         if not self.draw_debug:
@@ -104,7 +94,16 @@ class Game:
         for sprite in self.all_sprites:
             self.screen.blit(sprite.image, self.camera.apply(sprite))
 
+        if self.pop_up:
+            self.pop_up_window()
         pygame.display.flip()
+
+    def pop_up_window(self):
+        """ create a window and fill with text if text is too much wrap and break into
+            chunks wait until a key is pressed before continuing """
+        # self.text = text
+        # self.pop_up = False when no more text remains
+        pass
 
     def run(self):
         self.playing = True
@@ -113,7 +112,10 @@ class Game:
             self.events()
             if not self.pause:
                 self.update()
-            self.draw()
+            if not self.pop_up:
+                self.draw()
+            else:
+                self.draw(self.text)
 
     def events(self):
         for event in pygame.event.get():
@@ -128,7 +130,6 @@ class Game:
                     self.pause = not self.pause
                 # debug key prints a snapshot of game data
                 if event.key == pygame.K_m:
-                    self.grid = not self.grid
                     self.draw_debug = not self.draw_debug
                     draw_snapshot(self)
             if event.type == pygame.KEYUP:
