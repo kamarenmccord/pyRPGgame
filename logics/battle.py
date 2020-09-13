@@ -208,6 +208,7 @@ class Battle:
         for player in self.party:
             # draw animation for xp gains
             self.draw_xp_gains(player)
+        time.sleep(2)
 
     def draw_xp_gains(self, who):
         spotX = 40
@@ -235,6 +236,8 @@ class Battle:
                         self.game.draw_text(f'{who.name} gained {self.battle_xp}', self.battle_font, 24, BLACK,
                                             WIDTH/2, HEIGHT/2, align='center')
 
+                    self.game.draw_text(f'{who.stats["xp"]}/{who.stats["xp_to_level"]}', self.battle_font, 12, BLACK,
+                                        spotX+85, spotY)
                     pygame.draw.rect(self.screen, LIGHTGREY, (spotX - 20, spotY - 3, 100, 9))
                     pygame.draw.rect(self.screen, BLUE, (spotX-20, spotY-3,
                                                          100*who.stats['xp']/who.stats['xp_to_level'], 3))
@@ -262,6 +265,8 @@ class Battle:
         for enemy in self.enemies:
             if enemy.is_alive():
                 enemy.draw(self.screen)
+                self.game.draw_text(f'{enemy.level}', self.battle_font, 24, BLACK,
+                                    enemy.pos[0]+enemy.rect.width/2, enemy.pos[1]-50)
 
         # top bar
         pygame.draw.rect(self.screen, (172, 115, 57), (-5, -5, WIDTH+5, 75))
@@ -274,7 +279,11 @@ class Battle:
             pygame.draw.rect(self.screen, LIGHTGREY, (spotX-20, spotY-3, 100, 9))
             pygame.draw.rect(self.screen, BLUE, (spotX-20, spotY-3,
                                                  100*player.stats['xp']/player.stats['xp_to_level'], 3))
-            pygame.draw.rect(self.screen, (0, 255, 0), (spotX-20, spotY, 100*player.stats['hp']/player.max_hp, 6))
+            pygame.draw.rect(self.screen, GREEN, (spotX-20, spotY+6,
+                                                  100*player.stats['mana']/player.stats['max_mana'], 3))
+            pygame.draw.rect(self.screen, RED, (spotX-20, spotY, 100*player.stats['hp']/player.max_hp, 6))
+            self.game.draw_text(f'{player.stats["hp"]}/{player.max_hp}', self.battle_font, 12, BLACK,
+                                spotX+85, spotY)
             self.game.draw_text(player.name, self.battle_font, 18, BLACK, spotX+20, spotY+20, align='center')
             if player.active:
                 pygame.draw.circle(self.screen, BLACK, (spotX + 10, spotY + 40), 4)

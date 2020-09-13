@@ -112,7 +112,7 @@ class PartyChar(pygame.sprite.Sprite):
         self.pos = 0, 0
         self.imageFile = image
         self.image = pygame.image.load(path.join(game.game_folder, f'{image}'))
-        self.stats = {'level': 1, 'hp': 100, 'attack': 20, 'defence': 30, 'speed': 5,
+        self.stats = {'level': 1, 'hp': 175, 'attack': 20, 'defence': 30, 'speed': 5,
                        'sp_att': 3, 'sp_def': 4, 'accuracy': 90, 'mana': 25, 'max_mana': 25,
                        'xp_to_level': 50, 'xp': 0, 'step_count': 0}
         self.max_hp = self.stats['hp']
