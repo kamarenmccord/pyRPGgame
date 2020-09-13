@@ -53,12 +53,18 @@ class Battle:
 
                 if attack_num < 2:
                     if attack_num == 0:
-                        damage_delt = player.stats['attack']
+                        damage_delt = round(player.stats['attack'] - (player.stats['attack']
+                                            * self.enemies[last_enemy].stats['defence']/255))
+                        if damage_delt < 0:
+                            damage_delt = 1
                         self.enemies[last_enemy].stats['hp'] -= damage_delt
 
                     if attack_num == 1:
                         if player.stats['mana'] > 5:
-                            damage_delt = player.stats['sp_att']
+                            damage_delt = round(player.stats['sp_att'] - (player.stats['sp_att']
+                                                * self.enemies[last_enemy].stats['sp_def'] / 255))
+                            if damage_delt < 0:
+                                damage_delt = 1
                             self.enemies[last_enemy].stats['hp'] -= damage_delt
                             player.stats['mana'] -= 5
 
@@ -66,17 +72,17 @@ class Battle:
                     if not self.enemies[last_enemy].is_alive():
                         print('enemy died')
 
-                    if attack_num == 2:
-                        pass  # items
+                if attack_num == 2:
+                    pass  # items
 
-                    if attack_num == 3:
-                        escape_chance = random.random() * 100 - self.enemies[last_enemy].stats['speed']
-                        if escape_chance > 35:
-                            return 'escape'
-                        else:
-                            print('failed to escape')
-                else:
-                    print(f'{player.name} missed')
+                if attack_num == 3:
+                    escape_chance = random.random() * 100 - self.enemies[last_enemy].stats['speed']
+                    if escape_chance > 35:
+                        return 'escape'
+                    else:
+                        print('failed to escape')
+            else:
+                print(f'{player.name} missed')
 
     def get_player_choice(self, mem_pos):
         """ return the players selection """
@@ -120,7 +126,13 @@ class Battle:
                     if not self.party[random_player].is_alive() and len(self.party) > 1:
                         while not self.party[random_player].is_alive():
                             random_player = random.randint(1, len(self.party))
-                    self.party[random_player].stats['hp'] -= enemy.stats['attack']
+
+                    damage_delt = round(enemy.stats['attack'] - (self.party[random_player].stats['attack']
+                                        * self.party[random_player].stats['defence'] / 255))
+
+                    if damage_delt < 0:
+                        damage_delt = 1
+                    self.party[random_player].stats['hp'] -= damage_delt
 
                     """ print statements for debugging"""
                     print(f'moblin does {enemy.stats["attack"]} damage to {self.party[random_player]}.')
