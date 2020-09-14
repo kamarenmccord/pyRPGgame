@@ -31,6 +31,7 @@ def collide_with_walls(obj, dx, dy):
 def collision_with_bz(plyr, battlezone):
     # returns battle if plyr steps on battle zone
     # battle zones are randomized tiles within "grass"
+    # zone is a dict
     if isinstance(plyr.zone, bool):
         for value in battlezone.values():
             for zone in value:
@@ -41,6 +42,7 @@ def collision_with_bz(plyr, battlezone):
 
 
 def collision_with_zone(plyr, zone):
+    # zone is a list
     if isinstance(plyr.zone, bool):
         for coords in zone:
             zone_width = coords[0] + coords[2]

@@ -17,6 +17,7 @@ class Game:
         """ if a vari is not set here check the
             initalizer file for more loads
         """
+        self.title_font = path.join(game_folder, 'overpass-regular.otf')
         self.game_folder = path.join('./logics')
         self.all_sprites = pygame.sprite.Group()
         self.enemy_sprites = pygame.sprite.Group()
@@ -32,6 +33,9 @@ class Game:
         pygame.display.set_caption(TITLE)
         self.clock = pygame.time.Clock()
         self.pause = False
+        self.index = 0  # for txt
+        self.text = ''
+        self.talking = False
         self.pop_up = False
 
         self.party = []  # # where we will store the players, limit 3
@@ -97,14 +101,37 @@ class Game:
 
         if self.pop_up:
             self.pop_up_window()
-        pygame.display.flip()
+            pygame.display.flip()
+            if self.pause:
+                time.sleep(2)  # wait for key
+        else:
+            pygame.display.flip()
 
     def pop_up_window(self):
         """ create a window and fill with text if text is too much wrap and break into
             chunks wait until a key is pressed before continuing """
         # self.text = text
+        # self.index = number represents splice of text
         # self.pop_up = False when no more text remains
-        pass
+        thisIndex = self.index
+        text = self.text
+        text = text.split(' ')
+        printString = ''
+        posY = 0  # refactor for multi lines
+        for words in text[thisIndex:]:
+            if len(printString)+len(words) < 45:
+                printString += words + ' '
+                self.index += 1
+        # draw box
+        pygame.draw.rect(self.screen, BLACK, (100, HEIGHT-300, 750, 275))
+        # draw text
+        self.draw_text(f'{printString}', self.title_font, 24, WHITE, 150, HEIGHT-275)
+
+        if len(text[thisIndex:]) <= 0:
+            self.pause = False
+            self.pop_up = False
+            self.text = ''
+            self.index = 0
 
     def run(self):
         self.playing = True
@@ -113,10 +140,7 @@ class Game:
             self.events()
             if not self.pause:
                 self.update()
-            if not self.pop_up:
-                self.draw()
-            else:
-                self.draw(self.text)
+            self.draw()
 
     def events(self):
         for event in pygame.event.get():
@@ -141,7 +165,14 @@ class Game:
                             chdir('./logics')
                             save_status = crud_mod.save_game(self)
                             chdir('../')
+                            # self.setup_popup('saved')
+                            self.setup_popup("Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.")
                             print(save_status)
+
+    def setup_popup(self, text):
+        self.text = text
+        self.pause = True
+        self.pop_up = True
 
     def wait_for_key(self):
         pygame.event.wait()
@@ -157,7 +188,6 @@ class Game:
 
     def shows_main_menu(self):
         """ player can select to continue, start new game, or check settings """
-        title_font = path.join(game_folder, 'overpass-regular.otf')
         bg_img = pygame.image.load(path.join(game_folder, 'lights_bg.png'))
         font_size_lg = 105
         font_size_sm = 72
@@ -187,23 +217,23 @@ class Game:
             count += 1
             # draw background screen
             self.screen.blit(bg_img, (0, 20))
-            self.draw_text(f'{GAME_TITLE}', title_font, font_size_lg, WHITE, WIDTH/2, HEIGHT/2-200, align='n')
+            self.draw_text(f'{GAME_TITLE}', self.title_font, font_size_lg, WHITE, WIDTH/2, HEIGHT/2-200, align='n')
             # draw text on screen
             if display_return:
                 # choose new or continue cursor has 2 pos
                 if pos == 0:
-                    self.draw_text('CONTINUE', title_font, font_size_sm, WHITE, WIDTH / 2+50, HEIGHT / 2,
+                    self.draw_text('CONTINUE', self.title_font, font_size_sm, WHITE, WIDTH / 2+50, HEIGHT / 2,
                                    align='center')
-                    self.draw_text('New Game', title_font, font_size_sm, WHITE, WIDTH / 2, HEIGHT / 2 + 100,
+                    self.draw_text('New Game', self.title_font, font_size_sm, WHITE, WIDTH / 2, HEIGHT / 2 + 100,
                                    align='center')
                 if pos == 1:
-                    self.draw_text('New Game', title_font, font_size_sm, WHITE, WIDTH / 2+50, HEIGHT / 2 + 100,
+                    self.draw_text('New Game', self.title_font, font_size_sm, WHITE, WIDTH / 2+50, HEIGHT / 2 + 100,
                                    align='center')
-                    self.draw_text('CONTINUE', title_font, font_size_sm, WHITE, WIDTH / 2, HEIGHT / 2, align='center')
+                    self.draw_text('CONTINUE', self.title_font, font_size_sm, WHITE, WIDTH / 2, HEIGHT / 2, align='center')
 
             else:
                 # the only option unless we add settings
-                self.draw_text('New Game', title_font, font_size_sm, WHITE, WIDTH/2, HEIGHT/2, align='center')
+                self.draw_text('New Game', self.title_font, font_size_sm, WHITE, WIDTH/2, HEIGHT/2, align='center')
 
             # draw cursor half of the time
             if count < 60:
