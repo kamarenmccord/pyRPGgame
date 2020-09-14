@@ -36,6 +36,8 @@ def load_level(game, level):
                 game.map.saves.append((tile_objs.x, tile_objs.y, tile_objs.width, tile_objs.height, 'save'))
             if tile_objs.name == 'wall':
                 Wall(tile_objs.x, tile_objs.y, tile_objs.width, tile_objs.height, game)
+            if tile_objs.name == 'trainer':
+                NpcTrainer(tile_objs.x, tile_objs.y, game)
         game.camera = Camera(game.map.width, game.map.height)
 
 

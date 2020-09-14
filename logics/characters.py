@@ -169,6 +169,21 @@ class PartyChar(pygame.sprite.Sprite):
         return self.stats['xp_to_level'] - self.stats['xp']
 
 
+class NpcTrainer(pygame.sprite.Sprite):
+    def __init__(self, x, y, game):
+        self.pos = x+16, y+16
+        self.game = game
+        self.image = pygame.image.load(path.join(game.game_folder, 'npcTrainer.png'))
+        self.image = pygame.transform.scale(self.image, (32, 64))
+        self.rect = self.image.get_rect()
+        self.rect.center = self.pos
+        self.groups = [self.game.all_sprites]
+        pygame.sprite.Sprite.__init__(self, self.groups)
+
+        # wall around npc to prevent walk through
+        Wall(self.pos[0]-16, self.pos[1]-16, 32, 32, game)
+
+
 class Player(pygame.sprite.Sprite):
     def __init__(self, name, x, y, game):
         # the char that moves about the screen
