@@ -117,15 +117,23 @@ class Game:
         text = self.text
         text = text.split(' ')
         printString = ''
+        stringList = []
         posY = 0  # refactor for multi lines
         for words in text[thisIndex:]:
-            if len(printString)+len(words) < 45:
+            if len(printString)+len(words) < 65 and len(stringList) < 5:
                 printString += words + ' '
                 self.index += 1
+                if len(printString) >= 55 and len(stringList) < 5:
+                    stringList.append(printString)
+                    printString = ''
+
         # draw box
-        pygame.draw.rect(self.screen, BLACK, (100, HEIGHT-300, 750, 275))
+        pygame.draw.rect(self.screen, BLACK, (150, HEIGHT-300, 750, 275))
+        pygame.draw.rect(self.screen, WHITE, (150, HEIGHT - 300, 750, 275), 2)
         # draw text
-        self.draw_text(f'{printString}', self.title_font, 24, WHITE, 150, HEIGHT-275)
+        for index, text in enumerate(stringList):
+            self.draw_text(f'{stringList[index]}', self.title_font, 24, WHITE, 175, HEIGHT-275+posY)
+            posY += 65
 
         if len(text[thisIndex:]) <= 0:
             self.pause = False
@@ -165,8 +173,7 @@ class Game:
                             chdir('./logics')
                             save_status = crud_mod.save_game(self)
                             chdir('../')
-                            # self.setup_popup('saved')
-                            self.setup_popup("Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.")
+                            self.setup_popup('saved')
                             print(save_status)
 
     def setup_popup(self, text):

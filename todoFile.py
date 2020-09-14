@@ -1,7 +1,7 @@
 
 """ a place to store all my todo's """
 
-# TODO: dialogue pop-up box
+# DONE: dialogue pop-up box
 
 # TODO: add a game menu that pops up on right for options like checking inv, saving, etc.
 
