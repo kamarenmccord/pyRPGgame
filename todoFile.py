@@ -11,7 +11,11 @@
 
 # TODO: add more enemies and put them in zones
 
+# TODO: add a notification icon above player when obj is intractable
+
 # TODO: npc's and party chars
+#       -load up sprites
+#       -add speaking
 
 # TODO: BUILD UP THE INVENTORY SCREEN
 #       -after bag is selected on main menu (see other goal)

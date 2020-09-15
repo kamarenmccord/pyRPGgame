@@ -59,7 +59,7 @@ class Game:
 
     def update(self):
         self.all_sprites.update()
-        self.player.update()  # other function may be calling it on parent objecet
+        self.player.update()  # other function may be calling it on parent object
         self.camera.update(self.player)
 
     def draw_text(self, text, font_name, size, color, x, y, align="nw"):
