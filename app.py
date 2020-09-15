@@ -28,6 +28,7 @@ class Game:
         self.draw_debug = True
         pygame.init()
         self.battle_cursor = Cursor(self, -90)
+        self.battle_cursor.battleMode = True
         pygame.key.set_repeat(200, 100)
         self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
         pygame.display.set_caption(TITLE)
@@ -62,7 +63,7 @@ class Game:
         self.camera.update(self.player)
 
     def draw_text(self, text, font_name, size, color, x, y, align="nw"):
-        # from kids can code
+        # from kidsCanCode on youtube
         font = pygame.font.Font(font_name, size)
         text_surface = font.render(text, True, color)
         text_rect = text_surface.get_rect()
