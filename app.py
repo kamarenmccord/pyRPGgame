@@ -39,6 +39,8 @@ class Game:
         self.text = ''
         self.talking = False
         self.pop_up = False
+        self.menu = False
+        self.menu_box = pygame.Rect(WIDTH-200, 100, 200, HEIGHT-100)
 
         self.party = []  # # where we will store the players, limit 3
 
@@ -106,6 +108,9 @@ class Game:
             pygame.display.flip()
             if self.pause:
                 self.wait_for_key()  # wait for key
+        if self.menu:
+            self.create_menu()
+            pygame.display.flip()
         else:
             pygame.display.flip()
 
@@ -177,13 +182,35 @@ class Game:
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_0:
                     if not isinstance(self.player.zone, bool):
-                        if [(self.player.zone[0], self.player.zone[1]) for y in self.map.saves[:][:2]]:
+                        if self.player.area == 'save':
                             # do crud save
                             chdir('./logics')
                             save_status = crud_mod.save_game(self)
                             chdir('../')
                             self.setup_popup('saved')
                             print(save_status)
+                if event.key == pygame.K_e:
+                    self.open_menu()
+
+    def open_menu(self):
+        self.pause = not self.pause
+        self.menu = not self.menu
+
+    def create_menu(self):
+        menu_text = ['inventory', 'stats', 'save', 'quit']
+        x = WIDTH-200
+        y = 50
+        pygame.draw.rect(self.screen, LIGHTGREY, (x-100, 100, 400, WIDTH-300))
+
+        for option in menu_text:
+            y += 100
+            if not option == 'save':
+                self.draw_text(f'{option}', self.title_font, 24, WHITE, x, y)
+            if option == 'save':
+                if self.player.area == 'save':
+                    self.draw_text(f'{option}', self.title_font, 24, WHITE, x, y)
+                else:
+                    self.draw_text(f'{option}', self.title_font, 24, BLACK, x, y)
 
     def setup_popup(self, text):
         self.text = text

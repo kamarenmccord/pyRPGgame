@@ -50,10 +50,10 @@ def collision_with_zone(plyr, zone):
             if plyr.pos[0] >= coords[0] and plyr.pos[0] + TILESIZE <= zone_width:
                 if plyr.pos[1] >= coords[1] and plyr.pos[1] + TILESIZE <= zone_height:
                     plyr.zone = coords[0], coords[1], zone_width, zone_height
+                    plyr.area = 'save'
 
                     if coords[4] == 'save':
                         for guy in plyr.game.party:
-                            print(f'{guy.name} healed')
                             guy.stats['hp'] = guy.max_hp
 
 
@@ -63,7 +63,7 @@ def player_exit_zone(plyr):
         if (plyr.pos[0] < plyr.zone[0] or plyr.pos[0] + TILESIZE > plyr.zone[2]
                 or plyr.pos[1] < plyr.zone[1] or plyr.pos[1] + TILESIZE > plyr.zone[3]):
             plyr.zone = False
-            if isinstance(plyr.area, DangerZone):
+            if not isinstance(plyr.area, bool):
                 plyr.area = False
 
 
