@@ -9,8 +9,6 @@
 
 # TODO: create larger map, put hooks for other maps
 
-# TODO: player animation while walking
-
 # TODO: add more enemies and put them in zones
 
 # TODO: npc's and party chars
@@ -41,7 +39,7 @@
 #       + add selection retention
 #       + start game
 #       + delete the cursor after selection
-
+# DONE: player animation while walking
 
 """ UPDATE IDEAS """
 # TODO: create recover save screen

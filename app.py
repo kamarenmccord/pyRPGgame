@@ -34,6 +34,7 @@ class Game:
         self.clock = pygame.time.Clock()
         self.pause = False
         self.index = 0  # for txt
+        self.waiting_for_player = False
         self.text = ''
         self.talking = False
         self.pop_up = False
@@ -103,7 +104,7 @@ class Game:
             self.pop_up_window()
             pygame.display.flip()
             if self.pause:
-                time.sleep(2)  # wait for key
+                self.wait_for_key()  # wait for key
         else:
             pygame.display.flip()
 
@@ -114,7 +115,10 @@ class Game:
         # self.index = number represents splice of text
         # self.pop_up = False when no more text remains
         thisIndex = self.index
-        text = self.text
+        if isinstance(self.text, list):
+            text = ' '.join([str(item) for item in self.text])
+        else:
+            text = self.text
         text = text.split(' ')
         printString = ''
         stringList = []
@@ -130,16 +134,20 @@ class Game:
         # draw box
         pygame.draw.rect(self.screen, BLACK, (150, HEIGHT-300, 750, 275))
         pygame.draw.rect(self.screen, WHITE, (150, HEIGHT - 300, 750, 275), 2)
-        # draw text
-        for index, text in enumerate(stringList):
-            self.draw_text(f'{stringList[index]}', self.title_font, 24, WHITE, 175, HEIGHT-275+posY)
-            posY += 65
 
-        if len(text[thisIndex:]) <= 0:
-            self.pause = False
-            self.pop_up = False
-            self.text = ''
-            self.index = 0
+        # draw text
+        if stringList:
+            for index, text in enumerate(stringList):
+                self.draw_text(f'{stringList[index]}', self.title_font, 24, WHITE, 175, HEIGHT-275+posY)
+                posY += 65
+        else:
+            self.draw_text(f'{printString}', self.title_font, 24, WHITE, 175, HEIGHT-275+posY)
+
+            if len(text[thisIndex:]) <= 0:
+                self.pause = False
+                self.pop_up = False
+                self.text = ''
+                self.index = 0
 
     def run(self):
         self.playing = True
