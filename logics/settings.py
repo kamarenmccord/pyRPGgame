@@ -45,7 +45,9 @@ FONTSBATTLE = 'overpass-regular.otf'
 
 # player settings
 PLAYERSPEED = 200
-MAINCHARIMAGE = 'd-kin-front.png'
+MAINCHARIMAGES = ['player_down1.png', 'player_down2.png', 'player_down3.png', 'player_left1.png', 'player_left2.png',
+                  'player_left3.png', 'player_up1.png', 'player_up2.png', 'player_up3.png', 'player_right1.png',
+                  'player_right2.png', 'player_right3.png']
 
 # global settings for instances
 MAX_LEVEL = 100

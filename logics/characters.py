@@ -194,7 +194,8 @@ class Player(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self, self.groups)
         self.prev_pos = x, y
         self.pos = vec(x, y)
-        self.image = pygame.image.load(path.join(game.game_folder, MAINCHARIMAGE))
+        self.images = self.load_images()
+        self.image = self.images[0]
         self.rect = self.image.get_rect()
         self.rect.center = self.pos
 
@@ -206,15 +207,47 @@ class Player(pygame.sprite.Sprite):
         self.area = False
         self.grace_period = 0
 
-        self.partyChar = PartyChar(self.name, MAINCHARIMAGE, game)
+        # sprite animations
+        self.direction = 'down'
+        self.next_step = 0
+        self.frame = 0
+
+        self.partyChar = PartyChar(self.name, f'main_char/player_down2.png', game)
+
+    def load_images(self):
+        images = []
+        width, height = 64, 64
+        for img in MAINCHARIMAGES:
+            loaded_img = pygame.image.load(path.join(self.game.game_folder, f'main_char/{img}'))
+            loaded_img = pygame.transform.scale(loaded_img, (width, height))
+            images.append(loaded_img)
+        return images
 
     def move(self, dx=0, dy=0):
+        if self.step_count >= self.next_step:
+            self.frame = (self.frame+1) % 3
+        self.next_step = self.step_count + 1
         if not collide_with_boundries(self, dx, dy):
             if not collide_with_walls(self, dx, dy):
+                # get direction, set sprite
+                if dx > 0:
+                    self.direction = 'right'
+                    self.image = self.images[self.frame + 3 * 3]
+                elif dx < 0:
+                    self.direction = 'left'
+                    self.image = self.images[self.frame + 1 * 3]
+                elif dy > 0:
+                    self.direction = 'down'
+                    self.image = self.images[self.frame + 0 * 3]
+                elif dy < 0:
+                    self.direction = 'up'
+                    self.image = self.images[self.frame + 2 * 3]
+
                 self.pos = (self.pos[0] + dx, self.pos[1] + dy)
 
     def check_keys(self):
         keys = pygame.key.get_pressed()
+
         if keys[pygame.K_LEFT] or keys[pygame.K_a]:
             self.move(dx=-PLAYERSPEED * self.game.dt)
         elif keys[pygame.K_RIGHT] or keys[pygame.K_d]:
@@ -223,6 +256,15 @@ class Player(pygame.sprite.Sprite):
             self.move(dy=-PLAYERSPEED * self.game.dt)
         elif keys[pygame.K_DOWN] or keys[pygame.K_s]:
             self.move(dy=PLAYERSPEED * self.game.dt)
+        else:
+            if self.direction == 'right':
+                self.image = self.images[10]
+            if self.direction == 'left':
+                self.image = self.images[4]
+            if self.direction == 'up':
+                self.image = self.images[7]
+            if self.direction == 'down':
+                self.image = self.images[1]
 
     def check_steps(self):
         if (self.pos[0] >= self.prev_pos[0]+STEPSIZE or self.pos[0] <= self.prev_pos[0]-STEPSIZE
