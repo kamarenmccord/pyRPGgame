@@ -200,7 +200,7 @@ class Game:
                 else:
                     self.draw_text(f'{option}', self.title_font, 24, BLACK, x, y)
         option_index = self.menu_cursor.check_keys(menu_positions)
-        if option_index:
+        if option_index or option_index == 0:
             # do stuff
             if option_index == 3:
                 self.quit()
@@ -220,7 +220,8 @@ class Game:
                 pass
             if option_index == 0:
                 # open the inventory
-                pass
+                self.player.inventory.open()
+            print(option_index)
 
     def setup_popup(self, text):
         self.text = text

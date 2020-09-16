@@ -230,7 +230,7 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.center = self.pos
 
-        self.inventory = Inventory()
+        self.inventory = Inventory(self.game, Cursor(game))
         self.max_level = 100
         self.step_count = 0
 
