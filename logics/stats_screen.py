@@ -22,9 +22,19 @@ class Stat_Screen:
 
     def draw_backdrop(self):
         self.game.screen.fill(LIGHTBLUE)
+        pygame.draw.rect(self.game.screen, GREY, (100, 100, WIDTH-200, HEIGHT-200))
 
     def draw(self):
         self.draw_backdrop()
+
+        box = 300
+        rect = 500
+        # sprite box
+        pygame.draw.rect(self.game.screen, BLACK, (100, 100, box, box), 2)
+        # bars
+        pygame.draw.rect(self.game.screen, BLACK, (100, 400, rect, 250), 2)
+        # text information
+        pygame.draw.rect(self.game.screen, BLACK, (600, 100, box, HEIGHT-200), 2)
 
         pygame.display.flip()
 
