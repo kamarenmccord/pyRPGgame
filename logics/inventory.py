@@ -51,8 +51,8 @@ class Inventory:
 
     """ Functionality to backpack pages """
     def open(self):
-        self.open = True
-        while self.open:
+        self.is_open = True
+        while self.is_open:
             self.draw()
             self.events()
 
@@ -62,7 +62,7 @@ class Inventory:
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
-                    self.open = False
+                    self.is_open = False
 
     def draw_backdrop(self):
         self.game.screen.fill(TAN)

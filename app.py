@@ -221,7 +221,6 @@ class Game:
             if option_index == 0:
                 # open the inventory
                 self.player.inventory.open()
-            print(option_index)
 
     def setup_popup(self, text):
         self.text = text
