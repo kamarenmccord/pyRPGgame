@@ -54,3 +54,5 @@
 #        - convert epoch to datetime
 
 # TODO: create load screen
+
+# TODO: add scrolling to inventory screens
