@@ -158,6 +158,7 @@ class PartyChar(pygame.sprite.Sprite):
         self.pos = 0, 0
         self.imageFile = image
         self.image = pygame.image.load(path.join(game.game_folder, f'{image}'))
+        self.large_image = pygame.transform.scale(self.image, (128, 128))
         self.stats = {'level': 1, 'hp': 175, 'attack': 20, 'defence': 30, 'speed': 5,
                        'sp_att': 3, 'sp_def': 4, 'accuracy': 90, 'mana': 25, 'max_mana': 25,
                        'xp_to_level': 50, 'xp': 0, 'step_count': 0}
@@ -247,7 +248,7 @@ class Player(pygame.sprite.Sprite):
         self.next_step = 0
         self.frame = 0
 
-        self.partyChar = PartyChar(self.name, f'main_char/player_down2.png', game)
+        self.partyChar = PartyChar(self.name, 'main_char/player_down2.png', game)
 
     def load_images(self):
         images = []
