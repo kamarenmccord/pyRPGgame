@@ -1,9 +1,10 @@
 
 """ a place to store all my todo's """
 
-# DONE: dialogue pop-up box
-
 # TODO: add a game menu that pops up on right for options like checking inv, saving, etc.
+#       -add inventory
+#       -add stats screen
+
 
 # TODO: if savelimit files exist, prompt user to overwrite
 
@@ -23,6 +24,7 @@
 # TODO: add sound effects/ musics/ prettify
 
 
+# DONE: dialogue pop-up box
 # BYPASSED: add collision box for player to wall collisions
 # DONE: save_game data then successfully load data
 # DONE: fix collision with save zone in char file
