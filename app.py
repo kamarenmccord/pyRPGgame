@@ -5,6 +5,7 @@ from logics.characters import *
 from logics.tilemap import *
 from logics.initalizer import *
 import logics.crud_module as crud_mod
+from logics.stats_screen import *
 
 import sys
 from os import path, listdir, chdir
@@ -247,7 +248,8 @@ class Game:
                     self.setup_popup('you must be in a safe area to save')
             if option_index == 1:
                 # show party and stats screen
-                pass
+                SS = Stat_Screen(Cursor(self), self, self.party)
+                SS.open()
             if option_index == 0:
                 # open the inventory
                 self.player.inventory.open()
