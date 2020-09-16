@@ -25,7 +25,7 @@ class Inventory:
         """ test lines """
         self.add(Potion())
         self.add(Potion())
-        self.add(Potion())
+        self.add(Elixr())
 
     def __str__(self):
         a_list = []
@@ -108,8 +108,13 @@ class Inventory:
             for guy in self.game.party:
                 self.game.draw_text(f'{guy.name} hp: {guy.stats["hp"]} / {guy.max_hp}',
                                     self.game.title_font, 24, BLACK, 200, 200)
-                pygame.draw.rect(self.game.screen, BLACK, (200, y, 300, 6))
+                pygame.draw.rect(self.game.screen, DARKRED, (200, y, 300, 6))
                 pygame.draw.rect(self.game.screen, RED, (200, y, 300*guy.stats['hp']/guy.max_hp, 6))
+                self.game.draw_text(f'mana: {guy.stats["mana"]} / {guy.stats["max_mana"]}',
+                                    self.game.title_font, 24, BLACK, 200, y+10)
+                y += 30
+                pygame.draw.rect(self.game.screen, DARKGREEN, (200, y, 300, 6))
+                pygame.draw.rect(self.game.screen, GREEN, (200, y, 300*guy.stats['mana']/guy.stats['max_mana'], 6))
                 y += 75
         # items
         index = 0
@@ -126,5 +131,13 @@ class Inventory:
         if self.all_pockets[self.screenName]:
             self.cursor.draw()
             option_index = self.cursor.check_keys(keys, self.event_keys, direction=['vertical'])
-
+        if isinstance(option_index, int):
+            if option_index >= 0:
+                if self.screenName == 'healing':
+                    for player in self.game.party:
+                        player.stats['hp'] += self.all_pockets[self.screenName][option_index].amt
+                        if player.stats['hp'] > player.max_hp:
+                            player.stats['hp'] = player.max_hp
+                    self.remove(self.all_pockets[self.screenName][option_index])
+                    # set index to valid number move cursor there reset option index
         pygame.display.flip()

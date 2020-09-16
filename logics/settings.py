@@ -5,7 +5,9 @@ GAME_TITLE = 'Kams testing RPG'
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 RED = (255, 0, 0)
+DARKRED = (150, 25, 21)
 GREEN = (0, 255, 0)
+DARKGREEN = (0, 131, 36)
 BLUE = (0, 0, 255)
 LIGHTBLUE = (39, 192, 219)
 GREY = (224, 244, 244)
@@ -56,3 +58,4 @@ MAX_LEVEL = 100
 
 # item icons
 ICONS = {'potions': ['potions5.jpg', 'potions4.jpg']}
+ICONS_FOLDER = 'logics/icons'

@@ -1,13 +1,13 @@
 import os
 import pygame
 
-""" holds item classes for the game """
+from .settings import *
 
-game_folder = os.getcwd()
+""" holds item classes for the game """
 
 class Item:
     def __init__(self, img, pouch, name, description, value):
-        self.image = pygame.image.load(os.path.join(game_folder, img))
+        self.image = pygame.image.load(os.path.join(ICONS_FOLDER, img))
         self.pouch = pouch  # key_items, weapons, healing, misc
         self.name = name
         self.description = description
@@ -22,6 +22,7 @@ class Item:
 
 class Potion(Item):
     def __init__(self):
+        self.amt = 20
         pouch = 'healing'
         img = ICONS['potions'][0]
         name = 'potion'
@@ -41,8 +42,9 @@ class FireBallScroll(Item):
 
 class Elixr(Item):
     def __init__(self):
+        self.amt = 50
         super().__init__(img=ICONS['potions'][1],
-                         pouch='misc',
+                         pouch='healing',
                          name='Elixr',
                          description='an old parchment with a yellow glow in the centre',
                          value=30)
