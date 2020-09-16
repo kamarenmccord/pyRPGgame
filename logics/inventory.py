@@ -117,7 +117,6 @@ class Inventory:
                 pygame.draw.rect(self.game.screen, GREEN, (200, y, 300*guy.stats['mana']/guy.stats['max_mana'], 6))
                 y += 75
         # items
-        index = 0
         y = 150
         keys = []
         for items in self.all_pockets[self.screenName]:
@@ -125,9 +124,9 @@ class Inventory:
             pygame.draw.rect(self.game.screen, BLACK, (WIDTH-210, y-10, 100, 50), 2)
             self.game.draw_text(f'{items.name}', self.game.title_font, 24, BLACK, WIDTH-200, y)
             keys.append((WIDTH-250, y+10))
-            index += 1
             y += 60
 
+        option_index = None
         if self.all_pockets[self.screenName]:
             self.cursor.draw()
             option_index = self.cursor.check_keys(keys, self.event_keys, direction=['vertical'])
@@ -135,9 +134,17 @@ class Inventory:
             if option_index >= 0:
                 if self.screenName == 'healing':
                     for player in self.game.party:
-                        player.stats['hp'] += self.all_pockets[self.screenName][option_index].amt
+                        thing = self.all_pockets[self.screenName][option_index]
+                        player.stats[thing.effects] += thing.amt
                         if player.stats['hp'] > player.max_hp:
                             player.stats['hp'] = player.max_hp
-                    self.remove(self.all_pockets[self.screenName][option_index])
+                        if player.stats['mana'] > player.stats['max_mana']:
+                            player.stats['mana'] = player.stats['max_mana']
+                    self.remove(thing)
                     # set index to valid number move cursor there reset option index
+                    if len(keys) > 0:
+                        pos = option_index-1
+                        if 0 > pos < len(keys):
+                            pos = 0
+                        self.cursor.moveTo(keys[pos])
         pygame.display.flip()

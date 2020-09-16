@@ -22,6 +22,7 @@ class Item:
 
 class Potion(Item):
     def __init__(self):
+        self.effects = 'hp'
         self.amt = 20
         pouch = 'healing'
         img = ICONS['potions'][0]
@@ -42,6 +43,7 @@ class FireBallScroll(Item):
 
 class Elixr(Item):
     def __init__(self):
+        self.effects = 'mana'
         self.amt = 50
         super().__init__(img=ICONS['potions'][1],
                          pouch='healing',
