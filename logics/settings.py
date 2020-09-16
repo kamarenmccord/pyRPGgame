@@ -53,3 +53,6 @@ MAINCHARIMAGES = ['player_down1.png', 'player_down2.png', 'player_down3.png', 'p
 
 # global settings for instances
 MAX_LEVEL = 100
+
+# item icons
+ICONS = {'potions': ['potions5.jpg', 'potions4.jpg']}
