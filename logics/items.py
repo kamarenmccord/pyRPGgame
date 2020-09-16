@@ -24,7 +24,7 @@ class Potion(Item):
         name = 'potion'
         value = 5
         description = """ a questionable drink that builds constitution """
-        super().__init__(pouch, name, description, value)
+        super().__init__(pouch=pouch, name=name, description=description, value=value)
 
 
 class FireBallScroll(Item):
@@ -33,7 +33,7 @@ class FireBallScroll(Item):
         name = "Scroll of FireBall"
         value = 30
         desc = """ an old parchment with a glowing red symbol in the centre """
-        super().__init__(pouch, name, desc, value)
+        super().__init__(pouch=pouch, name=name, description=desc, value=value)
 
 
 class Elixr(Item):

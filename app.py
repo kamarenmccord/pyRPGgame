@@ -199,7 +199,7 @@ class Game:
                     self.draw_text(f'{option}', self.title_font, 24, WHITE, x, y)
                 else:
                     self.draw_text(f'{option}', self.title_font, 24, BLACK, x, y)
-        option_index = self.menu_cursor.check_keys(menu_positions)
+        option_index = self.menu_cursor.check_keys(menu_positions, direction=['vertical'])
         if option_index or option_index == 0:
             # do stuff
             if option_index == 3:
