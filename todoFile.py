@@ -5,6 +5,8 @@
 #       -add inventory
 #       -add stats screen
 
+# TODO: verify quit in app.py
+#       -fix broken escape function
 
 # TODO: if savelimit files exist, prompt user to overwrite
 

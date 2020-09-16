@@ -58,11 +58,11 @@ class Inventory:
                     break  # prevents multiple of like items from being removed
                 index += 1
 
-
-    """ Functionality to backpack pages """
+    """ Functionality to back pack pages """
     def open(self):
         self.is_open = True
         while self.is_open:
+            self.event_keys = pygame.event.get()
             self.clock.tick(FPS)
             self.draw()
             self.events()
@@ -70,10 +70,11 @@ class Inventory:
     def events(self):
         # check keys, move cursor or switch page
         # if esc back out of inventory
-        for event in pygame.event.get():
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
+        for event in self.event_keys:
+            if event.type == pygame.KEYUP:
+                if event.key == pygame.K_ESCAPE or event.key == pygame.K_e:
                     self.is_open = False
+                    print(self.is_open)
             if event.type == pygame.KEYUP:
                 index = 0
                 if event.key == pygame.K_RIGHT or event.key == pygame.K_d:
@@ -90,7 +91,6 @@ class Inventory:
                 self.screenName = self.pocket_list[index]
                 self.positions = range(len(self.pocket_list[index]))
 
-
     def draw_backdrop(self):
         self.game.screen.fill(TAN)
         pygame.draw.rect(self.game.screen, WHITE, (50, 50, WIDTH-100, HEIGHT-100))
@@ -103,6 +103,14 @@ class Inventory:
         # code here
         # title
         self.game.draw_text(f'{self.screenName}', self.game.title_font, 32, BLACK, WIDTH/2, 100, align='center')
+        if self.screenName == 'healing':
+            y = 220
+            for guy in self.game.party:
+                self.game.draw_text(f'{guy.name} hp: {guy.stats["hp"]} / {guy.max_hp}',
+                                    self.game.title_font, 24, BLACK, 200, 200)
+                pygame.draw.rect(self.game.screen, BLACK, (200, y, 300, 6))
+                pygame.draw.rect(self.game.screen, RED, (200, y, 300*guy.stats['hp']/guy.max_hp, 6))
+                y += 75
         # items
         index = 0
         y = 150
@@ -117,6 +125,6 @@ class Inventory:
 
         if self.all_pockets[self.screenName]:
             self.cursor.draw()
-            option_index = self.cursor.check_keys(keys, direction=['vertical'])
+            option_index = self.cursor.check_keys(keys, self.event_keys, direction=['vertical'])
 
         pygame.display.flip()

@@ -113,60 +113,38 @@ class Cursor(pygame.sprite.Sprite):
         if action == 'action':
             self.sfx_battle_enter.play()
 
-    def check_keys(self, positions, direction=[]):
+    def check_keys(self, positions, events, direction=('vertical', 'horizontal')):
         """ direction to check """
         if self.timeout > 0:
-            self.timeout -= 0.5
+            self.timeout -= 1
         if self.timeout <= 0:
-            keys = pygame.key.get_pressed()
+            for event in events:
+                if event.type == pygame.KEYDOWN:
+                    if 'vertical' in direction:
+                        if event.key == pygame.K_UP:
+                            self.index -= 1
+                        if event.key == pygame.K_DOWN:
+                            self.index += 1
+                    if 'horizontal' in direction:
+                        if event.key == pygame.K_RIGHT:
+                            self.index += 1
+                        if event.key == pygame.K_LEFT:
+                            self.index -= 1
 
-            if 'vertical' in direction:
-                if keys[pygame.K_UP]:
-                    self.index -= 1
-                if keys[pygame.K_DOWN]:
-                    self.index += 1
-            if 'horizontal' in direction:
-                if keys[pygame.K_RIGHT]:
-                    self.index += 1
-                if keys[pygame.K_LEFT]:
-                    self.index -= 1
+                if self.index >= len(positions):
+                    self.index = 0
+                if self.index < 0:
+                    self.index = len(positions)-1
 
-            if keys[pygame.K_RETURN]:
-                return self.index
+                if not self.index == self.lastIndex:
+                    self.moveTo(positions[self.index], playsnd=True)
+                    self.lastIndex = self.index
+                    self.timeout = 3
 
-            if self.index >= len(positions):
-                self.index = 0
-            if self.index < 0:
-                self.index = len(positions)-1
+                if event.type == pygame.KEYUP:
+                    if event.key == pygame.K_RETURN:
+                        return self.index
 
-            if not self.index == self.lastIndex:
-                self.moveTo(positions[self.index])
-                self.lastIndex = self.index
-                self.timeout = 6
-
-    def check_keys_vert(self, positions):
-        if self.timeout > 0:
-            self.timeout -= 0.5
-        if self.timeout <= 0:
-            keys = pygame.key.get_pressed()
-
-            if keys[pygame.K_UP]:
-                self.index -= 1
-            if keys[pygame.K_DOWN]:
-                self.index += 1
-
-            if keys[pygame.K_RETURN]:
-                return self.index
-
-            if self.index >= len(positions):
-                self.index = 0
-            if self.index < 0:
-                self.index = len(positions)-1
-
-            if not self.index == self.lastIndex:
-                self.moveTo(positions[self.index])
-                self.lastIndex = self.index
-                self.timeout = 6
 
 class PartyChar(pygame.sprite.Sprite):
     # the char that is in party

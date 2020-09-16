@@ -53,6 +53,34 @@ class Game:
         load_level(self, mapNum)
         self.spawn_player()
 
+    def verify_quit(self):
+        x = WIDTH/2-200
+        y = HEIGHT/2
+        menu_pos = ((x+50, y+20), (x+250, y+20))
+        self.menu_cursor.index = 0
+        self.menu_cursor.moveTo(menu_pos[0])
+
+        waiting = True
+        while waiting:
+            self.event_keys = pygame.event.get()
+            self.clock.tick(30)
+            pygame.draw.rect(self.screen, BLACK, (200, 200, 600, 400))
+            pygame.draw.rect(self.screen, WHITE, (200, 200, 600, 400), 2)
+
+            self.draw_text('are you sure you want to quit?', self.title_font,
+                           36, WHITE, WIDTH/2, HEIGHT/2-100, align='center')
+            self.draw_text('NO', self.title_font, 36, WHITE, x+100, y)
+            self.draw_text('YES', self.title_font, 36, WHITE, x+300, y)
+
+            self.menu_cursor.draw()
+            option = self.menu_cursor.check_keys(menu_pos, self.event_keys)
+            if option == 0:
+                waiting = False
+            if option == 1:
+                self.quit()
+            # self.quit()
+            pygame.display.flip()
+
     @staticmethod
     def quit():
         pygame.display.quit()
@@ -157,6 +185,7 @@ class Game:
     def run(self):
         self.playing = True
         while self.playing:
+            self.event_keys = pygame.event.get()
             self.dt = self.clock.tick(FPS) / 1000
             self.events()
             if not self.pause:
@@ -199,11 +228,11 @@ class Game:
                     self.draw_text(f'{option}', self.title_font, 24, WHITE, x, y)
                 else:
                     self.draw_text(f'{option}', self.title_font, 24, BLACK, x, y)
-        option_index = self.menu_cursor.check_keys(menu_positions, direction=['vertical'])
+        option_index = self.menu_cursor.check_keys(menu_positions, self.event_keys, direction=['vertical'])
         if option_index or option_index == 0:
             # do stuff
             if option_index == 3:
-                self.quit()
+                self.verify_quit()
             if option_index == 2:
                 if self.player.area == 'save':
                     # do crud save
