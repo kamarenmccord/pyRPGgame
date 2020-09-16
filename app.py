@@ -235,6 +235,7 @@ class Game:
             # do stuff
             if option_index == 3:
                 self.verify_quit()
+                self.menu_cursor.moveTo(menu_positions[3])
             if option_index == 2:
                 if self.player.area == 'save':
                     # do crud save
