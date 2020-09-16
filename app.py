@@ -78,7 +78,6 @@ class Game:
                 waiting = False
             if option == 1:
                 self.quit()
-            # self.quit()
             pygame.display.flip()
 
     @staticmethod
@@ -217,7 +216,9 @@ class Game:
         y = 50
         pygame.draw.rect(self.screen, LIGHTGREY, (x-100, 100, 400, HEIGHT-300))
         pygame.draw.rect(self.screen, BLUE, (x-100, 100, 400, HEIGHT-300), 5)
+
         self.menu_cursor.draw()
+
         for option in menu_text:
             menu_positions.append((x-50, y+110))
             y += 100
