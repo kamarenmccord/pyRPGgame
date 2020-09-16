@@ -9,3 +9,4 @@ This is work in progress
 <p>cursor enter sound plays after exit battle</p>
 <p><t>but not every time</p>
 <p>Game does not close down always, have to kill terminal to fully close app</p>
+<p>Pause menu feels sticky</p>
