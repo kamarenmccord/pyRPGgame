@@ -75,6 +75,9 @@ class Cursor(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self, self.groups)
 
         self.pos = vec(0, 0)
+        self.index = 0
+        self.lastIndex = 0
+        self.timeout = 0
         self.image = pygame.image.load(path.join(game.game_folder, 'cursor.png'))
         self.image = pygame.transform.rotate(self.image, angle)
         self.rect = self.image.get_rect()
@@ -109,6 +112,34 @@ class Cursor(pygame.sprite.Sprite):
             self.sfx_enter.play()
         if action == 'action':
             self.sfx_battle_enter.play()
+
+    def check_keys(self, positions):
+        if self.timeout > 0:
+            self.timeout -= 0.5
+        if self.timeout <= 0:
+            keys = pygame.key.get_pressed()
+
+            if keys[pygame.K_UP]:
+                self.index -= 1
+            if keys[pygame.K_DOWN]:
+                self.index += 1
+            if keys[pygame.K_RIGHT]:
+                self.index += 1
+            if keys[pygame.K_LEFT]:
+                self.index -= 1
+
+            if keys[pygame.K_RETURN]:
+                return self.index
+
+            if self.index >= len(positions):
+                self.index = 0
+            if self.index < 0:
+                self.index = len(positions)-1
+
+            if not self.index == self.lastIndex:
+                self.moveTo(positions[self.index])
+                self.lastIndex = self.index
+                self.timeout = 6
 
 
 class PartyChar(pygame.sprite.Sprite):

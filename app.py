@@ -144,13 +144,12 @@ class Game:
         # draw text
         if stringList:
             for index, text in enumerate(stringList):
-                self.draw_text(f'{stringList[index]}', self.title_font, 24, WHITE, 175, HEIGHT-275+posY)
+                self.draw_text(f'{stringList[index].strip()}', self.title_font, 24, WHITE, 175, HEIGHT-275+posY)
                 posY += 65
         else:
-            self.draw_text(f'{printString}', self.title_font, 24, WHITE, 175, HEIGHT-275+posY)
+            self.draw_text(f'{printString.strip()}', self.title_font, 24, WHITE, 175, HEIGHT-275+posY)
 
             if len(text[thisIndex:]) <= 0:
-                self.pause = False
                 self.pop_up = False
                 self.text = ''
                 self.index = 0
@@ -169,40 +168,29 @@ class Game:
             if event.type == pygame.QUIT:
                 self.quit()
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
-                    pygame.display.quit()
-                    self.quit()
-                    exit()
-                if event.key == pygame.K_p:
-                    self.pause = not self.pause
                 # debug key prints a snapshot of game data
                 if event.key == pygame.K_m:
                     self.draw_debug = not self.draw_debug
                     draw_snapshot(self)
-            if event.type == pygame.KEYUP:
-                if event.key == pygame.K_0:
-                    if not isinstance(self.player.zone, bool):
-                        if self.player.area == 'save':
-                            # do crud save
-                            chdir('./logics')
-                            save_status = crud_mod.save_game(self)
-                            chdir('../')
-                            self.setup_popup('saved')
-                            print(save_status)
-                if event.key == pygame.K_e:
+                if event.key == pygame.K_e or event.key == pygame.K_ESCAPE:
                     self.open_menu()
 
     def open_menu(self):
         self.pause = not self.pause
         self.menu = not self.menu
+        self.menu_cursor = Cursor(self)
+        self.menu_cursor.moveTo((WIDTH-250, 160))
 
     def create_menu(self):
         menu_text = ['inventory', 'stats', 'save', 'quit']
+        menu_positions = []
         x = WIDTH-200
         y = 50
-        pygame.draw.rect(self.screen, LIGHTGREY, (x-100, 100, 400, WIDTH-300))
-
+        pygame.draw.rect(self.screen, LIGHTGREY, (x-100, 100, 400, HEIGHT-300))
+        pygame.draw.rect(self.screen, BLUE, (x-100, 100, 400, HEIGHT-300), 5)
+        self.menu_cursor.draw()
         for option in menu_text:
+            menu_positions.append((x-50, y+110))
             y += 100
             if not option == 'save':
                 self.draw_text(f'{option}', self.title_font, 24, WHITE, x, y)
@@ -211,6 +199,28 @@ class Game:
                     self.draw_text(f'{option}', self.title_font, 24, WHITE, x, y)
                 else:
                     self.draw_text(f'{option}', self.title_font, 24, BLACK, x, y)
+        option_index = self.menu_cursor.check_keys(menu_positions)
+        if option_index:
+            # do stuff
+            if option_index == 3:
+                self.quit()
+            if option_index == 2:
+                if self.player.area == 'save':
+                    # do crud save
+                    chdir('./logics')
+                    save_status = crud_mod.save_game(self)
+                    chdir('../')
+                    self.setup_popup('saved')
+                    if self.draw_debug:
+                        print('save status: ', save_status)
+                else:
+                    self.setup_popup('you must be in a safe area to save')
+            if option_index == 1:
+                # show party and stats screen
+                pass
+            if option_index == 0:
+                # open the inventory
+                pass
 
     def setup_popup(self, text):
         self.text = text
