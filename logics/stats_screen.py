@@ -30,6 +30,7 @@ class Stat_Screen:
 
         box = 300
         rect = 500
+        self.check_keys()
         player = self.party[self.index]
         # sprite box
         pygame.draw.rect(self.game.screen, BLACK, (100, 100, box, box), 2)
@@ -61,12 +62,16 @@ class Stat_Screen:
 
     def check_keys(self):
         """ cycle though index of party """
-
-        for event in self.events:
-            if event.type == pygame.KEYUP:
-                if event.key == pygame.K_ESCAPE:
-                    self.is_open = False
-
-        if len(self.party) == 0:
-            return 0
-        pass
+        if len(self.pary) > 0:
+            for event in self.events:
+                if event.type == pygame.KEYUP:
+                    if event.key == pygame.K_ESCAPE:
+                        self.is_open = False
+                    if event.key == pygame.K_RIGHT:
+                        self.index += 1
+                    if event.key == pygame.K_LEFT:
+                        self.index -= 1
+            if self.index > len(self.party)-1:
+                self.index = 0
+            if self.index < 0:
+                self.index = len(self.party)-1
