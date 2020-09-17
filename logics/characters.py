@@ -220,6 +220,31 @@ class NpcTrainer(pygame.sprite.Sprite):
         Wall(self.pos[0]-16, self.pos[1]-16, 32, 32, game)
 
 
+class Npc(pygame.sprite.Sprite):
+    def __init__(self, game, img, interact=False):
+        self.pos = x+16, y+16
+        self.game = game
+        self.image = pygame.image.load(path.join(game.game_folder, img))
+        self.rect = self.image.get_rect()
+        self.rect.center = self.pos
+        self.interact_points = self.make_interact_points(interact=interact)
+        self.groups = [self.game.all_sprites]
+        pygame.sprite.Sprite.__init__(self, self.groups)
+
+        Wall(self.pos[0]-16, self.pos[1]-16, 32, 32, game)
+
+    def make_interact_points(self, interact=False):
+        # make a rect at the n e s w points of npc
+        # used to interact with player
+        # not all npcs should have interact points
+        """ return list of 4 points for player detection """
+        if interact:
+            points = ((self.pos[0]+32, self.pos[1]), (self.pos[0]-32, self.pos[1]),
+                      (self.pos[0], self.pos[1]+32), (self.pos[0], self.pos[1]-32))
+            return points
+        return False
+
+
 class Player(pygame.sprite.Sprite):
     def __init__(self, name, x, y, game):
         # the char that moves about the screen
@@ -239,6 +264,7 @@ class Player(pygame.sprite.Sprite):
         self.max_level = 100
         self.step_count = 0
 
+        # detection
         self.zone = False  # true if player enters a zone, change to False if exit, for triggered events
         self.area = False
         self.grace_period = 0
@@ -248,6 +274,7 @@ class Player(pygame.sprite.Sprite):
         self.next_step = 0
         self.frame = 0
 
+        # add default player to the battle party
         self.partyChar = PartyChar(self.name, 'main_char/player_down2.png', game)
 
     def load_images(self):
