@@ -12,7 +12,7 @@ class Stat_Screen:
         self.game = game
         self.screen = game.screen
         self.cursor = cursor
-        self.index = 0
+        self.index = 0  # used for pagination
 
     def open(self):
         self.is_open = True
@@ -64,16 +64,16 @@ class Stat_Screen:
 
     def check_keys(self):
         """ cycle though index of party """
-        if len(self.party) > 0:
-            for event in self.events:
-                if event.type == pygame.KEYUP:
-                    if event.key == pygame.K_ESCAPE:
-                        self.is_open = False
+        for event in self.events:
+            if event.type == pygame.KEYUP:
+                if event.key == pygame.K_ESCAPE or event.key == pygame.K_e:
+                    self.is_open = False
+                if len(self.party) > 1:
                     if event.key == pygame.K_RIGHT:
                         self.index += 1
                     if event.key == pygame.K_LEFT:
                         self.index -= 1
-            if self.index > len(self.party)-1:
-                self.index = 0
-            if self.index < 0:
-                self.index = len(self.party)-1
+        if self.index > len(self.party)-1:
+            self.index = 0
+        if self.index < 0:
+            self.index = len(self.party)-1
