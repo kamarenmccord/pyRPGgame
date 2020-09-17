@@ -15,17 +15,24 @@ class Inventory:
             'healing': [],
             'weapons': []
         }
-        self.positions = []  # contains indexes of x items
-        self.screenName = 'healing'
+        self.positions = []  # contains indexes
+        self.top = (774, 160)
+        self.bottom = (774, 640)
+        self.screenName = 'healing'  # always opens to first page
         self.clock = self.game.clock
         self.cursor = cursor
         self.cursor.moveTo((WIDTH-250, 160))
-        self.index = 0
+        self.index = 0  # used for pagination
+        self.offset = 0  # used for scroll
+        self.holdOffset = False
+        self.direction = False
+        self.y = 150  # print point
 
         """ test lines """
-        self.add(Potion())
-        self.add(Potion())
-        self.add(Elixr())
+        for x in range(20):
+            self.add(Potion())
+            self.add(Potion())
+            self.add(Elixr())
 
     def __str__(self):
         a_list = []
@@ -34,8 +41,16 @@ class Inventory:
 
         return f'{a_list}'
 
+    def scroll_top(self):
+        self.index = 0
+        self.offset = 0
+        self.cursor.moveTo(self.top)
+
+    def scroll_bottom(self):
+        self.index = len(self.all_pockets[self.screenName])-1
+
     def get_positions(self, subPocket):
-        # subPocket is a keys value in the all_pockets
+        # the subPocket is the list under a key
         positions = []
         for num, _ in enumerate(subPocket):
             positions.append(num)
@@ -78,11 +93,17 @@ class Inventory:
             if event.type == pygame.KEYUP:
                 index = 0
                 if event.key == pygame.K_RIGHT or event.key == pygame.K_d:
+                    self.scroll_top()
                     index = self.pocket_list.index(self.screenName)
                     index += 1
                 if event.key == pygame.K_LEFT or event.key == pygame.K_a:
+                    self.scroll_top()
                     index = self.pocket_list.index(self.screenName)
                     index -= 1
+                if event.key == pygame.K_DOWN or event.key == pygame.K_s:
+                    self.direction = 'down'
+                if event.key == pygame.K_UP or event.key == pygame.K_w:
+                    self.direction = 'up'
 
                 if index >= len(self.pocket_list):
                     index = 0
@@ -99,6 +120,27 @@ class Inventory:
     def draw(self):
         # main draw section
         self.draw_backdrop()
+
+        if self.holdOffset and self.cursor.index % 7 != 0:
+            self.holdOffset = False
+
+        if self.direction == 'down':
+            if self.cursor.index > 0 and self.cursor.index % 7 == 0 and not self.holdOffset:
+                self.offset -= 560
+                self.cursor.moveTo(self.top)
+                self.holdOffset = True
+
+            if self.cursor.index == 0 and not self.holdOffset:
+                self.scroll_top()
+
+        if self.direction == 'up':
+            if self.cursor.index > 0 and self.cursor.index % 7 == 6 and not self.holdOffset:
+                self.offset += 560
+                self.cursor.moveTo(self.bottom)
+                self.holdOffset = True
+
+            if self.cursor.index == len(self.all_pockets[self.screenName])-1 and not self.holdOffset:
+                self.scroll_bottom()
 
         # code here
         # title
@@ -117,15 +159,16 @@ class Inventory:
                 pygame.draw.rect(self.game.screen, GREEN, (200, y, 300*guy.stats['mana']/guy.stats['max_mana'], 6))
                 y += 75
         # items
-        y = 150
+        self.y += self.offset
         keys = []
         for items in self.all_pockets[self.screenName]:
-            pygame.draw.rect(self.game.screen, WHITE, (WIDTH-210, y-10, 100, 50))
-            pygame.draw.rect(self.game.screen, BLACK, (WIDTH-210, y-10, 100, 50), 2)
-            self.game.draw_text(f'{items.name}', self.game.title_font, 24, BLACK, WIDTH-200, y)
-            keys.append((WIDTH-250, y+10))
-            y += 60
-
+            if 150 <= self.y <= 640:  # limiter not working
+                pygame.draw.rect(self.game.screen, WHITE, (WIDTH-210, self.y-10, 100, 50))
+                pygame.draw.rect(self.game.screen, BLACK, (WIDTH-210, self.y-10, 100, 50), 2)
+                self.game.draw_text(f'{items.name}', self.game.title_font, 24, BLACK, WIDTH-200, self.y)
+                keys.append((WIDTH-250, self.y+10))
+            self.y += 80
+        print(keys)
         option_index = None
         if self.all_pockets[self.screenName]:
             self.cursor.draw()

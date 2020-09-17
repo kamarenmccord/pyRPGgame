@@ -124,6 +124,7 @@ class Cursor(pygame.sprite.Sprite):
                         if event.key == pygame.K_UP:
                             self.index -= 1
                         if event.key == pygame.K_DOWN:
+                            print(positions)
                             self.index += 1
                     if 'horizontal' in direction:
                         if event.key == pygame.K_RIGHT:
@@ -135,7 +136,6 @@ class Cursor(pygame.sprite.Sprite):
                     self.index = 0
                 if self.index < 0:
                     self.index = len(positions)-1
-
                 if not self.index == self.lastIndex:
                     self.moveTo(positions[self.index], playsnd=True)
                     self.lastIndex = self.index
