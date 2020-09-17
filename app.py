@@ -384,15 +384,20 @@ if USE_PREVIOUS_DATA:
     chdir('./logics')
     data = crud_mod.load_game()
     chdir('../')
+
     # call game.new(map) to get map
-    g.new(data['gameData']['map'])
     # player is created with map
-    # move player to data location (where did they save?)
+    g.new(data['gameData']['map'])
+
+    # set up new player with old player data
     g.player.pos = data['playerData']['pos']
     g.player.step_count = data['playerData']['steps']
+
+    # create a party and populate with players that were in the party
     g.party = []
     for objData in data['partyData']:
         g.party.append(PartyChar(objData['name'], objData['imageFile'], g, objData['max_hp'], objData['stats']))
+
     # start and play game
     while True:
         # if new game

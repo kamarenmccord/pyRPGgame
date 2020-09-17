@@ -161,7 +161,7 @@ class PartyChar(pygame.sprite.Sprite):
         self.large_image = pygame.transform.scale(self.image, (128, 128))
         self.stats = {'level': 1, 'hp': 175, 'attack': 20, 'defence': 30, 'speed': 5,
                        'sp_att': 3, 'sp_def': 4, 'accuracy': 90, 'mana': 25, 'max_mana': 25,
-                       'xp_to_level': 50, 'xp': 0, 'step_count': 0}
+                       'xp_to_level': 50, 'xp': 0}
         self.max_hp = self.stats['hp']
         self.active = False
 
@@ -190,7 +190,7 @@ class PartyChar(pygame.sprite.Sprite):
         """ method used to level up players stats """
         self.stats['xp_to_level'] += math.ceil(math.log(self.stats['xp_to_level'], 2) + self.stats['xp_to_level']/2)
         for key in self.stats.keys():
-            if key not in ['hp', 'level', 'accuracy', 'step_count', 'xp', 'xp_to_level', 'max_mana', 'mana']:
+            if key not in ['hp', 'level', 'accuracy', 'xp', 'xp_to_level', 'max_mana', 'mana']:
                 self.stats[f'{key}'] += random.randint(2, 7)
         gain = round(self.max_hp*25/100 + self.stats['level'])
         self.stats['mana'] += gain
@@ -261,7 +261,6 @@ class Player(pygame.sprite.Sprite):
         self.rect.center = self.pos
 
         self.inventory = Inventory(self.game, Cursor(game))
-        self.max_level = 100
         self.step_count = 0
 
         # detection

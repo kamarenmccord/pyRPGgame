@@ -53,10 +53,12 @@ class Stat_Screen:
         pygame.draw.rect(self.game.screen, BLACK, (600, 100, box, HEIGHT-200), 2)
         x = 650
         y = 150
-        stats_to_show = ['level', 'attack', 'sp_att', 'defence', 'sp_def', 'xp_to_level', 'step_count']
-        for stat in stats_to_show:
-            self.game.draw_text(f'{stat} : {player.stats[stat]}', self.game.title_font, 24, BLACK, x, y)
+        stats_to_show = ['level', 'attack', 'sp_att', 'defence', 'sp_def', 'xp_to_level']
+        clean_labels = ['Level', 'Attack', 'Sp attack', 'Defence', 'Sp Defence', 'next Level in']
+        for num, stat in enumerate(stats_to_show):
+            self.game.draw_text(f'{clean_labels[num]} : {player.stats[stat]}', self.game.title_font, 24, BLACK, x, y)
             y += 50
+        self.game.draw_text(f'Steps: {self.game.player.step_count}', self.game.title_font, 24, BLACK, x, y)
 
         pygame.display.flip()
 
