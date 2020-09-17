@@ -24,6 +24,7 @@ class Inventory:
         self.cursor.moveTo((WIDTH-250, 160))
         self.index = 0  # used for pagination
         self.offset = 0  # used for scroll
+        self.last_modulo = False  # for jumping up or down scroll when waiting
         self.holdOffset = False
         self.direction = False
         self.y = 150  # print point
@@ -89,7 +90,6 @@ class Inventory:
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_ESCAPE or event.key == pygame.K_e:
                     self.is_open = False
-                    print(self.is_open)
             if event.type == pygame.KEYUP:
                 index = 0
                 if event.key == pygame.K_RIGHT or event.key == pygame.K_d:
@@ -102,8 +102,10 @@ class Inventory:
                     index -= 1
                 if event.key == pygame.K_DOWN or event.key == pygame.K_s:
                     self.direction = 'down'
+                    self.index += 1
                 if event.key == pygame.K_UP or event.key == pygame.K_w:
                     self.direction = 'up'
+                    self.index -= 1
 
                 if index >= len(self.pocket_list):
                     index = 0
@@ -120,12 +122,28 @@ class Inventory:
     def draw(self):
         # main draw section
         self.draw_backdrop()
+        cursor_modulo = self.cursor.index % 7
+        # check to see if player went up or down at menu freeze
+        if self.holdOffset:
+            if cursor_modulo != self.last_modulo:
+                if self.last_modulo > cursor_modulo:
+                    # when from 6 to 0
+                    if self.cursor.index == 0:
+                        self.offset -= 560
+                        self.cursor.moveTo(self.top)
 
-        if self.holdOffset and self.cursor.index % 7 != 0:
-            self.holdOffset = False
+                if self.last_modulo < cursor_modulo:
+                    # went from 0 to 6
+                    if self.cursor.index == 6:
+                        self.offset += 560
+                        self.cursor.moveTo(self.bottom)
+
+            if cursor_modulo != 0 and cursor_modulo != 6:
+                self.holdOffset = False
+            self.last_modulo = cursor_modulo
 
         if self.direction == 'down':
-            if self.cursor.index > 0 and self.cursor.index % 7 == 0 and not self.holdOffset:
+            if self.cursor.index > 0 and cursor_modulo == 0 and not self.holdOffset:
                 self.offset -= 560
                 self.cursor.moveTo(self.top)
                 self.holdOffset = True
@@ -134,7 +152,7 @@ class Inventory:
                 self.scroll_top()
 
         if self.direction == 'up':
-            if self.cursor.index > 0 and self.cursor.index % 7 == 6 and not self.holdOffset:
+            if self.cursor.index > 0 and cursor_modulo == 6 and not self.holdOffset:
                 self.offset += 560
                 self.cursor.moveTo(self.bottom)
                 self.holdOffset = True
@@ -159,16 +177,16 @@ class Inventory:
                 pygame.draw.rect(self.game.screen, GREEN, (200, y, 300*guy.stats['mana']/guy.stats['max_mana'], 6))
                 y += 75
         # items
-        self.y += self.offset
+        y = 150 + self.offset
+        loop_offset = 0
         keys = []
         for items in self.all_pockets[self.screenName]:
-            if 150 <= self.y <= 640:  # limiter not working
-                pygame.draw.rect(self.game.screen, WHITE, (WIDTH-210, self.y-10, 100, 50))
-                pygame.draw.rect(self.game.screen, BLACK, (WIDTH-210, self.y-10, 100, 50), 2)
-                self.game.draw_text(f'{items.name}', self.game.title_font, 24, BLACK, WIDTH-200, self.y)
-                keys.append((WIDTH-250, self.y+10))
-            self.y += 80
-        print(keys)
+            if 150 <= y <= 640:
+                pygame.draw.rect(self.game.screen, WHITE, (WIDTH-210, y-10+loop_offset, 100, 50))
+                pygame.draw.rect(self.game.screen, BLACK, (WIDTH-210, y-10+loop_offset, 100, 50), 2)
+                self.game.draw_text(f'{items.name}', self.game.title_font, 24, BLACK, WIDTH-200, y+loop_offset)
+                keys.append((WIDTH-250, y+10+loop_offset))
+            loop_offset += 80
         option_index = None
         if self.all_pockets[self.screenName]:
             self.cursor.draw()

@@ -221,7 +221,7 @@ class NpcTrainer(pygame.sprite.Sprite):
 
 
 class Npc(pygame.sprite.Sprite):
-    def __init__(self, game, img, interact=False):
+    def __init__(self, x, y, game, img, interact=False):
         self.pos = x+16, y+16
         self.game = game
         self.image = pygame.image.load(path.join(game.game_folder, img))
