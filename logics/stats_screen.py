@@ -62,7 +62,7 @@ class Stat_Screen:
 
     def check_keys(self):
         """ cycle though index of party """
-        if len(self.pary) > 0:
+        if len(self.party) > 0:
             for event in self.events:
                 if event.type == pygame.KEYUP:
                     if event.key == pygame.K_ESCAPE:
