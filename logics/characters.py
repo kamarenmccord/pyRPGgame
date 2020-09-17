@@ -329,33 +329,38 @@ class Player(pygame.sprite.Sprite):
                 self.image = self.images[1]
 
     def check_steps(self):
+        # step counter for player
         if (self.pos[0] >= self.prev_pos[0]+STEPSIZE or self.pos[0] <= self.prev_pos[0]-STEPSIZE
                 or self.pos[1] >= self.prev_pos[1]+STEPSIZE or self.pos[1] <= self.prev_pos[1]-STEPSIZE):
             self.prev_pos = self.pos
             self.step_count += 1
+
+            # check for changes
+            if isinstance(self.area, bool):
+                collision_with_bz(self, self.game.map.danger_zone)
+                collision_with_zone(self, self.game.map.saves)
+            else:
+                player_exit_zone(self)
+
+            # battle cooldown
             if self.grace_period > 0:
                 self.grace_period -= 1
 
+            # check if battle occurs
             if isinstance(self.area, DangerZone):
                 battle_chance = 100 * random.random()
                 if battle_chance > 85 and self.grace_period <= 0:
                     b = Battle(self.game.party, self.area.zone, self.game)
                     b.main()
 
-                    # post battle effects
+                    # add cooldown
                     self.pos = self.prev_pos
-                    self.grace_period = 3  # battle cooldown
+                    self.grace_period = random.randint(0, 3)
 
     def update(self):
-        collision_with_bz(self, self.game.map.danger_zone)
-        collision_with_zone(self, self.game.map.saves)
-        player_exit_zone(self)
-
-        self.rect.x = self.pos[0]
-        self.rect.y = self.pos[1]
         self.rect.center = self.pos
-        self.check_steps()
         self.check_keys()
+        self.check_steps()
 
 
 class Wall(pygame.sprite.Sprite):
