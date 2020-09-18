@@ -330,6 +330,10 @@ class Game:
             pygame.display.flip()
             # check for input and move cursor to left side of text
             for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.display.quit()
+                    self.quit()
+                    exit()
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
                         pygame.display.quit()
