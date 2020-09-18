@@ -2,6 +2,7 @@ import pygame
 
 from .items import *
 from .settings import *
+import math
 
 
 class Inventory:
@@ -29,9 +30,10 @@ class Inventory:
         self.holdOffset = False
         self.current_pos = 0
         self.last_pos = 0
+        self.jumpToEnd = False
 
         """ test lines """
-        for x in range(20):
+        for x in range(9):
             self.add(Potion())
             self.add(Potion())
             self.add(Elixr())
@@ -80,6 +82,8 @@ class Inventory:
     """ Functionality to back pack pages """
     def open(self):
         self.is_open = True
+        self.current_pos = 0
+        self.cursor.index = 0
         while self.is_open:
             self.event_keys = pygame.event.get()
             self.clock.tick(FPS)
@@ -126,6 +130,12 @@ class Inventory:
 
         # menu title
         self.game.draw_text(f'{self.screenName}', self.game.title_font, 32, BLACK, WIDTH/2, 100, align='center')
+        max_offset = ((math.floor(len(self.all_pockets[self.screenName])/7))*560)*-1
+        max_offset += 560
+        gap = (len(self.all_pockets[self.screenName])/7 % 7)*80
+        if len(self.all_pockets[self.screenName]) > 0:
+            if max_offset % 7 == 0:
+                max_offset -= 560
         if self.screenName == 'healing':
             y = 220
             for guy in self.game.party:
@@ -154,16 +164,22 @@ class Inventory:
                     keys.append((WIDTH-250, y+10+loop_offset))
                 loop_offset += 80
 
+            if self.jumpToEnd:
+                self.cursor.moveTo(keys[-1])
+                self.cursor.index = len(keys)-1
+                self.jumpToEnd = False
+
             # scroller code
             if self.last_pos != self.current_pos:
                 if self.last_pos < self.current_pos:
                     # moving down
                     if self.current_pos > len(keys)-1:
                         self.current_pos = 0
+                        self.cursor.index = 0
                         self.offset -= 560
-                        # if self.offset < max_offset * -1
-                            # self.offset = 150
-                        self.cursor.moveTo(self.top)
+                        if self.offset < max_offset:
+                            self.offset = 0
+                        # self.cursor.moveTo(self.top)
 
                 if self.last_pos > self.current_pos:
                     # moving up
@@ -171,15 +187,15 @@ class Inventory:
                         self.current_pos = len(keys)-1
                         self.offset += 560
                         if self.offset > 150:
-                            # formula for max offset
-                            pass
-                        self.cursor.moveTo(self.bottom)
+                            self.offset = max_offset
+                        print(keys)
+                        self.jumpToEnd = True
                 print("y = ", y)
                 print('offset = ', self.offset)
                 print('current pos = ', self.current_pos)
                 print('last pos = ', self.last_pos)
                 print('cursor pos = ', self.cursor.pos)
-                print('len keys = ', len(keys))
+                print('len keys = ', len(keys)-1)
             # get players input
             option_index = None
 
