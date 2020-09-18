@@ -391,7 +391,7 @@ if USE_PREVIOUS_DATA:
 
     # set up new player with old player data
     g.player.pos = data['playerData']['pos']
-    g.player.step_count = data['playerData']['steps']
+    g.player.stats = data['playerData']['stats']
 
     # create a party and populate with players that were in the party
     g.party = []

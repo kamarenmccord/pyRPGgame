@@ -96,7 +96,7 @@ def save_game(game):
     # save essential data
     data = {}
     data['gameData'] = {'map': game.mapLevel}
-    data['playerData'] = {'steps': game.player.step_count, 'pos': game.player.pos}
+    data['playerData'] = {'stats': game.player.stats, 'pos': game.player.pos}
     data['partyData'] = []
     for obj in game.party:
         # adding the important stats

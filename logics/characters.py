@@ -5,6 +5,7 @@ import random
 from .settings import *
 from .battle import *
 from .inventory import Inventory
+from .quests import *
 vec = pygame.math.Vector2
 
 game_folder = path.dirname(__file__)
@@ -205,6 +206,7 @@ class PartyChar(pygame.sprite.Sprite):
 
 
 class NpcTrainer(pygame.sprite.Sprite):
+    """ special npc that helps player though game / gives advice """
     def __init__(self, x, y, game):
         self.pos = x+16, y+16
         self.game = game
@@ -220,7 +222,7 @@ class NpcTrainer(pygame.sprite.Sprite):
 
 
 class Npc(pygame.sprite.Sprite):
-    def __init__(self, x, y, game, img, interact=False):
+    def __init__(self, x, y, game, img, interact=False, speech=False):
         self.pos = x+16, y+16
         self.game = game
         self.image = pygame.image.load(path.join(game.game_folder, img))
@@ -230,8 +232,35 @@ class Npc(pygame.sprite.Sprite):
         self.game.map.interact_points.append(self.interact_points)
         self.groups = [self.game.all_sprites]
         pygame.sprite.Sprite.__init__(self, self.groups)
+        self.speech = speech
+        self.index = 0  # indexes speach
 
         Wall(self.pos[0]-16, self.pos[1]-16, 32, 32, game)
+
+    def talk(self):
+        if self.speech:
+            return self.speech[0]
+        return False
+
+
+class RandoNpc(Npc):
+    """ returns random speaches """
+    def __init__(self, x, y, game, img, interact=False, speech=False):
+        super().__init__(x=x, y=y, game=game, img=img, interact=interact, speech=speech)
+
+    def talk(self):
+        if self.speech:
+            rando_speech = random.randint(0, len(self.speech))
+            return self.speech[rando_speech]
+        return False
+
+
+class QuestNpc(Npc):
+    """ gives/ progresses quest """
+    def __init__(self, x, y, game, img, quest_object, interact=False, speech=False):
+        self.quest = quest_object()  # this is sudo code
+        self.index = 0  # tracks quest progression
+        super().__init__(x, y, game, img, interact=interact, speech=speech)
 
     def make_interact_points(self, interact=False):
         # make a rect at the n e s w points of npc
@@ -243,6 +272,10 @@ class Npc(pygame.sprite.Sprite):
                       (self.pos[0], self.pos[1]+32), (self.pos[0], self.pos[1]-32))
             return points
         return False
+
+    def talk(self):
+        """ returns quest """
+        return self.quest
 
 
 class Player(pygame.sprite.Sprite):
@@ -261,7 +294,7 @@ class Player(pygame.sprite.Sprite):
         self.rect.center = self.pos
 
         self.inventory = Inventory(self.game, Cursor(game))
-        self.step_count = 0
+        self.stats = {'step_count': 0, 'currency': 50}
 
         # detection
         self.zone = False  # true if player enters a zone, change to False if exit, for triggered events
@@ -286,9 +319,9 @@ class Player(pygame.sprite.Sprite):
         return images
 
     def move(self, dx=0, dy=0):
-        if self.step_count >= self.next_step:
+        if self.stats['step_count'] >= self.next_step:
             self.frame = (self.frame+1) % 3
-        self.next_step = self.step_count + 1
+        self.next_step = self.stats['step_count'] + 1
         if not collide_with_boundries(self, dx, dy):
             if not collide_with_walls(self, dx, dy):
                 # get direction, set sprite
@@ -333,7 +366,7 @@ class Player(pygame.sprite.Sprite):
         if (self.pos[0] >= self.prev_pos[0]+STEPSIZE or self.pos[0] <= self.prev_pos[0]-STEPSIZE
                 or self.pos[1] >= self.prev_pos[1]+STEPSIZE or self.pos[1] <= self.prev_pos[1]-STEPSIZE):
             self.prev_pos = self.pos
-            self.step_count += 1
+            self.stats['step_count'] += 1
 
             # check for changes
             if isinstance(self.area, bool):
