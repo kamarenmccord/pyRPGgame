@@ -31,6 +31,7 @@ class Inventory:
         self.current_pos = 0
         self.last_pos = 0
         self.jumpToEnd = False
+        self.scroll_y = 0
 
         """ test lines """
         for x in range(9):
@@ -109,8 +110,10 @@ class Inventory:
                     index -= 1
                 if event.key == pygame.K_DOWN or event.key == pygame.K_s:
                     self.current_pos += 1
+                    self.scroll_y += 1
                 if event.key == pygame.K_UP or event.key == pygame.K_w:
                     self.current_pos -= 1
+                    self.scroll_y -= 1
 
                 if index >= len(self.pocket_list):
                     index = 0
@@ -132,7 +135,16 @@ class Inventory:
         self.game.draw_text(f'{self.screenName}', self.game.title_font, 32, BLACK, WIDTH/2, 100, align='center')
         max_offset = ((math.floor(len(self.all_pockets[self.screenName])/7))*560)*-1
         max_offset += 560
-        gap = (len(self.all_pockets[self.screenName])/7 % 7)*80
+        x = WIDTH - 300
+
+        # draw page indicator
+        for page in self.pocket_list:
+            if page == self.screenName:
+                pygame.draw.circle(self.game.screen, BLACK, (x, 75), 10)
+            else:
+                pygame.draw.circle(self.game.screen, BLACK, (x, 75), 10, 2)
+            x += 25
+
         if len(self.all_pockets[self.screenName]) > 0:
             if max_offset % 7 == 0:
                 max_offset -= 560
@@ -156,17 +168,30 @@ class Inventory:
             y = 150 + self.offset
             loop_offset = 0
             keys = []
+            scrollBarKeys = []
+            thisIndex = 0
             for items in self.all_pockets[self.screenName]:
                 if 150 <= y+loop_offset <= 640:
                     pygame.draw.rect(self.game.screen, WHITE, (WIDTH-210, y-10+loop_offset, 100, 50))
                     pygame.draw.rect(self.game.screen, BLACK, (WIDTH-210, y-10+loop_offset, 100, 50), 2)
                     self.game.draw_text(f'{items.name}', self.game.title_font, 24, BLACK, WIDTH-200, y+loop_offset)
                     keys.append((WIDTH-250, y+10+loop_offset))
+                scrollBarKeys.append(thisIndex)
+                thisIndex += 1
                 loop_offset += 80
 
+            pygame.draw.line(self.game.screen, BLACK, (WIDTH-25, 100), (WIDTH-25, HEIGHT-100), 5)
+            pygame.draw.rect(self.game.screen, BLACK, (WIDTH-35, 100 + self.scroll_y/len(scrollBarKeys)*570, 20, 20), 4)
+
             if self.jumpToEnd:
+                # has to be done AFTER keys refresh
                 self.cursor.moveTo(keys[-1])
+                self.current_pos = len(keys) - 1
                 self.cursor.index = len(keys)-1
+                self.offset += 560
+                if self.offset > 150:
+                    self.offset = max_offset
+                    self.scroll_y = len(scrollBarKeys)
                 self.jumpToEnd = False
 
             # scroller code
@@ -179,19 +204,16 @@ class Inventory:
                         self.offset -= 560
                         if self.offset < max_offset:
                             self.offset = 0
+                            self.scroll_y = 0
                         # self.cursor.moveTo(self.top)
 
                 if self.last_pos > self.current_pos:
                     # moving up
                     if self.current_pos <= -1:
-                        self.current_pos = len(keys)-1
-                        self.offset += 560
-                        if self.offset > 150:
-                            self.offset = max_offset
-                        print(keys)
                         self.jumpToEnd = True
+
                 print("y = ", y)
-                print('offset = ', self.offset)
+                print(f'offset = {self.offset} / {max_offset}')
                 print('current pos = ', self.current_pos)
                 print('last pos = ', self.last_pos)
                 print('cursor pos = ', self.cursor.pos)
