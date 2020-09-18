@@ -45,17 +45,32 @@ def collision_with_bz(plyr, battlezone):
 def collision_with_zone(plyr, zone):
     # zone is a list
     if isinstance(plyr.zone, bool):
-        for coords in zone:
-            zone_width = coords[0] + coords[2]
-            zone_height = coords[1] + coords[3]
-            if plyr.pos[0] >= coords[0] and plyr.pos[0] + TILESIZE <= zone_width:
-                if plyr.pos[1] >= coords[1] and plyr.pos[1] + TILESIZE <= zone_height:
-                    plyr.zone = coords[0], coords[1], zone_width, zone_height
-                    plyr.area = 'save'
+        try:
+            for coords in zone:
+                zone_width = coords[0] + coords[2]
+                zone_height = coords[1] + coords[3]
+                if plyr.pos[0] >= coords[0] and plyr.pos[0] + TILESIZE <= zone_width:
+                    if plyr.pos[1] >= coords[1] and plyr.pos[1] + TILESIZE <= zone_height:
 
-                    if coords[4] == 'save':
-                        for guy in plyr.game.party:
-                            guy.stats['hp'] = guy.max_hp
+                        if coords[4] == 'save':
+                            plyr.zone = coords[0], coords[1], zone_width, zone_height
+                            plyr.area = 'save'
+                            for guy in plyr.game.party:
+                                guy.stats['hp'] = guy.max_hp
+        except TypeError:
+            count = 1
+            for coords in zone:
+                for num, coord in enumerate(coords):
+                    if num % 4 != 0 and num != 0:
+                        zone_width = coord[0] + coord[2]
+                        zone_height = coord[1] + coord[3]
+                        if plyr.pos[0] >= coord[0] and plyr.pos[0] <= zone_width:
+                            if plyr.pos[1] >= coord[1] and plyr.pos[1] <= zone_height:
+                                if isinstance(coords[4*count], Npc):
+                                    plyr.area = coords[4*count]  # npc obj
+                                    plyr.zone = coord[:3]  # coords
+                    if num % 4 == 0 and num != 0:
+                        count += 1
 
 
 def player_exit_zone(plyr):
@@ -229,8 +244,9 @@ class Npc(pygame.sprite.Sprite):
         self.image = pygame.transform.scale(self.image, (48, 81))
         self.rect = self.image.get_rect()
         self.rect.center = self.pos
-        self.interact_points = self.make_interact_points(interact=interact)
-        self.game.map.interact_points.append(self.interact_points)
+        if interact:
+            self.interact_points = self.make_interact_points(interact=interact)
+            self.game.map.interact_points.append(self.interact_points)
         self.groups = [self.game.all_sprites]
         pygame.sprite.Sprite.__init__(self, self.groups)
         self.speech = speech
@@ -244,8 +260,11 @@ class Npc(pygame.sprite.Sprite):
         # not all npcs should have interact points
         """ return list of 4 points for player detection """
         if interact:
-            points = ((self.pos[0]+32, self.pos[1]), (self.pos[0]-32, self.pos[1]),
-                      (self.pos[0], self.pos[1]+32), (self.pos[0], self.pos[1]-32), self)
+            points = ((self.pos[0]+64, self.pos[1], TILESIZE*2, TILESIZE*2),
+                      (self.pos[0]-64, self.pos[1], TILESIZE*2, TILESIZE*2),
+                      (self.pos[0], self.pos[1]+32, TILESIZE*2, TILESIZE*2),
+                      (self.pos[0], self.pos[1]-32, TILESIZE*2, TILESIZE*2),
+                      self)
             return points
         return False
 
@@ -373,6 +392,7 @@ class Player(pygame.sprite.Sprite):
             if isinstance(self.area, bool):
                 collision_with_bz(self, self.game.map.danger_zone)
                 collision_with_zone(self, self.game.map.saves)
+                collision_with_zone(self, self.game.map.interact_points)
             else:
                 player_exit_zone(self)
 

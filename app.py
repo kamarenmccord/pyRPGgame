@@ -86,6 +86,7 @@ class Game:
         pygame.display.quit()
         pygame.quit()
         sys.exit()
+        exit()
 
     def update(self):
         self.all_sprites.update()

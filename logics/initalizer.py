@@ -52,10 +52,12 @@ def draw_snapshot(game):
     if game.draw_debug:
         print('/'*50)
         print('// game shapshot: //')
+        print('// im hiding in the initalizer //')
         if game.player:
             x = str(game.player.pos[0])[:5]
             y = str(game.player.pos[1])[:5]
             print(f'// player pos: {x, y} //')
+            print(f'// player area: {game.player.area}')
         print('** current party: **')
         for persons in game.party:
             print(f'** plyr name: {persons.name} **')
