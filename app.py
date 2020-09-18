@@ -165,6 +165,8 @@ class Game:
                 if len(printString) >= 55 and len(stringList) < 5:
                     stringList.append(printString)
                     printString = ''
+        print(printString)
+        print(stringList)
 
         # draw box
         pygame.draw.rect(self.screen, BLACK, (150, HEIGHT-300, 750, 275))
@@ -178,10 +180,11 @@ class Game:
         else:
             self.draw_text(f'{printString.strip()}', self.title_font, 24, WHITE, 175, HEIGHT-275+posY)
 
-            if len(text[thisIndex:]) <= 0:
-                self.pop_up = False
-                self.text = ''
-                self.index = 0
+        if len(text[thisIndex:]) <= 0:
+            self.pop_up = False
+            self.pause = False
+            self.text = ''
+            self.index = 0
 
     def run(self):
         self.playing = True

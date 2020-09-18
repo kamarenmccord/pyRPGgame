@@ -244,6 +244,7 @@ class Npc(pygame.sprite.Sprite):
         self.image = pygame.transform.scale(self.image, (48, 81))
         self.rect = self.image.get_rect()
         self.rect.center = self.pos
+        self.interact = interact
         if interact:
             self.interact_points = self.make_interact_points(interact=interact)
             self.game.map.interact_points.append(self.interact_points)
@@ -281,7 +282,8 @@ class RandoNpc(Npc):
 
     def talk(self):
         if self.speech:
-            rando_speech = random.randint(0, len(self.speech))
+            rando_speech = random.randint(0, len(self.speech)-1
+                                          )
             return self.speech[rando_speech]
         return False
 
@@ -293,9 +295,9 @@ class QuestNpc(Npc):
         self.index = 0  # tracks quest progression
         super().__init__(x, y, game, img, interact=interact, speech=speech)
 
-    def talk(self):
-        """ returns quest """
-        return self.quest
+    def set_quest(self, player):
+        """ adds quest to player """
+        player.quests += self.quest
 
 
 class Player(pygame.sprite.Sprite):
@@ -363,23 +365,29 @@ class Player(pygame.sprite.Sprite):
     def check_keys(self):
         keys = pygame.key.get_pressed()
 
-        if keys[pygame.K_LEFT] or keys[pygame.K_a]:
-            self.move(dx=-PLAYERSPEED * self.game.dt)
-        elif keys[pygame.K_RIGHT] or keys[pygame.K_d]:
-            self.move(dx=PLAYERSPEED * self.game.dt)
-        elif keys[pygame.K_UP] or keys[pygame.K_w]:
-            self.move(dy=-PLAYERSPEED * self.game.dt)
-        elif keys[pygame.K_DOWN] or keys[pygame.K_s]:
-            self.move(dy=PLAYERSPEED * self.game.dt)
-        else:
-            if self.direction == 'right':
-                self.image = self.images[10]
-            if self.direction == 'left':
-                self.image = self.images[4]
-            if self.direction == 'up':
-                self.image = self.images[7]
-            if self.direction == 'down':
-                self.image = self.images[1]
+        if not self.game.pause:
+            if keys[pygame.K_LEFT] or keys[pygame.K_a]:
+                self.move(dx=-PLAYERSPEED * self.game.dt)
+            elif keys[pygame.K_RIGHT] or keys[pygame.K_d]:
+                self.move(dx=PLAYERSPEED * self.game.dt)
+            elif keys[pygame.K_UP] or keys[pygame.K_w]:
+                self.move(dy=-PLAYERSPEED * self.game.dt)
+            elif keys[pygame.K_DOWN] or keys[pygame.K_s]:
+                self.move(dy=PLAYERSPEED * self.game.dt)
+            else:
+                if self.direction == 'right':
+                    self.image = self.images[10]
+                if self.direction == 'left':
+                    self.image = self.images[4]
+                if self.direction == 'up':
+                    self.image = self.images[7]
+                if self.direction == 'down':
+                    self.image = self.images[1]
+
+            if keys[pygame.K_RETURN]:
+                if isinstance(self.area, Npc):
+                    if self.area.interact:
+                        self.game.setup_popup(self.area.talk())
 
     def check_steps(self):
         # step counter for player
