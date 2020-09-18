@@ -226,6 +226,7 @@ class Npc(pygame.sprite.Sprite):
         self.pos = x+16, y+16
         self.game = game
         self.image = pygame.image.load(path.join(game.game_folder, img))
+        self.image = pygame.transform.scale(self.image, (48, 81))
         self.rect = self.image.get_rect()
         self.rect.center = self.pos
         self.interact_points = self.make_interact_points(interact=interact)
