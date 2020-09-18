@@ -237,6 +237,17 @@ class Npc(pygame.sprite.Sprite):
 
         Wall(self.pos[0]-16, self.pos[1]-16, 32, 32, game)
 
+    def make_interact_points(self, interact=False):
+        # make a rect at the n e s w points of npc
+        # used to interact with player
+        # not all npcs should have interact points
+        """ return list of 4 points for player detection """
+        if interact:
+            points = ((self.pos[0]+32, self.pos[1]), (self.pos[0]-32, self.pos[1]),
+                      (self.pos[0], self.pos[1]+32), (self.pos[0], self.pos[1]-32), self)
+            return points
+        return False
+
     def talk(self):
         if self.speech:
             return self.speech[0]
@@ -261,17 +272,6 @@ class QuestNpc(Npc):
         self.quest = quest_object()  # this is sudo code
         self.index = 0  # tracks quest progression
         super().__init__(x, y, game, img, interact=interact, speech=speech)
-
-    def make_interact_points(self, interact=False):
-        # make a rect at the n e s w points of npc
-        # used to interact with player
-        # not all npcs should have interact points
-        """ return list of 4 points for player detection """
-        if interact:
-            points = ((self.pos[0]+32, self.pos[1]), (self.pos[0]-32, self.pos[1]),
-                      (self.pos[0], self.pos[1]+32), (self.pos[0], self.pos[1]-32))
-            return points
-        return False
 
     def talk(self):
         """ returns quest """

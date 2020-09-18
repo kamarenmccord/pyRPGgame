@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.3.2" orientation="orthogonal" renderorder="right-down" compressionlevel="0" width="35" height="35" tilewidth="64" tileheight="64" infinite="0" nextlayerid="11" nextobjectid="31">
+<map version="1.2" tiledversion="1.3.2" orientation="orthogonal" renderorder="right-down" compressionlevel="0" width="35" height="35" tilewidth="64" tileheight="64" infinite="0" nextlayerid="12" nextobjectid="33">
  <editorsettings>
   <export target="level1.xml" format="tmx"/>
  </editorsettings>
@@ -264,7 +264,21 @@
  </objectgroup>
  <objectgroup id="8" name="player">
   <object id="22" name="player" x="1547.59" y="1872.95" width="66.6152" height="63.7189"/>
+ </objectgroup>
+ <objectgroup id="11" name="npcs">
   <object id="30" name="trainer" x="1153" y="1346" width="64" height="62"/>
+  <object id="31" name="npc" type="rando" x="1473" y="1089" width="63" height="63">
+   <properties>
+    <property name="img" value="npcs/npc1.png"/>
+    <property name="speech" value="hello world"/>
+   </properties>
+  </object>
+  <object id="32" name="book" type="book1" x="1111" y="1058" width="57" height="54">
+   <properties>
+    <property name="contents" value="text/book1.txt"/>
+    <property name="img" value="text/book.png"/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup id="9" name="enemy_zones">
   <object id="23" name="zone_1" x="1.33227e-15" y="-0.965437" width="702.838" height="383.279"/>
@@ -272,6 +286,6 @@
   <object id="25" name="zone_1" x="-0.965437" y="513.613" width="125.507" height="60.8226"/>
  </objectgroup>
  <objectgroup id="10" name="save_locations">
-  <object id="27" name="save_spot" x="894.968" y="1026.74" width="385.21" height="254.876"/>
+  <object id="27" name="save_spot" x="893.968" y="1023.74" width="385.21" height="254.876"/>
  </objectgroup>
 </map>

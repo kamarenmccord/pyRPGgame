@@ -1,5 +1,6 @@
 from .characters import *
 from .tilemap import *
+from .items import *
 
 import pygame
 
@@ -39,6 +40,11 @@ def load_level(game, level):
                 Wall(tile_objs.x, tile_objs.y, tile_objs.width, tile_objs.height, game)
             if tile_objs.name == 'trainer':
                 NpcTrainer(tile_objs.x, tile_objs.y, game)
+            if tile_objs.name == 'npc':
+                if tile_objs.type == 'rando':
+                    RandoNpc(tile_objs.x, tile_objs.y, game, tile_objs.img, interact=True, speech=tile_objs.speech)
+            if tile_objs.name == 'book':
+                Book(tile_objs.x, tile_objs.y, tile_objs.img, tile_objs.contents, game)
         game.camera = Camera(game.map.width, game.map.height)
 
 

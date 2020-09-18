@@ -3,6 +3,7 @@ from .items import Item
 
 """ contains quest objects """
 
+
 class Quest:
     """ master quest object """
     def __init__(self, npc_obj, description, rewards, journey, finished=False):
