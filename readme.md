@@ -15,3 +15,5 @@ a RPG based game
 <h3>Known Bugs</h3>
 <p>--Game does not close down always, have to kill terminal to fully close app</p>
 <p>--Pause menu feels sticky / slow to respond</p>
+<p>--inventory screen bug where last item is skipped when you scroll
+    to the top, past the last item, and then back down.</p>
