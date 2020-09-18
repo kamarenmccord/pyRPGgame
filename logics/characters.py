@@ -124,7 +124,6 @@ class Cursor(pygame.sprite.Sprite):
                         if event.key == pygame.K_UP:
                             self.index -= 1
                         if event.key == pygame.K_DOWN:
-                            print(positions)
                             self.index += 1
                     if 'horizontal' in direction:
                         if event.key == pygame.K_RIGHT:
@@ -228,6 +227,7 @@ class Npc(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.center = self.pos
         self.interact_points = self.make_interact_points(interact=interact)
+        self.game.map.interact_points.append(self.interact_points)
         self.groups = [self.game.all_sprites]
         pygame.sprite.Sprite.__init__(self, self.groups)
 

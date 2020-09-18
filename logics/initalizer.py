@@ -18,6 +18,7 @@ def load_level(game, level):
     map_zones = range(20)
     game.map.danger_zone = {}
     game.map.saves = []
+    game.map.interact_points = []
     for zone in map_zones:
         game.map.danger_zone[f'zone_{zone+1}'] = []
 

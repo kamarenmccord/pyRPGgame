@@ -212,12 +212,6 @@ class Inventory:
                     if self.current_pos <= -1:
                         self.jumpToEnd = True
 
-                print("y = ", y)
-                print(f'offset = {self.offset} / {max_offset}')
-                print('current pos = ', self.current_pos)
-                print('last pos = ', self.last_pos)
-                print('cursor pos = ', self.cursor.pos)
-                print('len keys = ', len(keys)-1)
             # get players input
             option_index = None
 
