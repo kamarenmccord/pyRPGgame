@@ -138,6 +138,8 @@ class Game:
                 self.screen.blit(sprite.img, self.camera.apply(sprite))
         for sprite in self.all_sprites:
             self.screen.blit(sprite.image, self.camera.apply(sprite))
+            if isinstance(sprite, Npc):
+                sprite.draw()
         if self.draw_walls:
             for sprite in self.walls:
                 self.screen.blit(sprite.image, self.camera.apply(sprite))

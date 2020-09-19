@@ -67,23 +67,21 @@ def collision_with_zone(plyr, zone):
                     if num % 4 != 0:
                         zone_width = coord[0] + coord[2]
                         zone_height = coord[1] + coord[3]
-                        if plyr.pos[0] >= coord[0] and plyr.pos[0] <= zone_width:
-                            if plyr.pos[1] >= coord[1] and plyr.pos[1] <= zone_height:
+                        if coord[0] <= plyr.pos[0] <= zone_width:
+                            if coord[1] <= plyr.pos[1] <= zone_height:
                                 if isinstance(coords[-1], (Npc, Book)):
                                     plyr.area = coords[-1]  # npc obj
-                                    plyr.zone = coord[:3]  # coords
+                                    plyr.zone = coord[:4]  # coords
                     else:
                         count += 1
 
 
 def player_exit_zone(plyr):
     # check to see if player exited last entered zone
-    if not isinstance(plyr.zone, bool):
-        if (plyr.pos[0] < plyr.zone[0] or plyr.pos[0] + TILESIZE > plyr.zone[2]
-                or plyr.pos[1] < plyr.zone[1] or plyr.pos[1] + TILESIZE > plyr.zone[3]):
+    if (plyr.zone[0] < plyr.pos[0] or plyr.pos[0] > plyr.zone[0]+plyr.zone[2]
+        or plyr.zone[1] < plyr.pos[1] or plyr.pos[1] > plyr.zone[1]+plyr.zone[3]):
             plyr.zone = False
-            if not isinstance(plyr.area, bool):
-                plyr.area = False
+            plyr.area = False
 
 
 class Cursor(pygame.sprite.Sprite):
@@ -255,8 +253,15 @@ class Npc(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self, self.groups)
         self.speech = speech
         self.index = 0  # indexes speach
+        self.img = pygame.Surface((64, 64))
+        self.img_rect = self.img.get_rect()
 
         Wall(self.pos[0]-16, self.pos[1]-16, 32, 32, game)
+
+    def draw(self):
+        for pos in self.interact_points[:4]:
+            self.img_rect.center = pos[0], pos[1]
+            self.game.screen.blit(self.img, self.game.camera.apply_box(self.img_rect))
 
     def make_interact_points(self, interact):
         # make a rect at the n e s w points of npc
@@ -266,8 +271,8 @@ class Npc(pygame.sprite.Sprite):
         if interact:
             points = ((self.pos[0]+64, self.pos[1], TILESIZE*2, TILESIZE*2),
                       (self.pos[0]-64, self.pos[1], TILESIZE*2, TILESIZE*2),
-                      (self.pos[0], self.pos[1]+32, TILESIZE*2, TILESIZE*2),
-                      (self.pos[0], self.pos[1]-32, TILESIZE*2, TILESIZE*2),
+                      (self.pos[0], self.pos[1]+64, TILESIZE*2, TILESIZE*2),
+                      (self.pos[0], self.pos[1]-64, TILESIZE*2, TILESIZE*2),
                       self)
             return points
         return False
@@ -412,14 +417,13 @@ class Player(pygame.sprite.Sprite):
             self.prev_pos = self.pos
             self.stats['step_count'] += 1
             # check for changes
+            if not isinstance(self.area, bool):
+                player_exit_zone(self)
             if isinstance(self.area, bool):
                 # give priority to other areas
                 collision_with_zone(self, self.game.map.saves)
-            if isinstance(self.area, (bool, str)):
                 collision_with_zone(self, self.game.map.interact_points)
                 collision_with_bz(self, self.game.map.danger_zone)
-            if not isinstance(self.area, bool):
-                player_exit_zone(self)
 
             # battle cooldown
             if self.grace_period > 0:

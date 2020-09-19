@@ -32,8 +32,8 @@ class Book(pygame.sprite.Sprite):
         if interact:
             points = ((self.pos[0]+64, self.pos[1], TILESIZE*2, TILESIZE*2),
                       (self.pos[0]-64, self.pos[1], TILESIZE*2, TILESIZE*2),
-                      (self.pos[0], self.pos[1]+32, TILESIZE*2, TILESIZE*2),
-                      (self.pos[0], self.pos[1]-32, TILESIZE*2, TILESIZE*2),
+                      (self.pos[0], self.pos[1]+64, TILESIZE*2, TILESIZE*2),
+                      (self.pos[0], self.pos[1]-64, TILESIZE*2, TILESIZE*2),
                       self)
             return points
         return False
