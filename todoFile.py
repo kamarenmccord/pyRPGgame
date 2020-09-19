@@ -11,12 +11,11 @@
 
 # TODO: add a notification icon above player when obj is intractable
 
-# TODO: npc's and party chars
-#       -load up sprites
-#       -add speaking
-
 # TODO: add sound effects/ musics/ prettify
 
+# DONE: npc's and party chars
+#       -load up sprites
+#       -add speaking
 # DONE: BUILD UP THE INVENTORY SCREEN
 #       -after bag is selected on main menu (see other goal)
 # DONE: verify quit in app.py
