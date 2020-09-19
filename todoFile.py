@@ -1,18 +1,16 @@
 
 """ a place to store all my todo's """
 
-# TODO: rewrite popup window to do word wraping
-
 # TODO: if savelimit files exist, prompt user to overwrite
 
 # TODO: create larger map, put hooks for other maps
 
 # TODO: add more enemies and put them in zones
 
-# TODO: add a notification icon above player when obj is intractable
-
 # TODO: add sound effects/ musics/ prettify
 
+# DONE: add a notification icon above player when obj is intractable
+# DONE: rewrite popup window to do word wraping
 # DONE: npc's and party chars
 #       -load up sprites
 #       -add speaking
