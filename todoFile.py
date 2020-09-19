@@ -1,6 +1,8 @@
 
 """ a place to store all my todo's """
 
+# TODO: rewrite popup window to do word wraping
+
 # TODO: if savelimit files exist, prompt user to overwrite
 
 # TODO: create larger map, put hooks for other maps
