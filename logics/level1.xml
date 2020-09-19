@@ -245,7 +245,7 @@
   <object id="1" name="wall" x="830.103" y="961.576" width="199.846" height="59.8571"/>
   <object id="3" name="wall" x="834.62" y="1025.29" width="56.9613" height="315.698"/>
   <object id="4" name="wall" x="891.477" y="1282.07" width="325.353" height="59.8571"/>
-  <object id="5" name="wall" x="1283.55" y="959.645" width="61.7885" height="385.209"/>
+  <object id="5" name="wall" x="1283.55" y="962.645" width="61.7885" height="385.209"/>
   <object id="6" name="wall" x="1087.84" y="963.576" width="199.846" height="59.8571"/>
   <object id="8" name="wall" x="732.284" y="1503.19" width="63.7193" height="61.788"/>
   <object id="9" name="wall" x="542.576" y="1312.03" width="63.7193" height="61.788"/>
@@ -275,7 +275,7 @@
     <property name="speech" value="hello world"/>
    </properties>
   </object>
-  <object id="32" name="book" type="book1" x="1093" y="1042" width="57" height="54">
+  <object id="32" name="book" type="book1" x="1026" y="836" width="57" height="54">
    <properties>
     <property name="contents" value="text/book1.txt"/>
     <property name="img" value="text/book.png"/>
