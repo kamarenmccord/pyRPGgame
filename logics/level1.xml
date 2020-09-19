@@ -238,6 +238,9 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
+ <objectgroup id="10" name="save_locations">
+  <object id="27" name="save_spot" x="895.968" y="1026.74" width="385.21" height="254.876"/>
+ </objectgroup>
  <objectgroup id="7" name="solids">
   <object id="1" name="wall" x="835.103" y="961.576" width="199.846" height="59.8571"/>
   <object id="3" name="wall" x="834.62" y="1025.29" width="56.9613" height="315.698"/>
@@ -273,7 +276,7 @@
     <property name="speech" value="hello world"/>
    </properties>
   </object>
-  <object id="32" name="book" type="book1" x="1027" y="833" width="57" height="54">
+  <object id="32" name="book" type="book1" x="1118" y="1058" width="57" height="54">
    <properties>
     <property name="contents" value="text/book1.txt"/>
     <property name="img" value="text/book.png"/>
@@ -284,8 +287,5 @@
   <object id="23" name="zone_1" x="1.33227e-15" y="-0.965437" width="702.838" height="383.279"/>
   <object id="24" name="zone_2" x="770.419" y="3.86175" width="188.26" height="186.329"/>
   <object id="25" name="zone_1" x="-0.965437" y="513.613" width="125.507" height="60.8226"/>
- </objectgroup>
- <objectgroup id="10" name="save_locations">
-  <object id="27" name="save_spot" x="892.968" y="1105.74" width="385.21" height="254.876"/>
  </objectgroup>
 </map>
