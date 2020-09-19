@@ -437,7 +437,7 @@ class Player(pygame.sprite.Sprite):
                     self.grace_period = random.randint(0, 3)
 
     def update(self):
-        if not isinstance(self.area, (bool, str)):
+        if not isinstance(self.area, (bool, str, DangerZone)):
             self.interact_rect.center = self.pos[0], self.pos[1]-64
         self.buffer_rect.center = self.pos[0], self.pos[1]+16
         self.rect.center = self.pos
