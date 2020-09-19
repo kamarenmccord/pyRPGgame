@@ -17,3 +17,12 @@ a RPG based game
 <p>--Pause menu feels sticky / slow to respond</p>
 <p>--inventory screen bug where last item is skipped when you scroll
     to the top, past the last item, and then back down.</p>
+    
+<h2>tips on using this</h2>
+<h3>text folder</h3>
+<p>insert a txt file</p>
+<p>line limit 199 chars</p>
+<p>each new line will insert a new text page</p>
+<p>load these files by using tiled maps and adding a custom</p>
+<p>property:<ul><li>img : text/<img>.png</li>
+	        <li>content: text/<filename>.txt</li></ul></p>
