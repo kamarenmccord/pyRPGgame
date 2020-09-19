@@ -12,18 +12,34 @@ class Book(pygame.sprite.Sprite):
     """ in game book """
     def __init__(self, x, y, img, text_file, game):
         self.pos = x, y
-        self.interact_point = self.pos[0], self.pos[1]-TILESIZE
+        self.game = game
+        self.interact_point = self.make_interact_points(True)
+        self.game.map.interact_points.append(self.interact_point)
         self.image = pygame.image.load(os.path.join('logics', img))
         self.image = pygame.transform.scale(self.image, (32, 32))
         self.rect = self.image.get_rect()
         self.rect.center = self.pos
-        self.game = game
         self.groups = [game.all_sprites]
         pygame.sprite.Sprite.__init__(self, self.groups)
         with open(os.path.join('logics', text_file), 'r') as tx:
             self.text = tx.readlines()  # list
-        self.text = '\n'.join(self.text)
-        self.text = self.text.strip
+
+    def make_interact_points(self, interact):
+        # make a rect at the n e s w points of npc
+        # used to interact with player
+        # not all npcs should have interact points
+        """ return list of 4 points for player detection """
+        if interact:
+            points = ((self.pos[0]+64, self.pos[1], TILESIZE*2, TILESIZE*2),
+                      (self.pos[0]-64, self.pos[1], TILESIZE*2, TILESIZE*2),
+                      (self.pos[0], self.pos[1]+32, TILESIZE*2, TILESIZE*2),
+                      (self.pos[0], self.pos[1]-32, TILESIZE*2, TILESIZE*2),
+                      self)
+            return points
+        return False
+
+    def read(self):
+        return self.text
 
 
 class Item:

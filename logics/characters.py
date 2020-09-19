@@ -3,6 +3,7 @@ from os import path
 import random
 
 from .settings import *
+from .items import *
 from .battle import *
 from .inventory import Inventory
 from .quests import *
@@ -58,18 +59,18 @@ def collision_with_zone(plyr, zone):
                             for guy in plyr.game.party:
                                 guy.stats['hp'] = guy.max_hp
         except TypeError:
-            count = 1
+            count = 0
             for coords in zone:
                 for num, coord in enumerate(coords):
-                    if num % 4 != 0 and num != 0:
+                    if num % 4 != 0:
                         zone_width = coord[0] + coord[2]
                         zone_height = coord[1] + coord[3]
                         if plyr.pos[0] >= coord[0] and plyr.pos[0] <= zone_width:
                             if plyr.pos[1] >= coord[1] and plyr.pos[1] <= zone_height:
-                                if isinstance(coords[4*count], Npc):
-                                    plyr.area = coords[4*count]  # npc obj
+                                if isinstance(coords[-1], (Npc, Book)):
+                                    plyr.area = coords[-1]  # npc obj
                                     plyr.zone = coord[:3]  # coords
-                    if num % 4 == 0 and num != 0:
+                    else:
                         count += 1
 
 
@@ -255,7 +256,7 @@ class Npc(pygame.sprite.Sprite):
 
         Wall(self.pos[0]-16, self.pos[1]-16, 32, 32, game)
 
-    def make_interact_points(self, interact=False):
+    def make_interact_points(self, interact):
         # make a rect at the n e s w points of npc
         # used to interact with player
         # not all npcs should have interact points
@@ -388,6 +389,9 @@ class Player(pygame.sprite.Sprite):
                 if isinstance(self.area, Npc):
                     if self.area.interact:
                         self.game.setup_popup(self.area.talk())
+
+                if isinstance(self.area, Book):
+                    self.game.setup_popup(self.area.read())
 
     def check_steps(self):
         # step counter for player

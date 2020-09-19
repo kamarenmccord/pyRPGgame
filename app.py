@@ -35,7 +35,9 @@ class Game:
         pygame.display.set_caption(TITLE)
         self.clock = pygame.time.Clock()
         self.pause = False
-        self.index = 0  # for txt
+        self.word_count = 0
+        self.index = 0
+        self.first_pass = True
         self.waiting_for_player = False
         self.text = ''
         self.talking = False
@@ -133,10 +135,12 @@ class Game:
             self.screen.blit(sprite.image, self.camera.apply(sprite))
 
         if self.pop_up:
-            self.pop_up_window()
-            pygame.display.flip()
             if self.pause:
-                self.wait_for_key()  # wait for key
+                self.pop_up_window()
+                pygame.display.flip()
+                if self.pause:
+                    self.wait_for_key()  # wait for key
+                    self.index += 1
         if self.menu:
             self.create_menu()
             pygame.display.flip()
@@ -146,45 +150,43 @@ class Game:
     def pop_up_window(self):
         """ create a window and fill with text if text is too much wrap and break into
             chunks wait until a key is pressed before continuing """
-        # self.text = text
-        # self.index = number represents splice of text
+        # self.text = has the lines
+        # self.index = what page of self.text
         # self.pop_up = False when no more text remains
-        thisIndex = self.index
-        if isinstance(self.text, list):
-            text = ' '.join([str(item) for item in self.text])
-        else:
-            text = self.text
-        text = text.split(' ')
-        printString = ''
-        stringList = []
-        posY = 0  # refactor for multi lines
-        for words in text[thisIndex:]:
-            if len(printString)+len(words) < 65 and len(stringList) < 5:
-                printString += words + ' '
-                self.index += 1
-                if len(printString) >= 55 and len(stringList) < 5:
-                    stringList.append(printString)
-                    printString = ''
-        print(printString)
-        print(stringList)
 
-        # draw box
-        pygame.draw.rect(self.screen, BLACK, (150, HEIGHT-300, 750, 275))
-        pygame.draw.rect(self.screen, WHITE, (150, HEIGHT - 300, 750, 275), 2)
-
-        # draw text
-        if stringList:
-            for index, text in enumerate(stringList):
-                self.draw_text(f'{stringList[index].strip()}', self.title_font, 24, WHITE, 175, HEIGHT-275+posY)
-                posY += 65
-        else:
-            self.draw_text(f'{printString.strip()}', self.title_font, 24, WHITE, 175, HEIGHT-275+posY)
-
-        if len(text[thisIndex:]) <= 0:
+        if isinstance(self.text, str):
+            self.text = [self.text]
+        try:
+            text_on_this_page = self.text[self.index]
+        except IndexError:
             self.pop_up = False
+            self.index = 0
             self.pause = False
             self.text = ''
-            self.index = 0
+            self.word_count = 0
+            return
+
+        # break this index into sub_index for wrap effect
+        wrapped_text = []
+        line_limit = 4
+        lowerLimit = 0
+        amtup = 27
+        upperLimit = amtup
+        # rewrite for word wrap
+        for n in range(line_limit):
+            wrapped_text.append(text_on_this_page[lowerLimit:upperLimit])
+            lowerLimit = upperLimit
+            upperLimit += amtup
+
+
+        # print each sub_index out
+        x = WIDTH * 25/100
+        y = HEIGHT * 65/100
+        pygame.draw.rect(self.screen, BLACK, (x-50, y-50, 600, 250))
+        pygame.draw.rect(self.screen, WHITE, (x-50, y-50, 600, 250), 2)
+        for list_slice in wrapped_text:
+            self.draw_text(f'{" ".join(list_slice)}', self.title_font, 24, WHITE, x, y)
+            y += 50
 
     def run(self):
         self.playing = True
