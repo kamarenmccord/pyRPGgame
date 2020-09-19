@@ -59,7 +59,7 @@ def collision_with_zone(plyr, zone):
                     if plyr.pos[1] >= coords[1] and plyr.pos[1] + TILESIZE <= zone_height:
 
                         if coords[4] == 'save':
-                            plyr.zone = coords[0], coords[1], zone_width, zone_height
+                            plyr.zone = coords[0], coords[1], coords[2], coords[3]
                             plyr.area = 'save'
                             for guy in plyr.game.party:
                                 guy.stats['hp'] = guy.max_hp

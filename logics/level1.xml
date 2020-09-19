@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.3.2" orientation="orthogonal" renderorder="right-down" compressionlevel="0" width="35" height="35" tilewidth="64" tileheight="64" infinite="0" nextlayerid="12" nextobjectid="33">
+<map version="1.2" tiledversion="1.3.2" orientation="orthogonal" renderorder="right-down" compressionlevel="0" width="35" height="35" tilewidth="64" tileheight="64" infinite="0" nextlayerid="12" nextobjectid="34">
  <editorsettings>
   <export target="level1.xml" format="tmx"/>
  </editorsettings>
@@ -239,7 +239,7 @@
 </data>
  </layer>
  <objectgroup id="10" name="save_locations">
-  <object id="27" name="save_spot" x="889.968" y="1020.74" width="385.21" height="254.876"/>
+  <object id="27" name="save_spot" x="865.968" y="991.74" width="442.21" height="323.876"/>
  </objectgroup>
  <objectgroup id="7" name="solids">
   <object id="1" name="wall" x="830.103" y="961.576" width="199.846" height="59.8571"/>
@@ -279,6 +279,12 @@
    <properties>
     <property name="contents" value="text/book1.txt"/>
     <property name="img" value="text/book.png"/>
+   </properties>
+  </object>
+  <object id="33" name="npc" type="rando" x="1154" y="1601" width="60" height="57">
+   <properties>
+    <property name="img" value="npcs/npc2.png"/>
+    <property name="speech" value="Nice day for fishin aint it"/>
    </properties>
   </object>
  </objectgroup>
