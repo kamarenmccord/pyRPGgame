@@ -7,6 +7,7 @@ from .items import *
 from .battle import *
 from .inventory import Inventory
 from .quests import *
+
 vec = pygame.math.Vector2
 
 game_folder = path.dirname(__file__)
@@ -14,9 +15,9 @@ game_folder = path.dirname(__file__)
 
 def collide_with_boundries(player, dx, dy):
     """boundaries set by map dimensions"""
-    if player.pos[0] + dx <= CLIPPING_BUFFER or player.pos[0] + dx >= player.game.map.width-CLIPPING_BUFFER:
+    if player.pos[0] + dx <= CLIPPING_BUFFER or player.pos[0] + dx >= player.game.map.width - CLIPPING_BUFFER:
         return True
-    elif player.pos[1] + dy <= CLIPPING_BUFFER or player.pos[1] + dy >= player.game.map.height-CLIPPING_BUFFER:
+    elif player.pos[1] + dy <= CLIPPING_BUFFER or player.pos[1] + dy >= player.game.map.height - CLIPPING_BUFFER:
         return True
 
 
@@ -26,8 +27,10 @@ def collide_with_walls(obj, dx, dy):
     tl = obj.buffer_rect.topleft
     for wall in obj.game.walls:
         wl = wall.rect.topleft
-        if tl[0]+dx < wl[0]+wall.rect.width+CLIPPING_BUFFER and tl[0]+obj.buffer_rect.width+dx-CLIPPING_BUFFER > wl[0]:
-            if tl[1]+dy < wl[1]+wall.rect.height+CLIPPING_BUFFER and tl[1]+obj.buffer_rect.height+dy-CLIPPING_BUFFER > wl[1]:
+        if (tl[0] + dx < wl[0] + wall.rect.width + CLIPPING_BUFFER and
+                tl[0] + obj.buffer_rect.width + dx - CLIPPING_BUFFER > wl[0]):
+            if (tl[1] + dy < wl[1] + wall.rect.height + CLIPPING_BUFFER and
+                    tl[1] + obj.buffer_rect.height + dy - CLIPPING_BUFFER > wl[1]):
                 return True
     return False
 
@@ -78,10 +81,13 @@ def collision_with_zone(plyr, zone):
 
 def player_exit_zone(plyr):
     # check to see if player exited last entered zone
-    if (plyr.zone[0] < plyr.pos[0] or plyr.pos[0] > plyr.zone[0]+plyr.zone[2]
-        or plyr.zone[1] < plyr.pos[1] or plyr.pos[1] > plyr.zone[1]+plyr.zone[3]):
-            plyr.zone = False
-            plyr.area = False
+    print(plyr.zone)
+    tl = plyr.buffer_rect.topleft
+    br = plyr.buffer_rect
+    if not (plyr.zone[0]+plyr.zone[2] > tl[0] and tl[0]+br.width > plyr.zone[0]
+            and plyr.zone[1] < tl[1] and tl[1]+br.height > plyr.zone[1] + plyr.zone[3]):
+        plyr.zone = False
+        plyr.area = False
 
 
 class Cursor(pygame.sprite.Sprite):
@@ -151,7 +157,7 @@ class Cursor(pygame.sprite.Sprite):
                 if self.index >= len(positions):
                     self.index = 0
                 if self.index < 0:
-                    self.index = len(positions)-1
+                    self.index = len(positions) - 1
                 if not self.index == self.lastIndex:
                     self.moveTo(positions[self.index], playsnd=True)
                     self.lastIndex = self.index
@@ -176,8 +182,8 @@ class PartyChar(pygame.sprite.Sprite):
         self.image = pygame.image.load(path.join(game.game_folder, f'{image}'))
         self.large_image = pygame.transform.scale(self.image, (128, 128))
         self.stats = {'level': 1, 'hp': 175, 'attack': 20, 'defence': 30, 'speed': 5,
-                       'sp_att': 3, 'sp_def': 4, 'accuracy': 90, 'mana': 25, 'max_mana': 25,
-                       'xp_to_level': 50, 'xp': 0}
+                      'sp_att': 3, 'sp_def': 4, 'accuracy': 90, 'mana': 25, 'max_mana': 25,
+                      'xp_to_level': 50, 'xp': 0}
         self.max_hp = self.stats['hp']
         self.active = False
 
@@ -196,7 +202,7 @@ class PartyChar(pygame.sprite.Sprite):
         """ check to see if player has reached a level up """
         self.stats['xp'] += number_of_gained
         if self.stats['xp'] > self.stats['xp_to_level'] and self.stats['level'] < MAX_LEVEL:
-            print(f'{self.name} has reached lvl {self.stats["level"]+1}!')
+            print(f'{self.name} has reached lvl {self.stats["level"] + 1}!')
             self.stats['level'] += 1
             self.stats = self.statsIncrease()
             return True
@@ -204,11 +210,11 @@ class PartyChar(pygame.sprite.Sprite):
 
     def statsIncrease(self):
         """ method used to level up players stats """
-        self.stats['xp_to_level'] += math.ceil(math.log(self.stats['xp_to_level'], 2) + self.stats['xp_to_level']/2)
+        self.stats['xp_to_level'] += math.ceil(math.log(self.stats['xp_to_level'], 2) + self.stats['xp_to_level'] / 2)
         for key in self.stats.keys():
             if key not in ['hp', 'level', 'accuracy', 'xp', 'xp_to_level', 'max_mana', 'mana']:
                 self.stats[f'{key}'] += random.randint(2, 7)
-        gain = round(self.max_hp*25/100 + self.stats['level'])
+        gain = round(self.max_hp * 25 / 100 + self.stats['level'])
         self.stats['mana'] += gain
         self.stats['max_mana'] += gain
         self.max_hp += gain
@@ -223,8 +229,9 @@ class PartyChar(pygame.sprite.Sprite):
 
 class NpcTrainer(pygame.sprite.Sprite):
     """ special npc that helps player though game / gives advice """
+
     def __init__(self, x, y, game):
-        self.pos = x+16, y+16
+        self.pos = x + 16, y + 16
         self.game = game
         self.image = pygame.image.load(path.join(game.game_folder, 'npcTrainer.png'))
         self.image = pygame.transform.scale(self.image, (48, 81))
@@ -234,12 +241,12 @@ class NpcTrainer(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self, self.groups)
 
         # wall around npc to prevent walk through
-        Wall(self.pos[0]-16, self.pos[1]-16, 32, 32, game)
+        Wall(self.pos[0] - 16, self.pos[1] - 16, 32, 32, game)
 
 
 class Npc(pygame.sprite.Sprite):
     def __init__(self, x, y, game, img, interact=False, speech=False):
-        self.pos = x+16, y+16
+        self.pos = x + 16, y + 16
         self.game = game
         self.image = pygame.image.load(path.join(game.game_folder, img))
         self.image = pygame.transform.scale(self.image, (48, 81))
@@ -252,15 +259,15 @@ class Npc(pygame.sprite.Sprite):
         self.groups = [self.game.all_sprites]
         pygame.sprite.Sprite.__init__(self, self.groups)
         self.speech = speech
-        self.index = 0  # indexes speach
+        self.index = 0  # indexes speech
         self.img = pygame.Surface((64, 64))
         self.img_rect = self.img.get_rect()
 
-        Wall(self.pos[0]-16, self.pos[1]-16, 32, 32, game)
+        Wall(self.pos[0] - 16, self.pos[1] - 16, 32, 32, game)
 
     def draw(self):
         for pos in self.interact_points[:4]:
-            self.img_rect.center = pos[0], pos[1]
+            self.img_rect.topleft = pos[0], pos[1]
             self.game.screen.blit(self.img, self.game.camera.apply_box(self.img_rect))
 
     def make_interact_points(self, interact):
@@ -269,10 +276,11 @@ class Npc(pygame.sprite.Sprite):
         # not all npcs should have interact points
         """ return list of 4 points for player detection """
         if interact:
-            points = ((self.pos[0]+64, self.pos[1], TILESIZE*2, TILESIZE*2),
-                      (self.pos[0]-64, self.pos[1], TILESIZE*2, TILESIZE*2),
-                      (self.pos[0], self.pos[1]+64, TILESIZE*2, TILESIZE*2),
-                      (self.pos[0], self.pos[1]-64, TILESIZE*2, TILESIZE*2),
+            rect = self.rect.topleft
+            points = ((rect[0] + 64, rect[1], TILESIZE * 2, TILESIZE * 2),
+                      (rect[0] - 64, rect[1], TILESIZE * 2, TILESIZE * 2),
+                      (rect[0], rect[1] + 64, TILESIZE * 2, TILESIZE * 2),
+                      (rect[0], rect[1] - 64, TILESIZE * 2, TILESIZE * 2),
                       self)
             return points
         return False
@@ -285,12 +293,13 @@ class Npc(pygame.sprite.Sprite):
 
 class RandoNpc(Npc):
     """ returns random speaches """
+
     def __init__(self, x, y, game, img, interact=False, speech=False):
         super().__init__(x=x, y=y, game=game, img=img, interact=interact, speech=speech)
 
     def talk(self):
         if self.speech:
-            rando_speech = random.randint(0, len(self.speech)-1
+            rando_speech = random.randint(0, len(self.speech) - 1
                                           )
             return self.speech[rando_speech]
         return False
@@ -298,6 +307,7 @@ class RandoNpc(Npc):
 
 class QuestNpc(Npc):
     """ gives/ progresses quest """
+
     def __init__(self, x, y, game, img, quest_object, interact=False, speech=False):
         self.quest = quest_object()  # this is sudo code
         self.index = 0  # tracks quest progression
@@ -323,7 +333,7 @@ class Player(pygame.sprite.Sprite):
         self.interact_img = pygame.image.load(path.join(self.game.game_folder, 'interact_img.png'))
         self.interact_img = pygame.transform.scale(self.interact_img, (32, 64))
         self.interact_rect = self.interact_img.get_rect()
-        self.interact_rect.center = self.pos[0], self.pos[1]-64
+        self.interact_rect.center = self.pos[0], self.pos[1] - 64
         self.rect = self.image.get_rect()
         self.rect.center = self.pos
 
@@ -360,7 +370,7 @@ class Player(pygame.sprite.Sprite):
 
     def move(self, dx=0, dy=0):
         if self.stats['step_count'] >= self.next_step:
-            self.frame = (self.frame+1) % 3
+            self.frame = (self.frame + 1) % 3
         self.next_step = self.stats['step_count'] + 1
         if not collide_with_boundries(self, dx, dy):
             if not collide_with_walls(self, dx, dy):
@@ -412,8 +422,8 @@ class Player(pygame.sprite.Sprite):
 
     def check_steps(self):
         # step counter for player
-        if (self.pos[0] >= self.prev_pos[0]+STEPSIZE or self.pos[0] <= self.prev_pos[0]-STEPSIZE
-                or self.pos[1] >= self.prev_pos[1]+STEPSIZE or self.pos[1] <= self.prev_pos[1]-STEPSIZE):
+        if (self.pos[0] >= self.prev_pos[0] + STEPSIZE or self.pos[0] <= self.prev_pos[0] - STEPSIZE
+                or self.pos[1] >= self.prev_pos[1] + STEPSIZE or self.pos[1] <= self.prev_pos[1] - STEPSIZE):
             self.prev_pos = self.pos
             self.stats['step_count'] += 1
             # check for changes
@@ -442,8 +452,8 @@ class Player(pygame.sprite.Sprite):
 
     def update(self):
         if not isinstance(self.area, (bool, str, DangerZone)):
-            self.interact_rect.center = self.pos[0], self.pos[1]-64
-        self.buffer_rect.center = self.pos[0], self.pos[1]+16
+            self.interact_rect.center = self.pos[0], self.pos[1] - 64
+        self.buffer_rect.center = self.pos[0], self.pos[1] + 16
         self.rect.center = self.pos
         self.check_keys()
         self.check_steps()
@@ -459,7 +469,7 @@ class Wall(pygame.sprite.Sprite):
         self.width = width
         self.height = height
         shrink_size = 5
-        self.image = pygame.Surface((round(self.width)-shrink_size, round(self.height)-shrink_size))
+        self.image = pygame.Surface((round(self.width) - shrink_size, round(self.height) - shrink_size))
         self.image.fill(BLUE)
         self.rect = self.image.get_rect()
         self.rect.topleft = self.x, self.y
@@ -478,4 +488,3 @@ class DangerZone(pygame.sprite.Sprite):
     def __str__(self):
         # for debugging
         return f'x:{self.pos[0]} y:{self.pos[1]}, width: {self.width} height:{self.height}, danger: {self.zone}'
-
