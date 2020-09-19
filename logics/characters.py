@@ -64,11 +64,9 @@ def collision_with_zone(plyr, zone):
                             for guy in plyr.game.party:
                                 guy.stats['hp'] = guy.max_hp
         except TypeError:
-            count = 0
             tl = plyr.rect.topleft
             for coords in zone:
                 for num, coord in enumerate(coords):
-                    print(coord)
                     if num % 4 != 0 and num != 0:
                         zone_width = coord[0] + coord[2]
                         zone_height = coord[1] + coord[3]
@@ -77,8 +75,6 @@ def collision_with_zone(plyr, zone):
                                 if isinstance(coords[-1], (Npc, Book)):
                                     plyr.area = coords[-1]  # npc obj
                                     plyr.zone = coord[:4]  # coords
-                    else:
-                        count += 1
 
 
 def player_exit_zone(plyr):
