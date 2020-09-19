@@ -403,8 +403,10 @@ class Player(pygame.sprite.Sprite):
             # check for changes
             if isinstance(self.area, bool):
                 collision_with_bz(self, self.game.map.danger_zone)
-                collision_with_zone(self, self.game.map.saves)
                 collision_with_zone(self, self.game.map.interact_points)
+            if isinstance(self.area, bool):
+                # give priority to other areas
+                collision_with_zone(self, self.game.map.saves)
             else:
                 player_exit_zone(self)
 
