@@ -65,13 +65,15 @@ def collision_with_zone(plyr, zone):
                                 guy.stats['hp'] = guy.max_hp
         except TypeError:
             count = 0
+            tl = plyr.rect.topleft
             for coords in zone:
                 for num, coord in enumerate(coords):
-                    if num % 4 != 0:
+                    print(coord)
+                    if num % 4 != 0 and num != 0:
                         zone_width = coord[0] + coord[2]
                         zone_height = coord[1] + coord[3]
-                        if coord[0] <= plyr.pos[0] <= zone_width:
-                            if coord[1] <= plyr.pos[1] <= zone_height:
+                        if tl[0] < zone_width and tl[0] + plyr.rect.width > coord[0]:
+                            if tl[1] < zone_height and tl[1] + plyr.rect.height > coord[1]:
                                 if isinstance(coords[-1], (Npc, Book)):
                                     plyr.area = coords[-1]  # npc obj
                                     plyr.zone = coord[:4]  # coords
@@ -81,11 +83,10 @@ def collision_with_zone(plyr, zone):
 
 def player_exit_zone(plyr):
     # check to see if player exited last entered zone
-    print(plyr.zone)
     tl = plyr.buffer_rect.topleft
     br = plyr.buffer_rect
     if not (plyr.zone[0]+plyr.zone[2] > tl[0] and tl[0]+br.width > plyr.zone[0]
-            and plyr.zone[1] < tl[1] and tl[1]+br.height > plyr.zone[1] + plyr.zone[3]):
+            and plyr.zone[1]+plyr.zone[3] > tl[1] and tl[1]+br.height > plyr.zone[1]):
         plyr.zone = False
         plyr.area = False
 
@@ -421,20 +422,20 @@ class Player(pygame.sprite.Sprite):
                     self.game.setup_popup(self.area.read())
 
     def check_steps(self):
+        # check for changes
+        if not isinstance(self.area, bool):
+            player_exit_zone(self)
+        if isinstance(self.area, bool):
+            # give priority to other areas
+            collision_with_zone(self, self.game.map.saves)
+            collision_with_zone(self, self.game.map.interact_points)
+            collision_with_bz(self, self.game.map.danger_zone)
+
         # step counter for player
         if (self.pos[0] >= self.prev_pos[0] + STEPSIZE or self.pos[0] <= self.prev_pos[0] - STEPSIZE
                 or self.pos[1] >= self.prev_pos[1] + STEPSIZE or self.pos[1] <= self.prev_pos[1] - STEPSIZE):
             self.prev_pos = self.pos
             self.stats['step_count'] += 1
-            # check for changes
-            if not isinstance(self.area, bool):
-                player_exit_zone(self)
-            if isinstance(self.area, bool):
-                # give priority to other areas
-                collision_with_zone(self, self.game.map.saves)
-                collision_with_zone(self, self.game.map.interact_points)
-                collision_with_bz(self, self.game.map.danger_zone)
-
             # battle cooldown
             if self.grace_period > 0:
                 self.grace_period -= 1
