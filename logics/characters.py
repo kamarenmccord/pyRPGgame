@@ -300,8 +300,7 @@ class RandoNpc(Npc):
 
     def talk(self):
         if self.speech:
-            rando_speech = random.randint(0, len(self.speech) - 1
-                                          )
+            rando_speech = random.randint(0, len(self.speech) - 1)
             return self.speech[rando_speech]
         return False
 
