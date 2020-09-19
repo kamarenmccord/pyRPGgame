@@ -180,16 +180,27 @@ class Game:
             return
 
         # break this index into sub_index for wrap effect
-        wrapped_text = []
+        wrapped_text = [[]]
         line_limit = 4
         lowerLimit = 0
         amtup = 27
         upperLimit = amtup
+
+        # word wrap
+        count = 0
+        for word in text_on_this_page.split(' '):
+            if len(' '.join(wrapped_text[count])) + len(word) < 50:
+                wrapped_text[count].append(word)
+            else:
+                wrapped_text.append([])
+                count += 1
+                wrapped_text[count].append(word)
+
         # rewrite for word wrap
-        for n in range(line_limit):
-            wrapped_text.append(text_on_this_page[lowerLimit:upperLimit])
-            lowerLimit = upperLimit
-            upperLimit += amtup
+        # for n in range(line_limit):
+        #     wrapped_text.append(text_on_this_page[lowerLimit:upperLimit])
+        #     lowerLimit = upperLimit
+        #     upperLimit += amtup
 
 
         # print each sub_index out
