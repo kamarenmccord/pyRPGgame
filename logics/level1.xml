@@ -239,15 +239,14 @@
 </data>
  </layer>
  <objectgroup id="10" name="save_locations">
-  <object id="27" name="save_spot" x="895.968" y="1026.74" width="385.21" height="254.876"/>
+  <object id="27" name="save_spot" x="889.968" y="1020.74" width="385.21" height="254.876"/>
  </objectgroup>
  <objectgroup id="7" name="solids">
-  <object id="1" name="wall" x="835.103" y="961.576" width="199.846" height="59.8571"/>
+  <object id="1" name="wall" x="830.103" y="961.576" width="199.846" height="59.8571"/>
   <object id="3" name="wall" x="834.62" y="1025.29" width="56.9613" height="315.698"/>
-  <object id="4" name="wall" x="894.477" y="1283.07" width="325.353" height="59.8571"/>
+  <object id="4" name="wall" x="891.477" y="1282.07" width="325.353" height="59.8571"/>
   <object id="5" name="wall" x="1283.55" y="959.645" width="61.7885" height="385.209"/>
-  <object id="6" name="wall" x="1079.84" y="961.576" width="199.846" height="59.8571"/>
-  <object id="7" name="wall" x="1272.93" y="1282.1" width="73.3737" height="64.6843"/>
+  <object id="6" name="wall" x="1087.84" y="963.576" width="199.846" height="59.8571"/>
   <object id="8" name="wall" x="732.284" y="1503.19" width="63.7193" height="61.788"/>
   <object id="9" name="wall" x="542.576" y="1312.03" width="63.7193" height="61.788"/>
   <object id="10" name="wall" x="543.541" y="928.751" width="63.7193" height="61.788"/>
@@ -257,7 +256,7 @@
   <object id="14" name="wall" x="960.61" y="1663.45" width="63.7193" height="61.788"/>
   <object id="15" name="wall" x="1150.8" y="1660.55" width="63.7193" height="68.5461"/>
   <object id="16" name="wall" x="961.575" y="1726.2" width="254.876" height="195.018"/>
-  <object id="17" name="wall" x="1085.15" y="1027.23" width="194.053" height="61.788"/>
+  <object id="17" name="wall" x="1093.15" y="1023.23" width="194.053" height="61.788"/>
   <object id="18" name="wall" x="894.96" y="1034.95" width="61.7884" height="39.5829"/>
   <object id="19" name="wall" x="900.753" y="1125.7" width="52.1341" height="19.3088"/>
   <object id="20" name="wall" x="895.926" y="1262.79" width="55.9958" height="17.3778"/>
@@ -276,7 +275,7 @@
     <property name="speech" value="hello world"/>
    </properties>
   </object>
-  <object id="32" name="book" type="book1" x="1118" y="1058" width="57" height="54">
+  <object id="32" name="book" type="book1" x="1093" y="1042" width="57" height="54">
    <properties>
     <property name="contents" value="text/book1.txt"/>
     <property name="img" value="text/book.png"/>

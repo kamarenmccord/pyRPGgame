@@ -23,9 +23,11 @@ def collide_with_boundries(player, dx, dy):
 def collide_with_walls(obj, dx, dy):
     """object hits walls"""
     # this would be more effective via adding a col box around player
+    tl = obj.buffer_rect.topleft
     for wall in obj.game.walls:
-        if wall.x-CLIPPING_BUFFER <= obj.pos[0]+dx <= wall.width+CLIPPING_BUFFER:
-            if wall.y-CLIPPING_BUFFER <= obj.pos[1]+dy <= wall.height+CLIPPING_BUFFER:
+        wl = wall.rect.topleft
+        if tl[0]+dx < wl[0]+wall.rect.width+CLIPPING_BUFFER and tl[0]+obj.buffer_rect.width+dx-CLIPPING_BUFFER > wl[0]:
+            if tl[1]+dy < wl[1]+wall.rect.height+CLIPPING_BUFFER and tl[1]+obj.buffer_rect.height+dy-CLIPPING_BUFFER > wl[1]:
                 return True
     return False
 
@@ -313,8 +315,18 @@ class Player(pygame.sprite.Sprite):
         self.pos = vec(x, y)
         self.images = self.load_images()
         self.image = self.images[0]
+        self.interact_img = pygame.image.load(path.join(self.game.game_folder, 'interact_img.png'))
+        self.interact_img = pygame.transform.scale(self.interact_img, (32, 64))
+        self.interact_rect = self.interact_img.get_rect()
+        self.interact_rect.center = self.pos[0], self.pos[1]-64
         self.rect = self.image.get_rect()
         self.rect.center = self.pos
+
+        # temp code
+        self.buffer_box = pygame.Surface((TILESIZE, TILESIZE))
+        self.buffer_box.fill(RED)
+        self.buffer_rect = self.buffer_box.get_rect()
+        self.buffer_rect.center = self.pos
 
         self.inventory = Inventory(self.game, Cursor(game))
         self.stats = {'step_count': 0, 'currency': 50}
@@ -399,15 +411,14 @@ class Player(pygame.sprite.Sprite):
                 or self.pos[1] >= self.prev_pos[1]+STEPSIZE or self.pos[1] <= self.prev_pos[1]-STEPSIZE):
             self.prev_pos = self.pos
             self.stats['step_count'] += 1
-
             # check for changes
-            if isinstance(self.area, bool):
-                collision_with_bz(self, self.game.map.danger_zone)
-                collision_with_zone(self, self.game.map.interact_points)
             if isinstance(self.area, bool):
                 # give priority to other areas
                 collision_with_zone(self, self.game.map.saves)
-            else:
+            if isinstance(self.area, (bool, str)):
+                collision_with_zone(self, self.game.map.interact_points)
+                collision_with_bz(self, self.game.map.danger_zone)
+            if not isinstance(self.area, bool):
                 player_exit_zone(self)
 
             # battle cooldown
@@ -426,6 +437,9 @@ class Player(pygame.sprite.Sprite):
                     self.grace_period = random.randint(0, 3)
 
     def update(self):
+        if not isinstance(self.area, (bool, str)):
+            self.interact_rect.center = self.pos[0], self.pos[1]-64
+        self.buffer_rect.center = self.pos[0], self.pos[1]+16
         self.rect.center = self.pos
         self.check_keys()
         self.check_steps()
@@ -438,8 +452,13 @@ class Wall(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self, self.groups)
         self.x = x
         self.y = y
-        self.width = x+width
-        self.height = y+height
+        self.width = width
+        self.height = height
+        shrink_size = 5
+        self.image = pygame.Surface((round(self.width)-shrink_size, round(self.height)-shrink_size))
+        self.image.fill(BLUE)
+        self.rect = self.image.get_rect()
+        self.rect.topleft = self.x, self.y
 
     def __str__(self):
         return f'{self.x}, {self.y}, {self.width}, {self.height}'

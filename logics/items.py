@@ -18,7 +18,7 @@ class Book(pygame.sprite.Sprite):
         self.image = pygame.image.load(os.path.join('logics', img))
         self.image = pygame.transform.scale(self.image, (32, 32))
         self.rect = self.image.get_rect()
-        self.rect.center = self.pos
+        self.rect.topleft = self.pos
         self.groups = [game.all_sprites]
         pygame.sprite.Sprite.__init__(self, self.groups)
         with open(os.path.join('logics', text_file), 'r') as tx:

@@ -34,7 +34,7 @@ MOB_DIR = 'mobs'
 SAVELIMIT = 10  # allow up to 10 previous save files
 
 # game settings
-CLIPPING_BUFFER = 10  # increase to push player farther from wall collisions
+CLIPPING_BUFFER = +0  # increase to push player farther from wall collisions
 FPS = 60
 TITLE = 'GAME NAME'
 BGCOLOR = TAN

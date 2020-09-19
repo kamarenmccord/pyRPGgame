@@ -20,13 +20,18 @@ class Game:
         """
         self.title_font = path.join(game_folder, 'overpass-regular.otf')
         self.game_folder = path.join('./logics')
+
+        # groups
         self.all_sprites = pygame.sprite.Group()
         self.enemy_sprites = pygame.sprite.Group()
         self.battle_sprites = pygame.sprite.Group()
         self.cursors = pygame.sprite.Group()
         self.walls = pygame.sprite.Group()
         self.battle_zone_group = pygame.sprite.Group()
+        # debug varis
         self.draw_debug = True
+        self.draw_walls = False
+
         pygame.init()
         self.battle_cursor = Cursor(self, -90)
         self.battle_cursor.battleMode = True
@@ -133,6 +138,12 @@ class Game:
                 self.screen.blit(sprite.img, self.camera.apply(sprite))
         for sprite in self.all_sprites:
             self.screen.blit(sprite.image, self.camera.apply(sprite))
+        if self.draw_walls:
+            for sprite in self.walls:
+                self.screen.blit(sprite.image, self.camera.apply(sprite))
+            self.screen.blit(self.player.buffer_box, self.camera.apply_box(self.player.buffer_rect))
+        if not isinstance(self.player.area, (bool, str)):
+            self.screen.blit(self.player.interact_img, self.camera.apply_box(self.player.interact_rect))
 
         if self.pop_up:
             if self.pause:
@@ -205,6 +216,7 @@ class Game:
             if event.type == pygame.KEYDOWN:
                 # debug key prints a snapshot of game data
                 if event.key == pygame.K_m:
+                    self.draw_walls = not self.draw_walls
                     self.draw_debug = not self.draw_debug
                     draw_snapshot(self)
                 if event.key == pygame.K_e or event.key == pygame.K_ESCAPE:
