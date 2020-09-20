@@ -81,7 +81,7 @@ class Game:
             self.draw_text('YES', self.title_font, 36, WHITE, x+300, y)
 
             self.menu_cursor.draw()
-            option = self.menu_cursor.check_keys(menu_pos, self.event_keys)
+            option = self.menu_cursor.check_keys(menu_pos, self.event_keys, direction=['horizontal'])
             if option == 0:
                 waiting = False
             if option == 1:
@@ -181,10 +181,6 @@ class Game:
 
         # break this index into sub_index for wrap effect
         wrapped_text = [[]]
-        line_limit = 4
-        lowerLimit = 0
-        amtup = 27
-        upperLimit = amtup
 
         # word wrap
         count = 0
@@ -195,13 +191,6 @@ class Game:
                 wrapped_text.append([])
                 count += 1
                 wrapped_text[count].append(word)
-
-        # rewrite for word wrap
-        # for n in range(line_limit):
-        #     wrapped_text.append(text_on_this_page[lowerLimit:upperLimit])
-        #     lowerLimit = upperLimit
-        #     upperLimit += amtup
-
 
         # print each sub_index out
         x = WIDTH * 25/100
@@ -432,6 +421,7 @@ if USE_PREVIOUS_DATA:
     g.party = []
     for objData in data['partyData']:
         g.party.append(PartyChar(objData['name'], objData['imageFile'], g, objData['max_hp'], objData['stats']))
+        g.party.append(PartyChar('Bobby', objData['imageFile'], g))
 
     # start and play game
     while True:

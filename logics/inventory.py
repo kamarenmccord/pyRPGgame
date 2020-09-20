@@ -9,7 +9,11 @@ class Inventory:
     # default class for the players inventory
     def __init__(self, game, cursor):
         self.game = game
+
         self.pocket_list = ['healing', 'key_items', 'weapons', 'misc']
+        self.titles = {'healing': 'Healing', 'key_items': 'Key Items',
+                       'weapons': 'Weapons', 'misc': 'Misc'}
+
         self.all_pockets = {
             'misc': [],
             'key_items': [],
@@ -132,7 +136,8 @@ class Inventory:
         self.draw_backdrop()
 
         # menu title
-        self.game.draw_text(f'{self.screenName}', self.game.title_font, 32, BLACK, WIDTH/2, 100, align='center')
+        screen_name = self.titles[self.screenName]
+        self.game.draw_text(f'{screen_name}', self.game.title_font, 32, BLACK, WIDTH/2, 100, align='center')
         max_offset = ((math.floor(len(self.all_pockets[self.screenName])/7))*560)*-1
         max_offset += 560
         x = WIDTH - 300
@@ -149,15 +154,17 @@ class Inventory:
             if max_offset % 7 == 0:
                 max_offset -= 560
         if self.screenName == 'healing':
-            y = 220
+            y = 200
             for guy in self.game.party:
                 self.game.draw_text(f'{guy.name} hp: {guy.stats["hp"]} / {guy.max_hp}',
-                                    self.game.title_font, 24, BLACK, 200, 200)
+                                    self.game.title_font, 24, BLACK, 200, y)
+                y += 20
                 pygame.draw.rect(self.game.screen, DARKRED, (200, y, 300, 6))
                 pygame.draw.rect(self.game.screen, RED, (200, y, 300*guy.stats['hp']/guy.max_hp, 6))
+                y += 10
                 self.game.draw_text(f'mana: {guy.stats["mana"]} / {guy.stats["max_mana"]}',
-                                    self.game.title_font, 24, BLACK, 200, y+10)
-                y += 30
+                                    self.game.title_font, 24, BLACK, 200, y)
+                y += 20
                 pygame.draw.rect(self.game.screen, DARKGREEN, (200, y, 300, 6))
                 pygame.draw.rect(self.game.screen, GREEN, (200, y, 300*guy.stats['mana']/guy.stats['max_mana'], 6))
                 y += 75
