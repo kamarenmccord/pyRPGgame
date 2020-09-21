@@ -32,19 +32,19 @@ def load_level(game, level):
                 game.map.player_spawny = tile_objs.y
             for lvl in map_zones:
                 if tile_objs.name == f'zone_{lvl+1}':
-                    game.map.danger_zone[f'zone_{lvl+1}'].append(DangerZone(tile_objs.x, tile_objs.y, tile_objs.width,
-                                                                            tile_objs.height, lvl+1))
+                    game.map.danger_zone[f'zone_{lvl+1}'].append(DangerZone(tile_objs.x * SCALE, tile_objs.y * SCALE, tile_objs.width * SCALE,
+                                                                            tile_objs.height * SCALE, lvl+1))
             if tile_objs.name == 'save_spot':
-                game.map.saves.append((tile_objs.x, tile_objs.y, tile_objs.width, tile_objs.height, 'save'))
+                game.map.saves.append((tile_objs.x * SCALE, tile_objs.y * SCALE, tile_objs.width * SCALE, tile_objs.height * SCALE, 'save'))
             if tile_objs.name == 'wall':
-                Wall(tile_objs.x, tile_objs.y, tile_objs.width, tile_objs.height, game)
+                Wall(tile_objs.x*SCALE, tile_objs.y*SCALE, tile_objs.width*SCALE, tile_objs.height*SCALE, game)
             if tile_objs.name == 'trainer':
-                NpcTrainer(tile_objs.x, tile_objs.y, game)
+                NpcTrainer(tile_objs.x * SCALE, tile_objs.y * SCALE, game)
             if tile_objs.name == 'npc':
                 if tile_objs.type == 'rando':
-                    RandoNpc(tile_objs.x, tile_objs.y, game, tile_objs.img, interact=True, speech=[tile_objs.speech])
+                    RandoNpc(tile_objs.x * SCALE, tile_objs.y * SCALE, game, tile_objs.img, interact=True, speech=[tile_objs.speech])
             if tile_objs.name == 'book':
-                Book(tile_objs.x, tile_objs.y, tile_objs.img, tile_objs.contents, game)
+                Book(tile_objs.x * SCALE, tile_objs.y * SCALE, tile_objs.img, tile_objs.contents, game)
         game.camera = Camera(game.map.width, game.map.height)
 
 

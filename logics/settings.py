@@ -25,6 +25,7 @@ HEIGHT = 768
 
 # map settings
 TILESIZE = 32
+SCALE = 1  # 0.5 to 2 where 2 == 128 and 0.5 = 16 pixel squares
 GRIDWIDTH = WIDTH / TILESIZE
 GRIDHEIGHT = WIDTH / TILESIZE
 
