@@ -405,6 +405,10 @@ USE_PREVIOUS_DATA = g.shows_main_menu()
 
 
 def check_map_num(num):
+    """ allows maps of different pixel sizes to be loaded """
+    # multiplier makes pixel to ratio
+    # 2 makes 16 to 32
+    # 0.5 makes 32 to 16
     global SCALE
     if num == 1:
         SCALE = 1
@@ -415,7 +419,7 @@ def check_map_num(num):
 mapNum = 2
 check_map_num(mapNum)
 if mapNum == 2:
-    SCALE = 2
+    SCALE = 2  # makes 16 bit 32
 
 if USE_PREVIOUS_DATA:
     # get game data
