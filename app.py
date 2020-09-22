@@ -10,6 +10,8 @@ from logics.stats_screen import *
 import sys
 from os import path, listdir, chdir
 
+global SCALE
+
 import pygame
 
 
@@ -401,7 +403,19 @@ class Game:
 g = Game()
 USE_PREVIOUS_DATA = g.shows_main_menu()
 
-mapNum = 1
+
+def check_map_num(num):
+    global SCALE
+    if num == 1:
+        SCALE = 1
+    if num == 2:
+        SCALE = 2
+
+
+mapNum = 2
+check_map_num(mapNum)
+if mapNum == 2:
+    SCALE = 2
 
 if USE_PREVIOUS_DATA:
     # get game data

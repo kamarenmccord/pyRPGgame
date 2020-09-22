@@ -28,8 +28,8 @@ def load_level(game, level):
         game.map_rect = game.map_img.get_rect()
         for tile_objs in game.map.tmxdata.objects:
             if tile_objs.name == 'player':
-                game.map.player_spawnx = tile_objs.x
-                game.map.player_spawny = tile_objs.y
+                game.map.player_spawnx = tile_objs.x*SCALE
+                game.map.player_spawny = tile_objs.y*SCALE
             for lvl in map_zones:
                 if tile_objs.name == f'zone_{lvl+1}':
                     game.map.danger_zone[f'zone_{lvl+1}'].append(DangerZone(tile_objs.x * SCALE, tile_objs.y * SCALE, tile_objs.width * SCALE,
