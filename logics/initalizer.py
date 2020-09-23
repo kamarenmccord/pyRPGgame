@@ -22,7 +22,6 @@ def check_map_num(num):
 def load_level(game, level):
     """@game: an instance of the pygame
         @level: numerical value of current map area"""
-    global SCALE
     # top level map data
     game.map_data = []
     SCALE = check_map_num(level)
