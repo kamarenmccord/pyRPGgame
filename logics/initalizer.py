@@ -7,13 +7,28 @@ import pygame
 """ initalizes all of the other game data, if not under game.init check here """
 
 
+def check_map_num(num):
+    """ allows maps of different pixel sizes to be loaded """
+    # pixel_scale = 32 base pixels times num
+    # 16 = 32 * 0.5
+    # 64 =  32 * 2
+    if num in [1]:
+        scale_map_to = 1
+    if num in [2]:
+        scale_map_to = 2
+    return scale_map_to
+
+
 def load_level(game, level):
     """@game: an instance of the pygame
         @level: numerical value of current map area"""
+    global SCALE
     # top level map data
     game.map_data = []
+    SCALE = check_map_num(level)
+
     # map
-    game.map = TiledMap(path.join(game.game_folder, f'level{level}.xml'))
+    game.map = TiledMap(path.join(game.game_folder, f'level{level}.xml'), game)
     game.mapLevel = level
 
     map_zones = range(20)

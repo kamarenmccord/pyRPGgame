@@ -10,8 +10,6 @@ from logics.stats_screen import *
 import sys
 from os import path, listdir, chdir
 
-global SCALE
-
 import pygame
 
 
@@ -34,6 +32,7 @@ class Game:
         self.draw_debug = True
         self.draw_walls = False
 
+        # pygame block
         pygame.init()
         self.battle_cursor = Cursor(self, -90)
         self.battle_cursor.battleMode = True
@@ -41,6 +40,11 @@ class Game:
         self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
         pygame.display.set_caption(TITLE)
         self.clock = pygame.time.Clock()
+
+        # global block
+        self.scale = 1  # 0.5 to 2 where 2 == 128 and 0.5 = 16 pixel squares
+
+        # drawing variables, global for async
         self.pause = False
         self.word_count = 0
         self.index = 0
@@ -56,6 +60,8 @@ class Game:
 
     def spawn_player(self):
         """ spawn player at map point """
+        print(self.map.player_spawnx, self.map.player_spawny)
+
         self.player = Player('Noah', self.map.player_spawnx, self.map.player_spawny, self)
         self.party.append(self.player.partyChar)
 
@@ -404,23 +410,6 @@ g = Game()
 USE_PREVIOUS_DATA = g.shows_main_menu()
 
 
-def check_map_num(num):
-    """ allows maps of different pixel sizes to be loaded """
-    # multiplier makes pixel to ratio
-    # 2 makes 16 to 32
-    # 0.5 makes 32 to 16
-    global SCALE
-    if num == 1:
-        SCALE = 1
-    if num == 2:
-        SCALE = 2
-
-
-mapNum = 2
-check_map_num(mapNum)
-if mapNum == 2:
-    SCALE = 2  # makes 16 bit 32
-
 if USE_PREVIOUS_DATA:
     # get game data
     chdir('./logics')
@@ -449,6 +438,7 @@ if USE_PREVIOUS_DATA:
 else:
     while True:
         # if new game
+        mapNum = 2  # test line for start level
         g.new(mapNum)
         g.run()
         g.show_game_over()

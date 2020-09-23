@@ -8,7 +8,7 @@ from .characters import *
 
 
 class TiledMap():
-    def __init__(self, filename):
+    def __init__(self, filename, game):
         self.data = []
         with open(filename, 'rt') as f:
             for line in f:
@@ -19,6 +19,7 @@ class TiledMap():
         # self.height = self.tm.height * 64
         self.height = self.tm.height * self.tm.tileheight
         self.tmxdata = self.tm
+        self.scale = game.scale
 
     def render(self, surface):
         ti = self.tm.get_tile_image_by_gid
@@ -27,10 +28,9 @@ class TiledMap():
                 for x, y, gid in layer:
                     tile = ti(gid)
                     if tile:
-                        tile = pygame.transform.scale(tile, (round(64*SCALE), round(64*SCALE)))
-                        surface.blit(tile, (x*64*SCALE, y*64*SCALE))
+                        tile = pygame.transform.scale(tile, (round(64*self.scale), round(64*self.scale)))
+                        surface.blit(tile, (x*64*self.scale, y*64*self.scale))
                         # surface.blit(tile, (x*self.tm.tilewidth, y*self.tm.tileheight))
-
 
     def make_map(self):
         temp_surface = pygame.Surface((self.width, self.height))
