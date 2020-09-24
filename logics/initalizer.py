@@ -7,14 +7,18 @@ import pygame
 """ initalizes all of the other game data, if not under game.init check here """
 
 
-def check_map_num(num):
+def check_map_num(mapNum):
     """ allows maps of different pixel sizes to be loaded """
+    """ 
+        where the list is the map number,
+        Level[num]
+    """
     # pixel_scale = 32 base pixels times num
     # 128 = 32 * 4
     # 64 =  32 * 2
-    if num in [1]:
+    if mapNum in [1]:
         scale_map_to = 2
-    if num in [2]:
+    if mapNum in [2]:
         scale_map_to = 3
     return scale_map_to
 
@@ -46,17 +50,25 @@ def load_level(game, level):
                 game.map.player_spawny = tile_objs.y*game.scale
             for lvl in map_zones:
                 if tile_objs.name == f'zone_{lvl+1}':
-                    game.map.danger_zone[f'zone_{lvl+1}'].append(DangerZone(tile_objs.x * game.scale, tile_objs.y * game.scale, tile_objs.width * game.scale,
-                                                                            tile_objs.height * game.scale, lvl+1))
+                    game.map.danger_zone[f'zone_{lvl+1}'].append(DangerZone(tile_objs.x * game.scale,
+                                                                            tile_objs.y * game.scale,
+                                                                            tile_objs.width * game.scale,
+                                                                            tile_objs.height * game.scale,
+                                                                            lvl+1))
             if tile_objs.name == 'save_spot':
-                game.map.saves.append((tile_objs.x * game.scale, tile_objs.y * game.scale, tile_objs.width * game.scale, tile_objs.height * game.scale, 'save'))
+                game.map.saves.append((tile_objs.x * game.scale, tile_objs.y * game.scale,
+                                       tile_objs.width * game.scale,
+                                       tile_objs.height * game.scale,
+                                       'save'))
             if tile_objs.name == 'wall':
-                Wall(tile_objs.x * game.scale, tile_objs.y * game.scale, tile_objs.width * game.scale, tile_objs.height * game.scale, game)
+                Wall(tile_objs.x * game.scale, tile_objs.y * game.scale, tile_objs.width * game.scale,
+                     tile_objs.height * game.scale, game)
             if tile_objs.name == 'trainer':
                 NpcTrainer(tile_objs.x * game.scale, tile_objs.y * game.scale, game)
             if tile_objs.name == 'npc':
                 if tile_objs.type == 'rando':
-                    RandoNpc(tile_objs.x * game.scale, tile_objs.y * game.scale, game, tile_objs.img, interact=True, speech=[tile_objs.speech])
+                    RandoNpc(tile_objs.x * game.scale, tile_objs.y * game.scale, game, tile_objs.img,
+                             interact=True, speech=[tile_objs.speech])
             if tile_objs.name == 'book':
                 Book(tile_objs.x * game.scale, tile_objs.y * game.scale, tile_objs.img, tile_objs.contents, game)
         game.camera = Camera(game.map.width, game.map.height)
