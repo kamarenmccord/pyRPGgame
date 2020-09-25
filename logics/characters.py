@@ -15,9 +15,9 @@ game_folder = path.dirname(__file__)
 
 def collide_with_boundries(player, dx, dy):
     """boundaries set by map dimensions"""
-    if player.pos[0] + dx <= CLIPPING_BUFFER or player.pos[0] + dx >= player.game.map.width - CLIPPING_BUFFER:
+    if player.pos[0] + dx <= CLIPPING_BUFFER or player.pos[0] + dx >= player.game.map.width - 30:
         return True
-    elif player.pos[1] + dy <= CLIPPING_BUFFER or player.pos[1] + dy >= player.game.map.height - CLIPPING_BUFFER:
+    elif player.pos[1] + dy <= CLIPPING_BUFFER or player.pos[1] + dy >= player.game.map.height - 30:
         return True
 
 

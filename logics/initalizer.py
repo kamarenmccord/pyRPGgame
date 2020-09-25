@@ -34,6 +34,9 @@ def load_level(game, level):
     game.map = TiledMap(path.join(game.game_folder, f'level{level}.xml'), game)
     game.mapLevel = level
 
+    if 32 * game.scale == 64:
+        game.scale = 1
+
     map_zones = range(20)
     game.map.danger_zone = {}
     game.map.saves = []

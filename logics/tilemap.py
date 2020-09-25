@@ -16,8 +16,6 @@ class TiledMap():
                 self.scale = 32 * game.scale
         self.tm = load_pygame(filename, pixelalpha=True)
         self.width = self.tm.width * self.scale
-        # self.width = self.tm.width * 64
-        # self.height = self.tm.height * 64
         self.height = self.tm.height * self.scale
         print(f'tm height, tilehight, scale: {[self.tm.height, self.tm.tileheight, game.scale]}')
         self.tmxdata = self.tm
@@ -31,7 +29,6 @@ class TiledMap():
                     if tile:
                         tile = pygame.transform.scale(tile, (self.scale, self.scale))
                         surface.blit(tile, (x*self.scale, y*self.scale))
-                        # surface.blit(tile, (x*self.tm.tilewidth, y*self.tm.tileheight))
 
     def make_map(self):
         temp_surface = pygame.Surface((self.width, self.height))
