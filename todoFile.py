@@ -9,6 +9,11 @@
 
 # TODO: add sound effects/ musics/ prettify
 
+# TODO: add map teleportaions between levels
+
+# TODO: add a id property to pickup npcs so that they can have same name and not stack
+
+# DONE: added pickup-able npcs
 # DONE: add a notification icon above player when obj is intractable
 # DONE: rewrite popup window to do word wraping
 # DONE: npc's and party chars

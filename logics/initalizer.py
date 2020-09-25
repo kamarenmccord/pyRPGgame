@@ -72,6 +72,9 @@ def load_level(game, level):
                 if tile_objs.type == 'rando':
                     RandoNpc(tile_objs.x * game.scale, tile_objs.y * game.scale, game, tile_objs.img,
                              interact=True, speech=[tile_objs.speech])
+                if tile_objs.type == 'partychar':
+                    PartyNpc( tile_objs.x*game.scale, tile_objs.y*game.scale, game, tile_objs.img,
+                              tile_objs.char_name, speech=tile_objs.speech)
             if tile_objs.name == 'book':
                 Book(tile_objs.x * game.scale, tile_objs.y * game.scale, tile_objs.img, tile_objs.contents, game)
         game.camera = Camera(game.map.width, game.map.height)

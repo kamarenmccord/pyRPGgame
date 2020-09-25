@@ -288,6 +288,28 @@ class Npc(pygame.sprite.Sprite):
         return False
 
 
+class PartyNpc(Npc):
+    """ an non playable that becomes playable """
+    def __init__(self, x, y, game, img, name='newGuy', interact=True, speech=False):
+        self.name = name
+        self.pickup_line = ['Can I come with you? I can be of a great help to you.']
+        super().__init__(x=x, y=y, game=game, img=img, interact=interact, speech=speech)
+        self.party_char = PartyChar(self.name, img, self.game)
+
+    def pickUp(self):
+        self.game.party.append(self.party_char)
+
+    def talk(self):
+        # check to see if this member already exits
+        # may need to add an id value so that players with the same name can exist
+        for member in self.game.party:
+            if self.name == member.name:
+                return self.speech
+
+        self.pickUp()
+        return self.pickup_line
+
+
 class RandoNpc(Npc):
     """ returns random speaches """
 
