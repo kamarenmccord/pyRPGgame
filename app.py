@@ -163,6 +163,7 @@ class Game:
                     self.wait_for_key()  # wait for key
                     self.index += 1
         if self.menu:
+            self.pause = True  # stays paused even if save event (popup) occurs
             self.create_menu()
             pygame.display.flip()
         else:
