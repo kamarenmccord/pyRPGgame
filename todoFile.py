@@ -3,13 +3,22 @@
 
 # TODO: if savelimit files exist, prompt user to overwrite
 
-# TODO: create larger map, put hooks for other maps
+# TODO: create overworld map
+
+# TODO: put in map hooks to enter new places (buldings, maps, etc.)
+#   - create door object with params(rect, connecting_map)
+#   - functions for (collisions, changing map, changing state)
+#   - add col points to map (like doors)
+#   - when point is inside player col box trigger event
+#   - col box should { change player/game state to warping(prevents going back),
+#                      take a point and direction to warp to,
+#                      load new map and position player at point in direction facing
+#                       turn off warp status after stepping off col point
+#                     }
 
 # TODO: add more enemies and put them in zones
 
 # TODO: add sound effects/ musics/ prettify
-
-# TODO: add map teleportaions between levels
 
 # Fixed: BUGFIX:: after saving pause is not held causing movement of plyr while menu is up
 # DONE: add a id property to pickup npcs so that they can have same name and not stack
