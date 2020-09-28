@@ -7,9 +7,7 @@ import time
 from .settings import *
 
 """
-create read write delete
-using shelve!
-
+create read write delete module
 """
 
 # shelve.open('saveFile', 'w,r,c,n')
@@ -101,7 +99,8 @@ def save_game(game):
     for obj in game.party:
         # adding the important stats
         data['partyData'].append({'name': obj.name, 'imageFile': obj.imageFile,
-                                  'stats': obj.stats, 'max_hp': obj.max_hp})
+                                  'stats': obj.stats, 'max_hp': obj.max_hp,
+                                  'id': obj.id_num})
 
     save_data['game_data'] = data
     save_data.close()
@@ -122,13 +121,6 @@ def load_game():
     return 'no saves found'
 
 
-""" 
-    create a game object that holds all of the data,
-    done: create game
-    todo: load appropriate map
-    todo: create player with saved data
-"""
-
 # how to use this module
 if __name__ == '__main__':
     class testObj:
@@ -136,20 +128,3 @@ if __name__ == '__main__':
             self.name = 'bob'
             self.saveLimit = 10
 
-
-    helloObj = testObj()
-
-    # saving
-    print('saving')
-    print(helloObj)
-    print('original obj is a ' + str(type(helloObj)))
-    print('obj name = ' + helloObj.name)
-    save_game(helloObj)
-    data = load_game()
-
-    # loading
-    print('\nloading')
-    helloObjLoaded = data['game_data']
-    print(helloObjLoaded)
-    print('cloned obj is a ' + str(type(helloObjLoaded)))
-    print('copied obj name = ' + helloObjLoaded.name)

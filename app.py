@@ -427,8 +427,8 @@ if USE_PREVIOUS_DATA:
     # create a party and populate with players that were in the party
     g.party = []
     for objData in data['partyData']:
-        g.party.append(PartyChar(objData['name'], objData['imageFile'], g, objData['max_hp'], objData['stats']))
-        g.party.append(PartyChar('Bobby', objData['imageFile'], g))
+        g.party.append(PartyChar(objData['name'], objData['imageFile'], g, id_num=objData['id'],
+                                 max_hp=objData['max_hp'], stats=objData['stats']))
 
     # start and play game
     while True:

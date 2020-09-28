@@ -1,6 +1,8 @@
 
 """ a place to store all my todo's """
 
+# TODO: BUGFIX:: after saving pause is not held causing movement of plyr while menu is up
+
 # TODO: if savelimit files exist, prompt user to overwrite
 
 # TODO: create larger map, put hooks for other maps
@@ -11,8 +13,7 @@
 
 # TODO: add map teleportaions between levels
 
-# TODO: add a id property to pickup npcs so that they can have same name and not stack
-
+# DONE: add a id property to pickup npcs so that they can have same name and not stack
 # DONE: added pickup-able npcs
 # DONE: add a notification icon above player when obj is intractable
 # DONE: rewrite popup window to do word wraping

@@ -167,10 +167,11 @@ class Cursor(pygame.sprite.Sprite):
 
 class PartyChar(pygame.sprite.Sprite):
     # the char that is in party
-    def __init__(self, name, image, game, max_hp=False, stats=False):
+    def __init__(self, name, image, game, id_num, max_hp=False, stats=False):
         self.name = name
         self.groups = []
         self.game = game
+        self.id_num = id_num
         self.groups.append(self.game.battle_sprites)
         pygame.sprite.Sprite.__init__(self, self.groups)
 
@@ -242,9 +243,10 @@ class NpcTrainer(pygame.sprite.Sprite):
 
 
 class Npc(pygame.sprite.Sprite):
-    def __init__(self, x, y, game, img, interact=False, speech=False):
+    def __init__(self, x, y, game, img, id_num, interact=False, speech=False):
         self.pos = x + 16, y + 16
         self.game = game
+        self.id_num = id_num
         self.image = pygame.image.load(path.join(game.game_folder, img))
         self.image = pygame.transform.scale(self.image, (48, 81))
         self.rect = self.image.get_rect()
@@ -290,11 +292,11 @@ class Npc(pygame.sprite.Sprite):
 
 class PartyNpc(Npc):
     """ an non playable that becomes playable """
-    def __init__(self, x, y, game, img, name='newGuy', interact=True, speech=False):
+    def __init__(self, x, y, game, img, id_num, name='newGuy', interact=True, speech=False):
         self.name = name
         self.pickup_line = ['Can I come with you? I can be of a great help to you.']
-        super().__init__(x=x, y=y, game=game, img=img, interact=interact, speech=speech)
-        self.party_char = PartyChar(self.name, img, self.game)
+        super().__init__(x=x, y=y, game=game, img=img, id_num=id_num, interact=interact, speech=speech)
+        self.party_char = PartyChar(self.name, img, self.game, self.id_num)
 
     def pickUp(self):
         self.game.party.append(self.party_char)
@@ -303,7 +305,7 @@ class PartyNpc(Npc):
         # check to see if this member already exits
         # may need to add an id value so that players with the same name can exist
         for member in self.game.party:
-            if self.name == member.name:
+            if self.id_num == member.id_num:
                 return self.speech
 
         self.pickUp()
@@ -313,8 +315,8 @@ class PartyNpc(Npc):
 class RandoNpc(Npc):
     """ returns random speaches """
 
-    def __init__(self, x, y, game, img, interact=False, speech=False):
-        super().__init__(x=x, y=y, game=game, img=img, interact=interact, speech=speech)
+    def __init__(self, x, y, game, img, id_num, interact=False, speech=False):
+        super().__init__(x=x, y=y, game=game, img=img, id_num=id_num, interact=interact, speech=speech)
 
     def talk(self):
         if self.speech:
@@ -326,10 +328,10 @@ class RandoNpc(Npc):
 class QuestNpc(Npc):
     """ gives/ progresses quest """
 
-    def __init__(self, x, y, game, img, quest_object, interact=False, speech=False):
+    def __init__(self, x, y, game, img,  id_num, quest_object, interact=False, speech=False):
         self.quest = quest_object()  # this is sudo code
         self.index = 0  # tracks quest progression
-        super().__init__(x, y, game, img, interact=interact, speech=speech)
+        super().__init__(x=x, y=y, game=game, img=img, id_num=id_num, interact=interact, speech=speech)
 
     def set_quest(self, player):
         """ adds quest to player """
@@ -337,7 +339,7 @@ class QuestNpc(Npc):
 
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, name, x, y, game):
+    def __init__(self, name, x, y, game, id_num=1000):
         # the char that moves about the screen
         self.name = name
         self.groups = []
@@ -375,7 +377,7 @@ class Player(pygame.sprite.Sprite):
         self.frame = 0
 
         # add default player to the battle party
-        self.partyChar = PartyChar(self.name, 'main_char/player_down2.png', game)
+        self.partyChar = PartyChar(self.name, 'main_char/player_down2.png', game, id_num)
 
     def load_images(self):
         images = []
